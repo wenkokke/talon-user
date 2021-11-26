@@ -1,0 +1,12 @@
+[submodule "community"]
+	path = community
+	url = git@github.com:wenkokke/knausj_talon.git
+[submodule "cursorless"]
+	path = cursorless
+	url = https://github.com/pokey/cursorless-talon
+[submodule "hud"]
+	path = hud
+	url = https://github.com/chaosparrot/talon_hud
+[submodule "voicemacs"]
+	path = voicemacs
+	url = https://github.com/jcaw/voicemacs
