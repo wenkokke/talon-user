@@ -10,3 +10,6 @@
 [submodule "voicemacs"]
 	path = voicemacs
 	url = https://github.com/jcaw/voicemacs
+[submodule "emacs-monitor"]
+	path = emacs-monitor
+	url = git@github.com:wenkokke/emacs-monitor.git
