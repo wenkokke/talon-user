@@ -20,19 +20,26 @@ function talon_link {
     local SOURCES_TO_LINK="$1"
     for source in ${SOURCES_TO_LINK}; do
         mkdir -p "${TALON_DIR}/$(dirname ${source})"
-        ln -s "${SCRIPT_DIR}/${source}" "${TALON_DIR}/${source}"
+        cp -r "${SCRIPT_DIR}/${source}" "${TALON_DIR}/${source}"
     done
 }
 
 function talon_unlink {
     local SOURCES_TO_UNLINK="$1"
     for source in ${SOURCES_TO_UNLINK}; do
-        unlink "${TALON_DIR}/${source}"
+        source=`realpath -q "${TALON_DIR}/${source}"`
+        if [[ "${source}" =~ ^${TALON_DIR} ]]; then
+            rm -rf "${source}"
+        elif [ -e "${source}" ]; then
+            echo 'Attempted to delete file outside of ~/.talon/user:'
+            echo "${source}"
+            exit 1
+        fi
     done
 }
 
 # Local source files
-SOURCES="$(find "${SCRIPT_DIR}" -mindepth 1 \( -name '*.py' -o -name '*.talon' -o -name '*.csv' \) ! -path '*/\.*' -printf '%P\n')"
+SOURCES="$(find "${SCRIPT_DIR}" -mindepth 1 \( -type d -o -name '*.py' -o -name '*.talon' \) ! -path '*/\.*' -printf '%P\n')"
 
 SOURCES_RELATIVE=""
 for source in ${SOURCES}; do
@@ -42,7 +49,7 @@ done
 # Test if local source file is currently linked to the Talon user directory
 function is_linked {
     local source="$1"
-    [ -L "${TALON_DIR}/${source}" ]
+    [ -e "${TALON_DIR}/${source}" ]
 }
 
 # Script to select currently linked source files in PathPicker
@@ -87,7 +94,7 @@ if [ "$#" -gt 0 ]; then
 
     # Link the selected local files
     if [ ! "$SOURCES_TO_LINK" == "" ]; then
-        echo "${SCRIPT} is about to link the following files to ${TALON_DIR}:"
+        echo "${SCRIPT} is about to copy the following files to ${TALON_DIR}:"
         for source in ${SOURCES_TO_LINK}; do
             echo "- ${source}"
         done
@@ -100,11 +107,12 @@ if [ "$#" -gt 0 ]; then
 
     # Unlink the deselected local files
     if [ ! "$SOURCES_TO_UNLINK" == "" ]; then
-        echo "${SCRIPT} is about to unlink the following files from ${TALON_DIR}:"
+        echo "${SCRIPT} is about to remove the following files from ${TALON_DIR}:"
         for source in ${SOURCES_TO_UNLINK}; do
             echo "- ${source}"
         done
         read -p "Are you sure? [y/N]" -n 1 -r
+        echo # move to a new line
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             talon_unlink "${SOURCES_TO_UNLINK}"
         fi
