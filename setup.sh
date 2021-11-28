@@ -16,6 +16,12 @@ TALON_DIR="${HOME}/.talon/user"
 SCRIPT="${BASH_SOURCE[0]}"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${SCRIPT}" )" &> /dev/null && pwd )"
 
+# ./setup.sh update -- update active files
+if [[ "$1" == "update" ]]; then
+    rsync -ahPuv --existing --exclude='**/.**' "${SCRIPT_DIR}/" "${TALON_DIR}"
+    exit 0
+fi
+
 function talon_link {
     local SOURCES_TO_LINK="$1"
     for source in ${SOURCES_TO_LINK}; do
