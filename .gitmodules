@@ -13,9 +13,6 @@
 [submodule "cheatsheet"]
 	path = cheatsheet
 	url = https://gist.github.com/tararoys/c538b7ae8e1f21db9a794c2c0f5becf4
-[submodule "talon_hud"]
-	path = talon_hud
-	url = git@github.com:chaosparrot/talon_hud.git
 [submodule "haskell-talon"]
 	path = haskell-talon
 	url = git@github.com:wenkokke/haskell-talon.git
