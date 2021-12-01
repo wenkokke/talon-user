@@ -4,12 +4,6 @@
 [submodule "cursorless"]
 	path = cursorless
 	url = https://github.com/pokey/cursorless-talon
-[submodule "voicemacs"]
-	path = voicemacs
-	url = https://github.com/jcaw/voicemacs
-[submodule "emacs-monitor"]
-	path = emacs-monitor
-	url = git@github.com:wenkokke/emacs-monitor.git
 [submodule "cheatsheet"]
 	path = cheatsheet
 	url = https://gist.github.com/tararoys/c538b7ae8e1f21db9a794c2c0f5becf4
