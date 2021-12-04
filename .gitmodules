@@ -10,3 +10,6 @@
 [submodule "talon_hud"]
 	path = talon_hud
 	url = git@github.com:wenkokke/talon_hud.git
+[submodule "cheatsheet"]
+	path = cheatsheet
+	url = git@github.com:wenkokke/talon-cheatsheet.git
