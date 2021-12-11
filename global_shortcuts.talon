@@ -1,4 +1,6 @@
 -
-key(ctrl-alt-shift-m):
+key(cmd-ctrl-alt-T):
     user.toggle_sleep_mode()
-    user.zoomus_mute_toggle()
+
+key(cmd-ctrl-alt-Z):
+    user.zoomus_toggle()
