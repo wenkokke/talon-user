@@ -8,7 +8,6 @@ SETLEDS = "/usr/local/bin/setleds"
 
 
 def set_keybow2040_talon_led(resp: str) -> None:
-    print(f"set_keybow2040_talon_led({resp})")
     if "+sleep" in resp:
         run(f'{SETLEDS} -caps -name "Keybow 2040"', shell=True)
     if "-sleep" in resp:
@@ -16,7 +15,6 @@ def set_keybow2040_talon_led(resp: str) -> None:
 
 
 def set_keybow2040_zoom_led(resp: str) -> None:
-    print(f"set_keybow2040_zoom_led({resp})")
     if "-mute" in resp:
         run(f'{SETLEDS} +num -name "Keybow 2040"', shell=True)
     else:

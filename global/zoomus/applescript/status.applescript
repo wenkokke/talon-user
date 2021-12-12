@@ -1,0 +1,17 @@
+#!/usr/bin/osascript
+property muteAudio : "Mute audio"
+property unmuteAudio : "Unmute audio"
+
+if application "zoom.us" is running then
+	tell application "System Events"
+		tell application process "zoom.us"
+			if exists (menu item muteAudio of menu 1 of menu bar item "Meeting" of menu bar 1) then
+				return "on,-mute"
+			else
+        return "on,+mute"
+			end if
+		end tell
+	end tell
+else
+  return "off"
+end if
