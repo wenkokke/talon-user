@@ -1,3 +1,43 @@
+zoom in:
+	edit.zoom_in()
+
+zoom out:
+	edit.zoom_out()
+
+scroll up:
+	edit.page_up()
+
+scroll down:
+	edit.page_down()
+
+copy (it | that):
+	edit.copy()
+
+cut (it | that):
+	edit.cut()
+
+paste (it | that):
+	edit.paste()
+
+nope:
+	edit.undo()
+
+redo that:
+	edit.redo()
+
+paste match:
+	edit.paste_match_style()
+
+file save:
+	edit.save()
+
+# TODO: Should be linked to an edit command or migrated to a global file
+wipe:
+	key(backspace)
+
+slap:
+	edit.line_insert_down()
+
 step back:
     edit.word_left()
 

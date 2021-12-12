@@ -24,7 +24,6 @@ class Modes:
         """Add a callback to run when Talon enters sleep mode."""
         global MODE_CHANGE_HOOKS
         MODE_CHANGE_HOOKS.append(cb)
-        print(MODE_CHANGE_HOOKS)
 
     @staticmethod
     def talon_clear_mode_hooks() -> None:
