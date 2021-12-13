@@ -22,8 +22,6 @@ def set_keybow2040_zoom_led(resp: str) -> None:
 
 
 def on_ready() -> None:
-    # actions.user.talon_clear_mode_hooks()
-    # actions.user.zoomus_clear_hooks()
     if os.path.isfile(SETLEDS) and os.access(SETLEDS, os.X_OK):
         actions.user.talon_add_mode_hook(set_keybow2040_talon_led)
         actions.user.zoomus_add_hook(set_keybow2040_zoom_led)

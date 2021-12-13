@@ -1,5 +1,7 @@
-tag: terminal
+tag: user.terminal
 -
+tag(): terminal
+
 lisa: 
     user.terminal_list_directories()
 
@@ -30,7 +32,7 @@ rerun [<user.text>]:
 rerun search:
     user.terminal_rerun_search("")
 
-kill current:
+kill this:
     user.terminal_kill_current()
 
 copy paste:
@@ -38,7 +40,7 @@ copy paste:
     sleep(50ms)
     edit.paste()
 
-talon repel:
+talon rebel:
     user.terminal_open_talon_repl()
 
 talon log:

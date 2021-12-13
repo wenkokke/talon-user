@@ -6,6 +6,19 @@ MODE_CHANGE_HOOKS = []
 
 mod = Module()
 
+# The following built-in actions may be of use:
+#
+# mode.disable(mode: str)
+#   Disable a mode
+# mode.enable(mode: str)
+#   Enable a mode
+# mode.restore()
+#   Restore saved modes
+# mode.save()
+#   Save all active modes
+# mode.toggle(mode: str)
+#   Toggle a mode
+
 
 @mod.action_class
 class Modes:

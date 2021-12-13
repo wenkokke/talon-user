@@ -12,10 +12,10 @@ split down:
 split up:
   user.split_window_up()
 
-split (vertically | vertical):
+split (vertically|vertical):
   user.split_window_vertically()
 
-split (horizontally | horizontal):
+split (horizontally|horizontal):
   user.split_window_horizontally()
 
 split flip:

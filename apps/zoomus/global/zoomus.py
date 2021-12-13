@@ -1,5 +1,5 @@
 from typing import Callable
-from talon import Module
+from talon import Module, actions, app
 
 
 ZOOMUS_HOOKS = []
@@ -40,3 +40,34 @@ class ZoomUsGlobalActions:
         """Removes all existing Zoom hooks."""
         global ZOOMUS_HOOKS
         ZOOMUS_HOOKS.clear()
+
+
+# Hooks
+
+
+def talon_sleep_on_zoomus_unmute(resp: str) -> None:
+    """Sleeps Talon when zoom unmutes.
+
+    Note:
+        This only triggers when Talon unmutes Zoom.
+    """
+    if "-mute" in resp:
+        actions.user.talon_sleep()
+
+
+def zoomus_mute_on_talon_wake(resp: str) -> None:
+    """Mutes Zoom when Talon wakes.
+
+    Note:
+        This does not trigger if Talon is woken up via the menu.
+    """
+    if "-sleep" in resp:
+        actions.user.zoomus_mute()
+
+
+def on_ready() -> None:
+    actions.user.talon_add_mode_hook(zoomus_mute_on_talon_wake)
+    actions.user.zoomus_add_hook(talon_sleep_on_zoomus_unmute)
+
+
+app.register("ready", on_ready)

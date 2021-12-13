@@ -1,6 +1,7 @@
-tag: terminal
-and tag: user.git
+tag: user.terminal_git
 -
+tag: user.terminal
+
 git add patch:
     "git add . -p\n"
 git add:
