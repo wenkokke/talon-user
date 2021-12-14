@@ -9,7 +9,7 @@ app: vscode
 @ctx.action_class("win")
 class WinActions:
     def filename():
-        parts = actions.win.title().split(" - ")
+        parts = actions.win.title().split(" — ")
         result = parts[1] if parts[0] == "[Extension Development Host]" else parts[0]
         return result if "." in result else ""
 

@@ -46,16 +46,16 @@ tag: user.find
 ^replace confirm all$:
     user.find_replace_confirm_all()
 
-^scout dock [<user.text>] [<user.extension>]$:
+^scout dock [<user.text>] [<user.file_extension>]$:
     text = text or ""
-    extension = extension or ""
-    user.find_file(text + extension)
+    file_extension = file_extension or ""
+    user.find_file(text + file_extension)
 
 ^pop <user.text>$:
     edit.find(text)
     key(enter)
 
-^pop dock <user.text> [<user.extension>]$:
+^pop dock <user.text> [<user.file_extension>]$:
     extension = extension or ""
     user.find_file(text + extension)
     sleep(300ms)

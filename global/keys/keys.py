@@ -1,5 +1,5 @@
-from talon import Module, Context, actions
-from user.helper.merge import merge
+from collections.abc import Iterable
+from talon import Module, Context
 
 mod = Module()
 ctx = Context()
@@ -24,18 +24,40 @@ ctx.lists["self.key_function"] = {
 mod.list("key_arrow", desc="All arrow keys")
 ctx.lists["self.key_arrow"] = {"up", "down", "left", "right"}
 
+def merge(*args) -> dict:
+    """Merge dictionaries and lists"""
+    result = {}
+    for arg in args:
+        if isinstance(arg, dict):
+            for k, v in arg.items():
+                if v == None:
+                    del result[k]
+                else:
+                    result[k] = v
+        elif isinstance(arg, Iterable):
+            for v in arg:
+                result[v] = v
+        else:
+            raise Exception("Unknown type " + str(type(arg)))
+    return result
+
+
+
 mod.list("key_special", desc="All special keys")
-ctx.lists["self.key_special"] = merge(
-    {
-        "enter", "tab", "delete", "backspace",
-        "home", "end", "insert", "escape", "menu"
-    },
-    {
-        "page up":      "pageup",
-        "page down":    "pagedown",
-        "print screen": "printscr"
-    }
-)
+ctx.lists["self.key_special"] = {
+    "enter"       : "enter",
+    "tab"         : "tab",
+    "delete"      : "delete",
+    "backspace"   : "backspace",
+    "home"        : "home",
+    "end"         : "end",
+    "insert"      : "insert",
+    "escape"      : "escape",
+    "menu"        : "menu",
+    "page up"     : "pageup",
+    "page down"   : "pagedown",
+    "print screen": "printscr"
+}
 
 mod.list("key_modifier", desc="All modifier keys")
 ctx.lists["self.key_modifier"] = {

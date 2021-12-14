@@ -13,11 +13,13 @@ extension_lang_map = {
     ".gdb": "gdb",
     ".go": "go",
     ".h": "c",
+    ".hs": "haskell",
     ".hpp": "cplusplus",
     ".java": "java",
     ".js": "javascript",
     ".jsx": "javascriptreact",
     ".json": "json",
+    ".lhs": "literatehaskell",
     ".lua": "lua",
     ".md": "markdown",
     ".pl": "perl",
@@ -41,14 +43,14 @@ extension_lang_map = {
 for lang in extension_lang_map.values():
     mod.tag(lang)
     mod.tag(f"{lang}_forced")
-    c = Context()
+    ctx = Context()
     # Context is active if language is forced or auto language matches
-    c.matches = f"""
+    ctx.matches = f"""
     tag: user.{lang}_forced
     tag: user.auto_lang
     and code.language: {lang}
     """
-    c.tags = [f"user.{lang}"]
+    ctx.tags = [f"user.{lang}"]
 
 # Create a mode for the automated language detection. This is active when no lang is forced.
 mod.tag("auto_lang")
