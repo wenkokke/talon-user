@@ -43,14 +43,14 @@ extension_lang_map = {
 for lang in extension_lang_map.values():
     mod.tag(lang)
     mod.tag(f"{lang}_forced")
-    ctx = Context()
+    c = Context()
     # Context is active if language is forced or auto language matches
-    ctx.matches = f"""
+    c.matches = f"""
     tag: user.{lang}_forced
     tag: user.auto_lang
     and code.language: {lang}
     """
-    ctx.tags = [f"user.{lang}"]
+    c.tags = [f"user.{lang}"]
 
 # Create a mode for the automated language detection. This is active when no lang is forced.
 mod.tag("auto_lang")
