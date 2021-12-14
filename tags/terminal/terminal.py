@@ -1,9 +1,6 @@
 from talon import Module, actions
 
 mod = Module()
-# NOTE: this defines user.terminal, terminal is a built-in tag
-mod.tag("terminal", desc="Tag for enabling generic terminal commands")
-
 @mod.action_class
 class Actions:
     @staticmethod

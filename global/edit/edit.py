@@ -162,20 +162,3 @@
 #   Move cursor left one word
 # edit.word_right()
 #   Move cursor right one word
-# edit.zoom_in()
-#   Zoom in
-# edit.zoom_out()
-#   Zoom out
-# edit.zoom_reset()
-#   Zoom to original size
-
-# NOTE: support for the following edit actions is in the line_numbers tag
-#
-# edit.jump_column(n: int)
-#   Move cursor to column <n>
-# edit.jump_line(n: int)
-#   Move cursor to line <n>
-# edit.select_line(n: int = None)
-#   Select entire line <n>, or current line
-# edit.select_lines(a: int, b: int)
-#   Select entire lines from <a> to <b>

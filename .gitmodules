@@ -2,9 +2,6 @@
 [submodule "cheatsheet"]
 	path = cheatsheet
 	url = git@github.com:wenkokke/talon-cheatsheet.git
-[submodule "community"]
-	path = community
-	url = git@github.com:wenkokke/knausj_talon.git
 [submodule "cursorless"]
 	path = cursorless
 	url = git@github.com:pokey/cursorless-talon.git

@@ -1,113 +1,116 @@
 user.running: amethyst
 -
+
+# NOTE: these are all the standard shortcuts with command added
+
 window layout next:
     # Cycle layout forward
-    key("alt-shift-space")
+    key("alt-shift-cmd-space")
 
 window layout last:
     # Cycle layout lastwards
-    key("ctrl-alt-shift-space")
+    key("ctrl-alt-shift-cmd-space")
 
 window shrink:
     # Shrink the main pane
-    key("alt-shift-h")
+    key("alt-shift-cmd-h")
 
 window grow:
     # Expand the main pane
-    key("alt-shift-l")
+    key("alt-shift-cmd-l")
 
 window more:
     # Increase main pane count
-    key("alt-shift-,")
+    key("alt-shift-cmd-,")
 
 window less:
     # Decrease main pane count
-    key("alt-shift-.")
+    key("alt-shift-cmd-.")
 
 window focus next:
     # Move focus clockwise
-    key("alt-shift-k")
+    key("alt-shift-cmd-k")
 
 window focus last:
     # Move focus counter clockwise
-    key("alt-shift-j")
+    key("alt-shift-cmd-j")
 
 window swap next:
     # Swap focused window clockwise
-    key("ctrl-alt-shift-k")
+    key("ctrl-alt-shift-cmd-k")
 
 window swap last:
     # Swap focused window counter clockwise
-    key("ctrl-alt-shift-j")
+    key("ctrl-alt-shift-cmd-j")
 
 window swap main:
     # Swap focused window with main window
-    key("alt-shift-enter")
+    key("alt-shift-cmd-enter")
 
 window throw left:
     # Throw focused window to space left
-    key("ctrl-alt-shift-left")
+    key("ctrl-alt-shift-cmd-left")
 
 window throw right:
     # Throw focused window to space right
-    key("ctrl-alt-shift-right")
+    key("ctrl-alt-shift-cmd-right")
 
 window throw <number>:
     # Throw focused window to space <number>
-    key("ctrl-alt-shift-{number}")
+    key("ctrl-alt-shift-cmd-{number}")
 
 screen focus <number>:
     # Focus Screen <number>
-    user.amethyst_screen_focus(number)
+    key("alt-shift-cmd-f{number}")
 
 window throw screen <number>:
-    # Focus Screen 1
-    user.amethyst_screen_throw(number)
+    # Throw focused window to screen <number>
+    key("ctrl-alt-shift-cmd-f{number}")
 
 window float this:
     # Toggle float for focused window
-    key("alt-shift-t")
+    key("alt-shift-cmd-t")
 
 window layout show:
     # Display current layout
-    key("alt-shift-i")
+    key("alt-shift-cmd-i")
 
 window layout tall:
     # Select tall layout
-    key("alt-shift-a")
+    key("alt-shift-cmd-a")
 
 window layout wide:
     # Select wide layout
-    key("alt-shift-s")
+    key("alt-shift-cmd-s")
 
 window layout (full|fullscreen):
     # Select fullscreen layout
-    key("alt-shift-d")
+    key("alt-shift-cmd-d")
 
 window layout column:
     # Select column layout
-    key("alt-shift-f")
+    key("alt-shift-cmd-f")
 
 screen focus next:
     # Move focus to clockwise screen
-    key("alt-shift-n")
+    key("alt-shift-cmd-n")
 
 screen focus last:
     # Move focus to counter clockwise screen
-    key("alt-shift-p")
+    key("alt-shift-cmd-p")
 
 screen swap next:
     # Swap focused window to clockwise screen
-    key("ctrl-alt-shift-l")
+    key("ctrl-alt-shift-cmd-l")
 
 screen swap last:
     # Swap focused window to counter clockwise screen
-    key("ctrl-alt-shift-h")
+    key("ctrl-alt-shift-cmd-h")
 
 window manager redo:
     # Force windows to be reevalulated
-    key("alt-shift-z")
+    key("alt-shift-cmd-z")
 
 window manager restart:
     # Relaunch Amethyst
-    key("ctrl-alt-shift-z")
+    key("ctrl-alt-shift-cmd-z")

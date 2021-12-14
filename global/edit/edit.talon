@@ -1,21 +1,21 @@
 # Find
 
-hunt this:
+scout this:
   edit.find(edit.selected_text())
 
-hunt next:
+scout next:
   edit.find_next()
 
-hunt previous:
+scout previous:
   edit.find_previous()
 
 
 # Save
 
-save file:
+file save:
 	edit.save()
 
-save all:
+file save all:
 	edit.save_all()
 
 
@@ -26,19 +26,6 @@ nope:
 
 actually yes:
 	edit.redo()
-
-
-# Zoom
-
-zoom in:
-	edit.zoom_in()
-
-zoom out:
-	edit.zoom_out()
-
-zoom reset:
-	edit.zoom_reset()
-
 
 # Navigation
 
@@ -202,16 +189,6 @@ clear tailor:
     edit.extend_file_end()
     edit.delete()
 
-clear word:
-    edit.select_word()
-
-clear word left:
-    edit.extend_word_left()
-    edit.delete()
-
-clear word right:
-    edit.extend_word_right()
-    edit.delete()
 
 # Copy
 
@@ -252,17 +229,6 @@ copy header:
 
 copy tailor:
     edit.extend_file_end()
-    edit.copy()
-
-copy word:
-    edit.select_word()
-
-copy word left:
-    edit.extend_word_left()
-    edit.copy()
-
-copy word right:
-    edit.extend_word_right()
     edit.copy()
 
 
@@ -307,16 +273,6 @@ cut tailor:
     edit.extend_file_end()
     edit.cut()
 
-cut word:
-    edit.select_word()
-
-cut word left:
-    edit.extend_word_left()
-    edit.cut()
-
-cut word right:
-    edit.extend_word_right()
-    edit.cut()
 
 # Paste
 

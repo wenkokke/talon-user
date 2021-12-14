@@ -1,7 +1,5 @@
-tag: user.browser
+tag: browser
 -
-tag(): browser
-
 # browser.address() -> str
 #   Get page URL
 # browser.bookmark()

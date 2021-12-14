@@ -1,8 +1,3 @@
-from talon import Module
-
-mod = Module()
-mod.tag("browser", desc="Tag for enabling browser commands")
-
 # Minimal complete definition:
 #
 # browser.address() -> str

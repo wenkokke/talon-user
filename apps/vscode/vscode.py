@@ -1,0 +1,230 @@
+from talon import Module, Context, actions, ui, ctrl, app
+
+mod = Module()
+
+mod.apps.vscode = """
+os: linux
+and app.name: Code
+"""
+mod.apps.vscode = """
+os: mac
+and app.bundle: com.microsoft.VSCode
+"""
+mod.apps.vscode = """
+os: windows
+and app.name: Visual Studio Code
+os: windows
+and app.exe: Code.exe
+"""
+
+ctx = Context()
+ctx.matches = r"""
+app: vscode
+"""
+
+
+@ctx.action_class("app")
+class AppActions:
+    def tab_open():
+        actions.user.vscode("workbench.action.files.newUntitledFile")
+
+    def tab_close():
+        actions.user.vscode("workbench.action.closeActiveEditor")
+
+    def tab_next():
+        actions.user.vscode("workbench.action.nextEditorInGroup")
+
+    def tab_previous():
+        actions.user.vscode("workbench.action.previousEditorInGroup")
+
+    def tab_reopen():
+        actions.user.vscode("workbench.action.reopenClosedEditor")
+
+    def window_close():
+        actions.user.vscode("workbench.action.closeWindow")
+
+    def window_open():
+        actions.user.vscode("workbench.action.newWindow")
+
+    def preferences():
+        actions.user.vscode("workbench.action.openGlobalSettings")
+
+
+@ctx.action_class("code")
+class CodeActions:
+    def toggle_comment():
+        actions.user.vscode("editor.action.commentLine")
+
+    def complete():
+        actions.user.vscode("editor.action.triggerSuggest")
+
+
+@ctx.action_class("edit")
+class EditActions:
+    # overwrite default edit commands
+    def save():
+        actions.user.vscode("workbench.action.files.save")
+
+    def save_all():
+        actions.user.vscode("workbench.action.files.saveAll")
+
+    def line_swap_up():
+        actions.user.vscode("editor.action.moveLinesUpAction")
+
+    def line_swap_down():
+        actions.user.vscode("editor.action.moveLinesDownAction")
+
+    def line_clone():
+        actions.user.vscode("editor.action.copyLinesDownAction")
+
+    def line_insert_up():
+        actions.user.vscode("editor.action.insertLineBefore")
+
+    def line_insert_down():
+        actions.user.vscode("editor.action.insertLineAfter")
+
+    def delete_line():
+        actions.user.vscode("editor.action.deleteLines")
+
+    def indent_more():
+        actions.user.vscode("editor.action.indentLines")
+
+    def indent_less():
+        actions.user.vscode("editor.action.outdentLines")
+
+    # support for user.line_commands
+    def extend_line(n: int):
+        actions.user.vscode("andreas.selectTo", n)
+
+    def jump_line(n: int):
+        actions.user.vscode("workbench.action.gotoLine")
+        actions.insert(n)
+        actions.key("enter")
+        actions.edit.line_start()
+
+    # support for user.find
+    def find_next():
+        actions.user.vscode("editor.action.nextMatchFindAction")
+
+    def find_previous():
+        actions.user.vscode("editor.action.previousMatchFindAction")
+
+    # support for user.zoom
+    def zoom_in():
+        actions.user.vscode("workbench.action.zoomIn")
+
+    def zoom_out():
+        actions.user.vscode("workbench.action.zoomOut")
+
+    def zoom_reset():
+        actions.user.vscode("workbench.action.zoomReset")
+
+@ctx.action_class("user")
+class UserActions:
+    # support for user.splits
+    def split_clear_all():
+        actions.user.vscode("workbench.action.editorLayoutSingle")
+
+    def split_clear():
+        actions.user.vscode("workbench.action.joinTwoGroups")
+
+    def split_flip():
+        actions.user.vscode("workbench.action.toggleEditorGroupLayout")
+
+    def split_last():
+        actions.user.vscode("workbench.action.focusLeftGroup")
+
+    def split_next():
+        actions.user.vscode_and_wait("workbench.action.focusRightGroup")
+
+    def split_window_down():
+        actions.user.vscode("workbench.action.moveEditorToBelowGroup")
+
+    def split_window_horizontally():
+        actions.user.vscode("workbench.action.splitEditorOrthogonal")
+
+    def split_window_left():
+        actions.user.vscode("workbench.action.moveEditorToLeftGroup")
+
+    def split_window_right():
+        actions.user.vscode("workbench.action.moveEditorToRightGroup")
+
+    def split_window_up():
+        actions.user.vscode("workbench.action.moveEditorToAboveGroup")
+
+    def split_window_vertically():
+        actions.user.vscode("workbench.action.splitEditor")
+
+    def split_window():
+        actions.user.vscode("workbench.action.splitEditor")
+
+    # support for user.multiple_cursor
+    def multi_cursor_add_above():
+        actions.user.vscode("editor.action.insertCursorAbove")
+
+    def multi_cursor_add_below():
+        actions.user.vscode("editor.action.insertCursorBelow")
+
+    def multi_cursor_add_to_line_ends():
+        actions.user.vscode("editor.action.insertCursorAtEndOfEachLineSelected")
+
+    def multi_cursor_disable():
+        actions.key("escape")
+
+    def multi_cursor_enable():
+        # NOTE: vscode has no explicit mode for multiple cursors
+        actions.skip()
+
+    def multi_cursor_select_all_occurrences():
+        actions.user.vscode("editor.action.selectHighlights")
+
+    def multi_cursor_select_fewer_occurrences():
+        actions.user.vscode("cursorUndo")
+
+    def multi_cursor_select_more_occurrences():
+        actions.user.vscode("editor.action.addSelectionToNextFindMatch")
+
+    def multi_cursor_skip_occurrence():
+        actions.user.vscode("editor.action.moveSelectionToNextFindMatch")
+
+    # support for user.snippets
+    def snippet_search(text: str):
+        actions.user.vscode("editor.action.insertSnippet")
+        actions.insert(text)
+
+    def snippet_insert(text: str):
+        """Inserts a snippet"""
+        actions.user.vscode("editor.action.insertSnippet")
+        actions.insert(text)
+        actions.key("enter")
+
+    def snippet_create():
+        """Triggers snippet creation"""
+        actions.user.vscode("workbench.action.openSnippets")
+
+    # support for user.find
+    def find_file(text: str = None):
+        actions.user.vscode("workbench.action.quickOpen")
+        if text:
+            actions.sleep("50ms")
+            actions.insert(text)
+
+    def find_everywhere(text: str = None):
+        actions.user.vscode("workbench.action.findInFiles")
+        if text:
+            actions.sleep("50ms")
+            actions.insert(text)
+
+    def find_replace(text: str = None):
+        """Find and replace in current file/editor"""
+        actions.user.vscode("editor.action.startFindReplaceAction")
+        if text:
+            actions.sleep("50ms")
+            actions.insert(text)
+
+    def find_replace_everywhere(text: str = None):
+        """Find and replace in entire project/all files"""
+        actions.user.vscode("workbench.action.replaceInFiles")
+        if text:
+            actions.sleep("50ms")
+            actions.insert(text)

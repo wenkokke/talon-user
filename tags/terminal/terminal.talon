@@ -1,6 +1,5 @@
-tag: user.terminal
+tag: terminal
 -
-tag(): terminal
 
 lisa: 
     user.terminal_list_directories()
