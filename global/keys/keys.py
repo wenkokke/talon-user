@@ -70,9 +70,6 @@ ctx.lists["self.key_modifier"] = {
 # Symbols you want available BOTH in dictation and command mode.
 mod.list("key_punctuation", desc="Symbols for inserting punctuation into text")
 ctx.lists["self.key_punctuation"] = {
-    "dot": ".",
-    "dash": "-",
-    "prime": "'",
     "ampersand": "&",
     "back tick": "`",
     "comma": ",",
@@ -97,6 +94,9 @@ ctx.lists["self.key_punctuation"] = {
 # Symbols available in command mode, but NOT during dictation.
 mod.list("key_symbol", desc="All symbols from the keyboard")
 ctx.lists["self.key_symbol"] = {
+    "dot": ".",
+    "dash": "-",
+    "prime": "'",
     "brick": "`",
     "slash": "/",
     "backslash": "\\",
