@@ -28,3 +28,10 @@ def on_ready() -> None:
 
 
 app.register("ready", on_ready)
+
+
+def on_launch() -> None:
+    set_keybow2040_talon_led("-sleep")
+
+
+app.register("launch", on_launch)
