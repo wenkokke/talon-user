@@ -1,0 +1,34 @@
+code.complete()
+  Trigger code autocomplete
+code.extend_scope_end()
+  Extend selection to end of current scope
+code.extend_scope_in()
+  Extend selection to start of first inner scope
+code.extend_scope_next()
+  Extend selection to start of next sibling scope
+code.extend_scope_out()
+  Extend selection to start of outer scope
+code.extend_scope_previous()
+  Extend selection to start of previous sibling scope
+code.extend_scope_start()
+  Extend selection to start of current scope
+code.language() -> str
+  Return the active programming language
+code.rename(name: str)
+  Rename selection to <name>
+code.scope_end()
+  Move cursor to end of current scope
+code.scope_in()
+  Move cursor to start of first inner scope
+code.scope_next()
+  Move cursor to start of next sibling scope
+code.scope_out()
+  Move cursor to start of outer scope
+code.scope_previous()
+  Move cursor to start of previous sibling scope
+code.scope_start()
+  Move cursor to start of current scope
+code.select_scope()
+  Select scope under cursor
+code.toggle_comment()
+  Toggle comments on the current line(s)

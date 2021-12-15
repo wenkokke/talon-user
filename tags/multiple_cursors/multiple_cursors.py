@@ -12,6 +12,12 @@ class multiple_cursor_actions:
     def multi_cursor_disable():
         """Disables multi-cursor mode"""
 
+    def multi_cursor_undo():
+        """Undo the most recent multi-cursor action"""
+
+    def multi_cursor_redo():
+        """Redo the most recent multi-cursor action"""
+
     def multi_cursor_add_above():
         """Adds cursor to line above"""
 

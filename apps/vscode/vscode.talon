@@ -1,5 +1,8 @@
 app: vscode
 -
+tag(): user.code_comment
+tag(): user.code_format
+tag(): user.code_suggest
 tag(): user.find
 tag(): user.line_commands
 tag(): user.multiple_cursors
@@ -8,9 +11,13 @@ tag(): user.splits
 tag(): user.tabs
 tag(): user.zoom
 
+
+
+# Snippets
+snip last:                       user.vscode("jumpToPrevSnippetPlaceholder")
+[snip] next:                     user.vscode("jumpToNextSnippetPlaceholder")
+
 # Language features
-comment:                         code.toggle_comment()
-suggest:                         code.complete()
 format document:                 user.format_document()
 suggest param:                   user.vscode("editor.action.triggerParameterHints")
 imports organize:                user.vscode("editor.action.organizeImports")
@@ -18,21 +25,6 @@ problem next:                    user.vscode("editor.action.marker.nextInFiles")
 problem last:                    user.vscode("editor.action.marker.prevInFiles")
 problem fix:                     user.vscode("problems.action.showQuickFixes")
 refactor this:                   user.vscode("editor.action.refactor")
-
-# Split
-split up:                        user.vscode("workbench.action.moveEditorToAboveGroup")
-split down:                      user.vscode("workbench.action.moveEditorToBelowGroup")
-split left:                      user.vscode("workbench.action.moveEditorToLeftGroup")
-split right:                     user.vscode("workbench.action.moveEditorToRightGroup")
-focus up:                        user.vscode("workbench.action.focusAboveGroup")
-focus down:                      user.vscode("workbench.action.focusBelowGroup")
-focus left:                      user.vscode("workbench.action.focusLeftGroup")
-focus right:                     user.vscode("workbench.action.focusRightGroup")
-split flip:                      user.vscode("workbench.action.toggleEditorGroupLayout")
-split clear:                     user.vscode("workbench.action.joinTwoGroups")
-split clear all:                 user.vscode("workbench.action.editorLayoutSingle")
-cross:                           user.vscode("workbench.action.focusNextGroup")
-open cross:                      key(ctrl-enter)
 
 # Sidebar
 bar (show | hide):               user.vscode("workbench.action.toggleSidebarVisibility")
@@ -84,16 +76,9 @@ fold all:                        user.vscode("editor.foldAll")
 unfold all:                      user.vscode("editor.unfoldAll")
 fold comments:                   user.vscode("editor.foldAllBlockComments")
 
-# Navigation
+# Selection
 take last:                       user.vscode("editor.action.addSelectionToPreviousFindMatch")
 take all these:                  user.vscode("editor.action.selectHighlights")
-cursor nope:                     user.vscode("cursorUndo")
-cursor redo:                     user.vscode("cursorRedo")
-cursor up:                       user.vscode("editor.action.insertCursorAbove")
-cursor down:                     user.vscode("editor.action.insertCursorBelow")
-cursor lines:                    user.vscode("editor.action.insertCursorAtEndOfEachLineSelected")
-cursor expand:                   user.vscode("editor.action.smartSelect.expand")
-cursor shrink:                   user.vscode("editor.action.smartSelect.shrink")
 
 # Find session
 scout sesh [<user.text>]$:
@@ -116,16 +101,8 @@ scout all symbol [<user.text>]$:
     user.vscode("workbench.action.showAllSymbols")
     "{text}"
 
-# Misc
-install extension:               user.vscode("workbench.extensions.action.installVSIX")
-window reload:                   user.vscode("workbench.action.reloadWindow")
-open settings json:              user.vscode("workbench.action.openSettingsJson")
-trim trailing:                   user.vscode("editor.action.trimTrailingWhitespace")
-cursorless record:               user.vscode("cursorless.recordTestCase")
-inspect scope:                   user.vscode("editor.action.inspectTMScopes")
-
-snip last:                       user.vscode("jumpToPrevSnippetPlaceholder")
-[snip] next:                     user.vscode("jumpToNextSnippetPlaceholder")
+open settings json:
+    user.vscode("workbench.action.openSettingsJson")
 
 please [<user.text>]$:
     user.vscode("workbench.action.showCommands")

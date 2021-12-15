@@ -1,29 +1,16 @@
 from talon import Module, Context
-from user.helper import csv
+from user.settings import csv
 
 mod = Module()
 mod.list("file_extension", desc="List of file extensions")
 
 ctx = Context()
-
-header = ["File extension", "Spoken form"]
-
-
-def on_ready_and_change(file_ext_list: list[list[str]]):
-    global ctx
-    file_ext_dict = {}
-    for row in file_ext_list:
-        try:
-            v, k = row
-            file_ext_dict[k] = v
-        except ValueError:
-            (k,) = row
-            file_ext_dict[k] = k
-    ctx.lists["user.file_extension"] = file_ext_dict
-
-
-csv.watch("file_extension.csv", header, on_ready_and_change)
-
+csv.register(
+    csv_file="file_extension.csv",
+    list_name="user.file_extension",
+    column_name="File extension",
+    ctx=ctx,
+)
 
 @mod.capture(rule="dot {user.file_extension}")
 def file_extension(m) -> str:

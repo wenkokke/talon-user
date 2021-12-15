@@ -1,5 +1,11 @@
 tag: user.multiple_cursors
 -
+cursor nope:
+  user.multi_cursor_undo()
+
+cursor redo:
+  user.multi_cursor_redo()
+
 cursor multiple:
   user.multi_cursor_enable()
 

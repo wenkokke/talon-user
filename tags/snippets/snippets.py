@@ -13,9 +13,7 @@ def gui(gui: imgui.GUI):
 
     if "user.snippets" in registry.lists:
         function_list = sorted(registry.lists["user.snippets"][0].keys())
-        # print(str(registry.lists["user.snippets"]))
 
-        # print(str(registry.lists["user.code_functions"]))
         if function_list:
             for i, entry in enumerate(function_list):
                 gui.text("{}".format(entry, function_list))

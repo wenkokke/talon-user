@@ -1,14 +1,14 @@
 Programming language, File extension, Spoken form,   Icon
-agda,                 .agda,          agda,          -
-bash,                 .sh,            bash,          -
-c,                    .c,             see,           -
-csharp,               .cs,            see sharp,     -
-cpp,                  .cpp,           see plus plus, -
-haskell,              .hs,            high school,   -
-javascript,           .js,            java script,   -
-lua,                  .lua,           lua,           -
-markdown,             .md,            mark down,     -
-python,               .py,            python,        -
-talon,                .talon,         talon,         -
-typescript,           .ts,            type script,   -
-vimscript,            .vim,           vim script,    -
+agda,                 .agda,          agda,          icons/agda.png
+bash,                 .sh,            bash,          icons/bash.png
+c,                    .c,             see,           icons/c.png
+csharp,               .cs,            see sharp,     icons/csharp.png
+cpp,                  .cpp,           see plus plus, icons/cplusplus.png
+haskell,              .hs,            high school,   icons/haskell.png
+javascript,           .js,            java script,   icons/javascript.png
+lua,                  .lua,           lua,           icons/lua.png
+markdown,             .md,            mark down,     icons/markdown.png
+python,               .py,            python,        icons/python.png
+talon,                .talon,         talon,         icons/talon.png
+typescript,           .ts,            type script,   icons/typescript.png
+vimscript,            .vim,           vim script,    icons/vim.png

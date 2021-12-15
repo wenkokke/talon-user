@@ -25,14 +25,19 @@ app: vscode
 
 @ctx.action_class("app")
 class AppActions:
-    def tab_open():
-        actions.user.vscode("workbench.action.files.newUntitledFile")
 
+    # support for tabs
     def tab_close():
         actions.user.vscode("workbench.action.closeActiveEditor")
 
+    def tab_detach():
+        pass # don't allow detaching tabs
+
     def tab_next():
         actions.user.vscode("workbench.action.nextEditorInGroup")
+
+    def tab_open():
+        actions.user.vscode("workbench.action.files.newUntitledFile")
 
     def tab_previous():
         actions.user.vscode("workbench.action.previousEditorInGroup")
@@ -40,21 +45,25 @@ class AppActions:
     def tab_reopen():
         actions.user.vscode("workbench.action.reopenClosedEditor")
 
+    # support for windows
     def window_close():
         actions.user.vscode("workbench.action.closeWindow")
 
     def window_open():
         actions.user.vscode("workbench.action.newWindow")
 
+    # support for preferences
     def preferences():
         actions.user.vscode("workbench.action.openGlobalSettings")
 
 
 @ctx.action_class("code")
 class CodeActions:
+    # support for user.code_comment
     def toggle_comment():
         actions.user.vscode("editor.action.commentLine")
 
+    # support for user.code_suggest
     def complete():
         actions.user.vscode("editor.action.triggerSuggest")
 
@@ -119,35 +128,22 @@ class EditActions:
     def zoom_reset():
         actions.user.vscode("workbench.action.zoomReset")
 
+
 @ctx.action_class("user")
 class UserActions:
+    # support for user.code_format
+    def code_format():
+        actions.user.vscode("editor.action.formatDocument")
+
     # support for user.splits
-    def split_clear_all():
-        actions.user.vscode("workbench.action.editorLayoutSingle")
-
-    def split_clear():
-        actions.user.vscode("workbench.action.joinTwoGroups")
-
-    def split_flip():
-        actions.user.vscode("workbench.action.toggleEditorGroupLayout")
-
-    def split_last():
-        actions.user.vscode("workbench.action.focusLeftGroup")
-
-    def split_next():
-        actions.user.vscode_and_wait("workbench.action.focusRightGroup")
-
-    def split_window_down():
-        actions.user.vscode("workbench.action.moveEditorToBelowGroup")
-
-    def split_window_horizontally():
-        actions.user.vscode("workbench.action.splitEditorOrthogonal")
+    def split_window_right():
+        actions.user.vscode("workbench.action.moveEditorToRightGroup")
 
     def split_window_left():
         actions.user.vscode("workbench.action.moveEditorToLeftGroup")
 
-    def split_window_right():
-        actions.user.vscode("workbench.action.moveEditorToRightGroup")
+    def split_window_down():
+        actions.user.vscode("workbench.action.moveEditorToBelowGroup")
 
     def split_window_up():
         actions.user.vscode("workbench.action.moveEditorToAboveGroup")
@@ -155,10 +151,37 @@ class UserActions:
     def split_window_vertically():
         actions.user.vscode("workbench.action.splitEditor")
 
+    def split_window_horizontally():
+        actions.user.vscode("workbench.action.splitEditorOrthogonal")
+
+    def split_flip():
+        actions.user.vscode("workbench.action.toggleEditorGroupLayout")
+
     def split_window():
         actions.user.vscode("workbench.action.splitEditor")
 
+    def split_clear():
+        actions.user.vscode("workbench.action.joinTwoGroups")
+
+    def split_clear_all():
+        actions.user.vscode("workbench.action.editorLayoutSingle")
+
+    def split_next():
+        actions.user.vscode_and_wait("workbench.action.focusRightGroup")
+
+    def split_last():
+        actions.user.vscode("workbench.action.focusLeftGroup")
+
+    # def split_number(index: int):
+    #     """Navigates to a the specified split"""
+
     # support for user.multiple_cursor
+    def multi_cursor_undo():
+        actions.user.vscode("cursorUndo")
+
+    def multi_cursor_redo():
+        actions.user.vscode("cursorRedo")
+
     def multi_cursor_add_above():
         actions.user.vscode("editor.action.insertCursorAbove")
 
