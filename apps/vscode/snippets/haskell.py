@@ -4,14 +4,15 @@ from user.core import csv
 ctx = Context()
 ctx.matches = r"""
 app: vscode
-mode: user.haskell
-mode: user.auto_lang
+tag: user.haskell
+tag: user.auto_lang
 and code.language: haskell
 """
 
+# support for #user.snippets
 csv.register(
     csv_file="code/haskell/snippets_vscode.csv",
-    list_name="user.code_snippets",
+    list_name="user.snippets",
     column_name="Snippet name",
     ctx=ctx,
 )
