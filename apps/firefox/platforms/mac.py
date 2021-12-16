@@ -1,3 +1,5 @@
+from pathlib import Path
+from user.core import applescript
 from talon import Context, actions
 
 ctx = Context()
@@ -7,75 +9,82 @@ app: firefox
 """
 
 
+def firefox_run_applescript(name: str) -> None:
+    """Runs one of the AppleScript scripts in the AppleScript subdirectory."""
+    APPLESCRIPT_DIR = (Path(__file__).parent / "applescript").resolve()
+    return applescript.run(APPLESCRIPT_DIR, name)
+
+
 @ctx.action_class("browser")
 class BrowserActions:
-    @staticmethod
-    def bookmark():
-        actions.key("cmd-d")
+    def address() -> str:
+        return firefox_run_applescript('address')
 
-    @staticmethod
+    def bookmark():
+        actions.key("cmd-shift-d")
+
     def bookmark_tabs():
         actions.key("cmd-shift-d")
 
-    @staticmethod
     def bookmarks():
         actions.key("cmd-alt-b")
-        # action(browser.bookmarks_bar):
-        # 	key(ctrl-shift-b)
 
-    @staticmethod
+    def bookmarks_bar():
+        actions.key("cmd-shift-b")
+
     def focus_address():
         actions.key("cmd-l")
-        # action(browser.focus_page):
 
-    @staticmethod
-    def go_blank():
-        actions.key("cmd-n")
+    def focus_page():
+        actions.browser.focus_address()
+        actions.key('f6')
 
-    @staticmethod
+    def focus_search():
+        actions.key("cmd-k")
+
+    def go(url: str):
+        actions.browser.focus_address()
+        actions.insert(url)
+        actions.edit.enter()
+
     def go_back():
-        actions.key("cmd-left")
+        actions.key("cmd-[")
 
-    @staticmethod
+    def go_blank():
+        actions.browser.go('about:blank')
+
     def go_forward():
-        actions.key("cmd-right")
+        actions.key("cmd-]")
 
-    @staticmethod
     def go_home():
-        actions.key("cmd-shift-h")
+        actions.key("alt-home")
 
-    @staticmethod
     def open_private_window():
         actions.key("cmd-shift-p")
 
-    @staticmethod
     def reload():
         actions.key("cmd-r")
 
-    @staticmethod
     def reload_hard():
         actions.key("cmd-shift-r")
 
-    @staticmethod
-    def reload_hardest():
-        actions.browser.reload_hard()
-
-    @staticmethod
     def show_clear_cache():
         actions.key("cmd-shift-delete")
 
-    @staticmethod
     def show_downloads():
-        actions.key("cmd-shift-j")
+        actions.key("cmd-j")
 
-    @staticmethod
     def show_extensions():
         actions.key("cmd-shift-a")
 
-    @staticmethod
     def show_history():
-        actions.key("cmd-y")
+        actions.key("cmd-shift-h")
 
-    @staticmethod
+    def submit_form():
+        actions.key("enter")
+
+    def title() -> str:
+        return firefox_run_applescript('title')
+
     def toggle_dev_tools():
         actions.key("cmd-alt-i")

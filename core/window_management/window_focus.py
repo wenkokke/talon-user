@@ -36,7 +36,7 @@ def creates_spoken_form_app(name: str) -> str:
         return app_name_overrides[name]
     except KeyError:
         name = name.removesuffix(".exe")
-        name = name.split('-')[0]
+        name = name.split("-")[0]
         name = name.strip()
         name = create_spoken_form(name)
         return name
@@ -48,7 +48,6 @@ def on_ready():
 
 
 app.register("ready", on_ready)
-
 
 
 # Monitor CSV file with application name overrides

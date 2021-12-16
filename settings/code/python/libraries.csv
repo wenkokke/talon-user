@@ -2,7 +2,9 @@ Library                      , Spoken form
 *                            , star
 os
 os                           , operating system
+subprocess
 re                           , regular expressions
+pathlib                      , path lib
 csv                          , csv
 functools                    , funk tools
 itertools                    , iterator tools

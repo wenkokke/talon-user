@@ -1,12 +1,19 @@
-from talon import Module, actions
+from talon import Module, actions, clip
 
 mod = Module()
 
 
 @mod.action_class
 class Actions:
+    def insert_unicode(text: str):
+        """Inserts <text> via the clipboard."""
+        with clip.revert():
+            clip.set_text(text)
+            actions.edit.paste()
+            actions.sleep("150ms")
+
     def insert_string(text: str):
-        """Inserts the string"""
+        """Inserts <text>."""
         insert_string(text, text)
 
     def insert_and_format(text: str, formatters: str):
