@@ -1,0 +1,12 @@
+Library                      , Spoken form
+*                            , star
+os
+os                           , operating system
+re                           , regular expressions
+csv                          , csv
+functools                    , funk tools
+itertools                    , iterator tools
+talon
+user
+user.core                    , user core
+user.core.create_spoken_form , user core create spoken form

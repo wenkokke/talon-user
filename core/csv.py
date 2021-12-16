@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Callable, Optional
 from talon import Module, Context, actions, app, fs
 import csv
-import os
 
 mod = Module()
 

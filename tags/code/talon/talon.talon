@@ -12,7 +12,7 @@ tag(): user.code_operator
 
 # support for #user.code_library
 require {user.code_library}:
-  "tag: {code_library}\n"
+  "tag: {code_library}"
 
 set {user.code_library}:
-  "tag(): {code_library}\n"
+  "tag(): {code_library}"

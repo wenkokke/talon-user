@@ -97,6 +97,7 @@ ctx.lists["self.key_symbol"] = {
     "dot": ".",
     "dash": "-",
     "prime": "'",
+    "space": " ",
     "brick": "`",
     "slash": "/",
     "backslash": "\\",

@@ -14,7 +14,7 @@ and code.language: haskell
 csv.register(
     csv_file="code/haskell/libraries.csv",
     list_name="user.code_library",
-    column_name="Library name",
+    column_name="Library",
     ctx=ctx,
 )
 
