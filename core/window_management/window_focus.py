@@ -26,7 +26,6 @@ def on_app_launch_or_close():
             running_application[spoken_form] = app.name
         else:
             print(f"Could not pronounce {app.name}")
-    print(running_application)
     ctx.lists["self.running_application"] = running_application
 
 
