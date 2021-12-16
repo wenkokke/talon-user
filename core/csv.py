@@ -31,7 +31,6 @@ def register(csv_file: str, list_name: str, column_name: str, ctx: Context) -> N
             except ValueError:
                 (k,) = csv_row
                 csv_dict[k] = k
-        print(csv_dict)
         ctx.lists[list_name] = csv_dict
 
     watch(csv_file, [column_name, "Spoken form"], on_ready_and_change)

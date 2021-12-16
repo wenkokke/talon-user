@@ -3,8 +3,9 @@ Operator, Spoken form
 -       , minus
 *       , times
 /       , divide
+%       , modulo
 ==      , equal
-/=      , not equal
+!=      , not equal
 >       , greater than
 >=      , greater than or equal
 <       , less than

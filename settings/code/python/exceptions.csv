@@ -1,0 +1,65 @@
+Exception                 , Spoken form
+BaseException             , base exception
+SystemExit                , system exit
+KeyboardInterrupt         , keyboard interrupt
+GeneratorExit             , generator exit
+Exception                 , exception
+StopIteration             , stop iteration
+StopAsyncIteration        , stop async iteration
+ArithmeticError           , arithmetic error
+FloatingPointError        , floating point error
+OverflowError             , overflow error
+ZeroDivisionError         , zero division error
+AssertionError            , assertion error
+AttributeError            , attribute error
+BufferError               , buffer error
+EOFError                  , end of file error
+ImportError               , import error
+ModuleNotFoundError       , module not found error
+LookupError               , lookup error
+IndexError                , index error
+KeyError                  , key error
+MemoryError               , memory error
+NameError                 , name error
+UnboundLocalError         , unbound local error
+OSError                   , operating system error
+BlockingIOError           , blocking input output error
+ChildProcessError         , child process error
+ConnectionError           , connection error
+BrokenPipeError           , broken pipe error
+ConnectionAbortedError    , connection aborted error
+ConnectionRefusedError    , connection refused error
+ConnectionResetError      , connection reset error
+FileExistsError           , file exists error
+FileNotFoundError         , file not founderror
+InterruptedError          , interrupted error
+IsADirectoryError         , is a directory error
+NotADirectoryError        , not a directory error
+PermissionError           , permission error
+ProcessLookupError        , process lookup error
+TimeoutError              , timeout error
+ReferenceError            , reference error
+RuntimeError              , runtime error
+NotImplementedError       , not implemented error
+RecursionError            , recursion error
+SyntaxError               , syntax error
+IndentationError          , indentation error
+TabError                  , tab error
+SystemError               , system error
+TypeError                 , type error
+ValueError                , value error
+UnicodeError              , unicode error
+UnicodeDecodeError        , unicode decode error
+UnicodeEncodeError        , unicode encode error
+UnicodeTranslateError     , unicode translate error
+Warning                   , warning
+DeprecationWarning        , deprecation warning
+PendingDeprecationWarning , pending deprecation warning
+RuntimeWarning            , runtime warning
+SyntaxWarning             , syntax warning
+UserWarning               , user warning
+FutureWarning             , future warning
+ImportWarning             , import warning
+UnicodeWarning            , unicode warning
+BytesWarning              , bytes warning
+ResourceWarning           , resource warning

@@ -1,5 +1,5 @@
 from talon import Context, Module
-from user.settings import csv
+from user.core import csv
 
 mod = Module()
 mod.list("abbreviation", desc="Common abbreviations")

@@ -1,11 +1,11 @@
 from talon import Context
-from user.settings import csv
+from user.core import csv
 
 ctx = Context()
 ctx.matches = r"""
 app: vscode
 mode: user.haskell
-mode: user.auto_lang 
+mode: user.auto_lang
 and code.language: haskell
 """
 
