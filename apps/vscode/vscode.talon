@@ -84,13 +84,13 @@ take all these:                  user.vscode("editor.action.selectHighlights")
 scout sesh [<user.text>]$:
     user.vscode_find_recent(text or "")
 
-pop sesh <user.text>$:
-    user.vscode_find_recent(text)
-    key(enter)
+# pop sesh <user.text>$:
+#     user.vscode_find_recent(text)
+#     key(enter)
 
-pop sesh:
-    user.vscode_find_recent("", 1)
-    key(enter)
+# pop sesh:
+#     user.vscode_find_recent("", 1)
+#     key(enter)
 
 # Find a symbol
 scout symbol [<user.text>]$:

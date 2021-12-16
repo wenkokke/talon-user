@@ -26,7 +26,7 @@ app: vscode
 @ctx.action_class("app")
 class AppActions:
 
-    # support for tabs
+    # support for #user.tabs
     def tab_close():
         actions.user.vscode("workbench.action.closeActiveEditor")
 
@@ -45,25 +45,24 @@ class AppActions:
     def tab_reopen():
         actions.user.vscode("workbench.action.reopenClosedEditor")
 
-    # support for windows
+    # support for app
     def window_close():
         actions.user.vscode("workbench.action.closeWindow")
 
     def window_open():
         actions.user.vscode("workbench.action.newWindow")
 
-    # support for preferences
     def preferences():
         actions.user.vscode("workbench.action.openGlobalSettings")
 
 
 @ctx.action_class("code")
 class CodeActions:
-    # support for user.code_comment
+    # support for #user.code_comment
     def toggle_comment():
         actions.user.vscode("editor.action.commentLine")
 
-    # support for user.code_suggest
+    # support for #user.code_suggest
     def complete():
         actions.user.vscode("editor.action.triggerSuggest")
 
@@ -101,7 +100,7 @@ class EditActions:
     def indent_less():
         actions.user.vscode("editor.action.outdentLines")
 
-    # support for user.line_commands
+    # support for #user.line_commands
     def extend_line(n: int):
         actions.user.vscode("andreas.selectTo", n)
 
@@ -111,14 +110,14 @@ class EditActions:
         actions.key("enter")
         actions.edit.line_start()
 
-    # support for user.find
+    # support for #user.find
     def find_next():
         actions.user.vscode("editor.action.nextMatchFindAction")
 
     def find_previous():
         actions.user.vscode("editor.action.previousMatchFindAction")
 
-    # support for user.zoom
+    # support for #user.zoom
     def zoom_in():
         actions.user.vscode("workbench.action.zoomIn")
 
@@ -131,11 +130,11 @@ class EditActions:
 
 @ctx.action_class("user")
 class UserActions:
-    # support for user.code_format
+    # support for #user.code_format
     def code_format():
         actions.user.vscode("editor.action.formatDocument")
 
-    # support for user.splits
+    # support for #user.splits
     def split_window_right():
         actions.user.vscode("workbench.action.moveEditorToRightGroup")
 
@@ -175,7 +174,7 @@ class UserActions:
     # def split_number(index: int):
     #     """Navigates to a the specified split"""
 
-    # support for user.multiple_cursor
+    # support for #user.multiple_cursor
     def multi_cursor_undo():
         actions.user.vscode("cursorUndo")
 
@@ -210,7 +209,7 @@ class UserActions:
     def multi_cursor_skip_occurrence():
         actions.user.vscode("editor.action.moveSelectionToNextFindMatch")
 
-    # support for user.snippets
+    # support for #user.snippets
     def snippet_search(text: str):
         actions.user.vscode("editor.action.insertSnippet")
         actions.insert(text)
@@ -225,7 +224,7 @@ class UserActions:
         """Triggers snippet creation"""
         actions.user.vscode("workbench.action.openSnippets")
 
-    # support for user.find
+    # support for #user.find
     def find_file(text: str = None):
         actions.user.vscode("workbench.action.quickOpen")
         if text:

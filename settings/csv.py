@@ -31,6 +31,7 @@ def register(csv_file: str, list_name: str, column_name: str, ctx: Context) -> N
             except ValueError:
                 (k,) = csv_row
                 csv_dict[k] = k
+        print(csv_dict)
         ctx.lists[list_name] = csv_dict
 
     watch(csv_file, [column_name, "Spoken form"], on_ready_and_change)
@@ -39,6 +40,12 @@ def register(csv_file: str, list_name: str, column_name: str, ctx: Context) -> N
 def watch(
     csv_file: str, header: list[str], cb: Callable[[list[list[str]]], None]
 ) -> None:
+    """Watch a CSV file for changes, and calls a callback with the new values when the file is changed.
+
+    Note:
+        If you simply wish to update a Talon list, see `register`.
+    """
+
     def on_ready():
         csv_path = get_path(csv_file)
         cb(get_csv_list(csv_path, header))
@@ -54,9 +61,7 @@ def watch(
 
 def csv_sanitize(text: str) -> Optional[str]:
     text = text.strip()
-    if text == "-":
-        return None
-    elif get_path(text).exists():
+    if get_path(text).exists():
         return str(get_path(text).absolute())
     else:
         return text

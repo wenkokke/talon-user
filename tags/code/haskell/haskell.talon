@@ -1,13 +1,11 @@
-mode: command
-and mode: user.haskell
-mode: command
-and mode: user.auto_lang
+tag: user.haskell
+tag: user.auto_lang
 and code.language: haskell
 -
 tag(): user.code_library
+tag(): user.code_operator
 
-# import statements
-
+# support for #user.code_library
 import {user.code_library}:
   insert("import {code_library}")
 

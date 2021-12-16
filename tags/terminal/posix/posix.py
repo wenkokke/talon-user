@@ -1,7 +1,7 @@
 from talon import Module, Context, actions
 from os.path import join
 
-# NOTE: activating user.terminal_posix provides support for a portion of user.terminal
+# NOTE: activating #user.terminal_posix provides support for a portion of #terminal
 
 mod = Module()
 mod.tag("terminal_posix", desc="Tag for enabling generic BASH shell commands")

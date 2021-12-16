@@ -1,0 +1,17 @@
+Type     , Spoken form
+bool     , boolean
+int      , integer
+str      , string
+None     , none
+Dict     , dick
+float    , float
+Any      , any
+Tuple    , tuple
+UnionAny , union
+Iterable , iterable
+Vector   , vector
+bytes    , bytes
+Sequence , sequence
+Callable , callable
+List     , list
+NoReturn , no return

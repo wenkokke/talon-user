@@ -5,17 +5,24 @@ mod = Module()
 
 ctx = Context()
 ctx.matches = r"""
-mode: user.haskell
-mode: user.auto_lang
+tag: user.haskell
+tag: user.auto_lang
 and code.language: haskell
 """
 
-# support for code_library
-
+# support for #user.code_library
 csv.register(
     csv_file="code/haskell/libraries.csv",
     list_name="user.code_library",
     column_name="Library name",
+    ctx=ctx,
+)
+
+# support for #user.code_operator
+csv.register(
+    csv_file="code/haskell/operators.csv",
+    list_name="user.code_operator",
+    column_name="Operator",
     ctx=ctx,
 )
 

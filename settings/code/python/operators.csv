@@ -1,0 +1,29 @@
+Operator, Spoken form
++       , plus
+-       , minus
+*       , times
+/       , divide
+==      , equal
+/=      , not equal
+>       , greater than
+>=      , greater than or equal
+<       , less than
+<=      , less than or equal
+and     , and
+or      , or
+&       , bitwise and
+|       , bitwise or
+^       , bitwise X or
+<<      , bitwise left shift
+>>      , bitwise right shift
+=       , assign
++=      , plus assign
+-=      , minus assign
+*=      , times assign
+/=      , divide assign
+%=      , modulo assign
+&=      , bitwise and assign
+|=      , bitwise or assign
+^=      , bitwise X or assign
+<<=     , bitwise left shift assign
+>>=     , bitwise right shift assign

@@ -18,7 +18,7 @@ and app.bundle: com.googlecode.iterm2
 @ctx.action_class("user")
 class Actions:
 
-    # support for tag terminal
+    # support for #terminal
 
     @staticmethod
     def terminal_clear_screen():

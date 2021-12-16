@@ -15,3 +15,5 @@ global:
 tags:
   Contains abstract .talon files which define tags and the .py files which define their associated modules.
 ```
+
+TODO: Reorganize by putting all the files that you're allowed to depend on—e.g. sleep_mode, app_running, language_mode, and text—in core, and enforcing a strict policy that nothing is allowed to depend on anything outside core unless it is behind a tag.

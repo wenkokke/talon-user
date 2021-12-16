@@ -1,11 +1,6 @@
 from typing import Callable
 from talon import Module, actions
 
-
-MODE_CHANGE_HOOKS = []
-
-mod = Module()
-
 # The following built-in actions may be of use:
 #
 # mode.disable(mode: str)
@@ -18,6 +13,10 @@ mod = Module()
 #   Save all active modes
 # mode.toggle(mode: str)
 #   Toggle a mode
+
+MODE_CHANGE_HOOKS = []
+
+mod = Module()
 
 
 @mod.action_class
