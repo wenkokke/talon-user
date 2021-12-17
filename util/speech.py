@@ -1,5 +1,4 @@
-from typing import Mapping
-from talon import registry
+from user.util.talon import active_list
 import re
 
 RE_SNAKE = r"(?<![A-Za-z])([A-Z]?[a-z]+)"
@@ -8,20 +7,9 @@ RE_NUM = r"([0-9])"
 RE_WORD = re.compile(f"{RE_SNAKE}|{RE_CAMEL}|{RE_NUM}")
 
 
-def get_list(list_name: str) -> Mapping[str, str]:
-    result = {}
-    for ctx in registry.active_contexts():
-        try:
-            for k, v in ctx.lists[list_name].items():
-                result[v] = k
-        except KeyError:
-            pass
-    return result
-
-
 def create_spoken_form(text: str) -> str:
-    ALPHABET = get_list("user.key_alphabet")
-    DIGITS = get_list("user.key_number")
+    ALPHABET = active_list("user.key_alphabet")
+    DIGITS = active_list("user.key_number")
     chunks = RE_WORD.finditer(text)
     chunks = [m.group(0) for m in chunks]
     chunks = list(map(str.lower, chunks))

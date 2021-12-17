@@ -9,6 +9,3 @@ csv                          , csv
 functools                    , funk tools
 itertools                    , iterator tools
 talon
-user
-user.util                    , user.util
-user.util.create_spoken_form , user.util create spoken form

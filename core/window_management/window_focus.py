@@ -109,7 +109,7 @@ class Actions:
     def focus_name(name: str, phrase: Phrase = None):
         """Focus application by name"""
         focus_name(name)
-        actions.user.focus_hide()
+        actions.user.help_focus_hide()
         if phrase:
             actions.sleep("200ms")
             actions.user.rephrase(phrase)
@@ -125,15 +125,15 @@ class Actions:
         if index > -1 and index < len(names):
             actions.user.focus_name(names[index])
 
-    def focus_help_toggle():
+    def help_focus_toggle():
         """Shows/hides all running applications"""
         if gui.showing:
-            actions.user.focus_hide()
+            actions.user.help_focus_hide()
         else:
             actions.mode.enable("user.focus")
             gui.show()
 
-    def focus_hide():
+    def help_focus_hide():
         """Hides list of running applications"""
         actions.mode.disable("user.focus")
         gui.hide()
@@ -168,4 +168,4 @@ def gui(gui: imgui.GUI):
         index += 1
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.focus_hide()
+        actions.user.help_focus_hide()

@@ -7,9 +7,6 @@ import re
 mod = Module()
 ctx = Context()
 
-mod.mode("help_formatters", "Mode for showing the formatter help gui")
-
-
 Formatter = Callable[[str], str]
 
 noop = lambda text: text
@@ -112,22 +109,6 @@ def formatters(m) -> str:
     return ",".join(m)
 
 
-@imgui.open()
-def gui(gui: imgui.GUI):
-    gui.text("Formatters")
-    gui.line()
-    formatters = {
-        **ctx.lists["self.formatter_code"],
-        **ctx.lists["self.formatter_prose"],
-    }
-    for name in sorted(set(formatters)):
-        example = actions.user.format_text("one two three", formatters[name])
-        gui.text(f"{name.ljust(30)}{example}")
-    gui.spacer()
-    if gui.button("Hide"):
-        actions.user.formatters_help_toggle()
-
-
 @mod.action_class
 class Actions:
     def format_text(text: str, formatters: str) -> str:
@@ -158,15 +139,6 @@ class Actions:
         text = de_camel(text)
         text = text.lower()
         return text
-
-    def formatters_help_toggle():
-        """Toggle list all formatters gui"""
-        if gui.showing:
-            actions.mode.disable("user.help_formatters")
-            gui.hide()
-        else:
-            gui.show()
-            actions.mode.enable("user.help_formatters")
 
 
 # NOTE: This is different from the definition of a camelCase boundary
