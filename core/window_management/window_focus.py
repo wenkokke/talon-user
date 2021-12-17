@@ -1,8 +1,8 @@
 from talon import Context, Module, app, imgui, ui, actions
 from talon.grammar import Phrase
 from itertools import *
-from user.core import csv
-from user.core.create_spoken_form import *
+from user.util import csv
+from user.util.speech import create_spoken_form
 
 import os
 import re

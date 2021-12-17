@@ -1,5 +1,5 @@
 from talon import Context
-from user.core import csv
+from user.util import csv
 
 ctx = Context()
 ctx.matches = r"""

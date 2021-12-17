@@ -1,5 +1,5 @@
 from pathlib import Path
-from user.core import applescript
+from user.util import applescript
 from talon import Context, actions
 
 ctx = Context()

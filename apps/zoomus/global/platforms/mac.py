@@ -1,7 +1,7 @@
 from talon import Context, actions
 from pathlib import *
 import subprocess
-from user.core import applescript
+from user.util import applescript
 
 
 ctx = Context()

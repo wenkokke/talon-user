@@ -10,5 +10,5 @@ functools                    , funk tools
 itertools                    , iterator tools
 talon
 user
-user.core                    , user core
-user.core.create_spoken_form , user core create spoken form
+user.util                    , user.util
+user.util.create_spoken_form , user.util create spoken form

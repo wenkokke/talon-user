@@ -1,6 +1,6 @@
 from talon import Module, Context, registry
-from user.core import csv
-from user.core.create_spoken_form import create_spoken_form
+from user.util import csv
+from user.util.speech import create_spoken_form
 
 ctx = Context()
 ctx.matches = r"""

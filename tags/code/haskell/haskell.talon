@@ -27,14 +27,14 @@ import {user.code_library} qualified letter:
 
 # equivalent of snippet "data type"
 (deaf|define) data type <user.text>:
-  type_name = user.formatted_text(text, "PUBLIC_CAMEL_CASE")
+  type_name = user.format_text(text, "PUBLIC_CAMEL_CASE")
   insert("data {type_name}")
   edit.line_insert_down()
   insert("= ")
 
 # equivalent of snippet "generalized data type"
 (deaf|define) (gene|generalized) data type <user.text>:
-  type_name = user.formatted_text(text, "PUBLIC_CAMEL_CASE")
+  type_name = user.format_text(text, "PUBLIC_CAMEL_CASE")
   insert("data {type_name} where")
   edit.line_insert_down()
   insert("   :: ")
@@ -43,17 +43,17 @@ import {user.code_library} qualified letter:
 
 # equivalent of snippet "new type"
 (deaf|define) new type <user.text>:
-  type_name = user.formatted_text(text, "PUBLIC_CAMEL_CASE")
+  type_name = user.format_text(text, "PUBLIC_CAMEL_CASE")
   insert("newtype {type_name} = {type_name} ")
 
 # equivalent of snippet "type alias"
 (deaf|define) type alias <user.text>:
-  type_name = user.formatted_text(text, "PUBLIC_CAMEL_CASE")
+  type_name = user.format_text(text, "PUBLIC_CAMEL_CASE")
   insert("type {type_name} = ")
 
 # equivalent of snippet "function"
 (funk|function) <user.text>:
-  function_name = user.formatted_text(text, "PRIVATE_CAMEL_CASE")
+  function_name = user.format_text(text, "PRIVATE_CAMEL_CASE")
   insert("{function_name} :: ")
   edit.line_insert_down()
   insert("{function_name} = _")
@@ -62,12 +62,12 @@ import {user.code_library} qualified letter:
 
 # equivalent of snippet "function type"
 (funk|function) sig <user.text>:
-  function_name = user.formatted_text(text, "PRIVATE_CAMEL_CASE")
+  function_name = user.format_text(text, "PRIVATE_CAMEL_CASE")
   insert("{function_name} :: ")
 
 # equivalent of snippet "function body"
 (funk|function) def <user.text>:
-  function_name = user.formatted_text(text, "PRIVATE_CAMEL_CASE")
+  function_name = user.format_text(text, "PRIVATE_CAMEL_CASE")
   insert("{function_name}  = _")
   edit.left()
   repeat(3)
@@ -108,7 +108,7 @@ ex if:
 
 # equivalent of snippet "let"
 ex let [<user.text>]:
-  function_name = user.formatted_text(text or "_", "PRIVATE_CAMEL_CASE")
+  function_name = user.format_text(text or "_", "PRIVATE_CAMEL_CASE")
   insert("let")
   edit.line_insert_down()
   insert("{function_name} = _")

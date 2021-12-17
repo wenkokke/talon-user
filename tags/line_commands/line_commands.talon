@@ -2,9 +2,6 @@ tag: user.line_commands
 -
 jump <number>:
   edit.jump_line(number)
-
-jump <number> head:
-  edit.jump_line(number)
   edit.line_start()
 
 jump <number> tail:
