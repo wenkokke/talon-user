@@ -34,3 +34,12 @@ is type {user.code_type}:
 returns type {user.code_type}:
     "-> {code_type}"
 
+# snippet for function definition
+(deaf|define) funk <user.text>:
+    function_name = user.format_text(text, "SNAKE_CASE")
+    "def {function_name}():"
+    edit.insert_line_below()
+    edit.up()
+    edit.line_end()
+    edit.left()
+    edit.left()

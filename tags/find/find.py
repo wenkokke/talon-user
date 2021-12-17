@@ -6,6 +6,10 @@ mod.tag("find")
 
 @mod.action_class
 class Actions:
+    def find_close():
+        """Close the find dialogue"""
+        actions.key("escape")
+
     def find_file(text: str = None):
         """Find file by file name"""
 

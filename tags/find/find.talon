@@ -53,7 +53,7 @@ tag: user.find
 
 ^pop <user.text>$:
     edit.find(text)
-    key(escape)
+    user.find_close()
 
 ^pop dock <user.text> [<user.file_extension>]$:
     user.find_file(text + file_extension)
