@@ -51,12 +51,11 @@ tag: user.find
     file_extension = file_extension or ""
     user.find_file(text + file_extension)
 
-# ^pop <user.text>$:
-#     edit.find(text)
-#     key(enter)
+^pop <user.text>$:
+    edit.find(text)
+    key(escape)
 
-# ^pop dock <user.text> [<user.file_extension>]$:
-#     extension = extension or ""
-#     user.find_file(text + extension)
-#     sleep(300ms)
-#     key(enter)
+^pop dock <user.text> [<user.file_extension>]$:
+    user.find_file(text + file_extension)
+    sleep(300ms)
+    key(enter)

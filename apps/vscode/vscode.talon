@@ -11,14 +11,18 @@ tag(): user.splits
 tag(): user.tabs
 tag(): user.zoom
 
+# Alignment
+align by [<user.text>]:
+    user.vscode("align.by.regex")
 
+cursor align:
+    user.vscode("yo1dog.cursor-align.alignCursors")
 
 # Snippets
 snip last:                       user.vscode("jumpToPrevSnippetPlaceholder")
 [snip] next:                     user.vscode("jumpToNextSnippetPlaceholder")
 
 # Language features
-format document:                 user.format_document()
 suggest param:                   user.vscode("editor.action.triggerParameterHints")
 imports organize:                user.vscode("editor.action.organizeImports")
 problem next:                    user.vscode("editor.action.marker.nextInFiles")
@@ -84,13 +88,13 @@ take all these:                  user.vscode("editor.action.selectHighlights")
 scout sesh [<user.text>]$:
     user.vscode_find_recent(text or "")
 
-# pop sesh <user.text>$:
-#     user.vscode_find_recent(text)
-#     key(enter)
+pop sesh <user.text>$:
+    user.vscode_find_recent(text)
+    key(enter)
 
-# pop sesh:
-#     user.vscode_find_recent("", 1)
-#     key(enter)
+pop sesh:
+    user.vscode_find_recent("", 1)
+    key(enter)
 
 # Find a symbol
 scout symbol [<user.text>]$:
