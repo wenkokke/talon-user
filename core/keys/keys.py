@@ -80,15 +80,9 @@ ctx.lists["self.key_punctuation"] = {
     "forward slash": "/",
     "question mark": "?",
     "exclamation mark": "!",
-    "exclamation point": "!",
     "asterisk": "*",
     "hash sign": "#",
     "percent sign": "%",
-
-    # Currencies
-    "euro sign": "€",
-    "dollar sign": "$",
-    "pound sign": "£",
 }
 
 # Symbols available in command mode, but NOT during dictation.
@@ -129,13 +123,8 @@ ctx.lists["self.key_symbol"] = {
     "drip": ",",
     "at sign": "@",
     "hash": "#",
-    "near dash": "–", # en dash
-    "made dash": "—", # em dash
-
-    # Currencies
-    "euro": "€",
-    "dollar": "$",
-    "pound": "£",
+    # "near dash": "–", # en dash
+    # "made dash": "—", # em dash
 }
 
 @mod.capture(rule="{self.key_modifier}+")

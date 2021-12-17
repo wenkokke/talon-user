@@ -1,8 +1,6 @@
 # Formatted code phrase: "camel hello there" -> helloThere
 <user.formatters_code> <user.text> [over]:
     user.insert_and_format(text, formatters_code)
-strict <user.formatters_code> <user.text>$:
-    user.insert_and_format(text, formatters_code)
 
 # Formatted prose phrase: "sentence hello there" -> Hello there
 {user.formatter_prose} <user.prose>$:

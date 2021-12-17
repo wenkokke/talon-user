@@ -24,7 +24,7 @@ def words(m) -> str:
     """A sequence of words, including user-defined vocabulary."""
     return format_phrase(m)
 
-@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <phrase>)+")
+@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | <phrase>)+")
 def text(m) -> str:
     """Sequence of words, including user-defined vocabulary, abbreviations and spelling."""
     return format_phrase(m)

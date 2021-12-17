@@ -1,3 +1,6 @@
+from __future__ import annotations
+from itertools import chain, repeat
+from typing import Callable
 from talon import Module, Context, actions, imgui
 import re
 
@@ -6,50 +9,56 @@ ctx = Context()
 
 mod.mode("help_formatters", "Mode for showing the formatter help gui")
 
-formatters_dict = {
-    "NOOP": lambda text: text,
-    "TRAILING_PADDING": lambda text: f"{text} ",
-    "ALL_CAPS": lambda text: text.upper(),
-    "ALL_LOWERCASE": lambda text: text.lower(),
-    "DOUBLE_QUOTED_STRING": lambda text: surround(text, '"'),
-    "SINGLE_QUOTED_STRING": lambda text: surround(text, "'"),
-    # Splitting formatters
-    "REMOVE_FORMATTING": lambda text: format_words(text, split, " ", lower, lower),
-    "CAPITALIZE_ALL_WORDS": lambda text: format_words(
-        text, split, " ", capitalize, capitalize
-    ),
-    "CAPITALIZE_FIRST_WORD": lambda text: format_words(text, split, " ", capitalize),
-    "CAMEL_CASE": lambda text: format_words(
-        text, split_no_symbols, "", lower, capitalize
-    ),
-    "PASCAL_CASE": lambda text: format_words(
-        text, split_no_symbols, "", capitalize, capitalize
-    ),
-    "SNAKE_CASE": lambda text: format_words(text, split_no_symbols, "_", lower, lower),
-    "ALL_CAPS_SNAKE_CASE": lambda text: format_words(
-        text, split_no_symbols, "_", upper, upper
-    ),
-    "DASH_SEPARATED": lambda text: format_words(
-        text, split_no_symbols, "-", lower, lower
-    ),
-    "DOT_SEPARATED": lambda text: format_words(
-        text, split_no_symbols, ".", lower, lower
-    ),
-    "SLASH_SEPARATED": lambda text: format_words(
-        text, split_no_symbols, "/", lower, lower
-    ),
-    "DOUBLE_UNDERSCORE": lambda text: format_words(
-        text, split_no_symbols, "__", lower, lower
-    ),
-    "DOUBLE_COLON_SEPARATED": lambda text: format_words(
-        text, split_no_symbols, "::", lower, lower
-    ),
-    "NO_SPACES": lambda text: format_words(text, split_no_symbols, ""),
-    "COMMA_SEPARATED": lambda text: format_words(text, split, ", "),
-}
 
-formatters_no_unformat = {
-    "COMMA_SEPARATED",
+Formatter = Callable[[str], str]
+
+noop = lambda text: text
+lower = str.lower
+upper = str.upper
+capitalize = str.capitalize
+
+
+def surround(char: str) -> Formatter:
+    return lambda text: f"{char}{text}{char}"
+
+
+def suffix(text_suffix: str) -> Formatter:
+    return lambda text: f"{text}{text_suffix}"
+
+
+def formatter(delimiter: str, *formatters: Formatter) -> Formatter:
+    """
+    Create a formatter from a delimiter and a list of formatters.
+
+    Each of the formatters will be applied to successive words,
+    and the last one will be repeated for the rest of the words.
+    """
+    formatters = chain(formatters, repeat(formatters[-1]))
+    return lambda text: delimiter.join(
+        formatter(word) for formatter, word in zip(formatters, text.split())
+    )
+
+
+formatters_dict = {
+    "NOOP": noop,
+    "TRAILING_PADDING": suffix(" "),
+    "ALL_CAPS": upper,
+    "ALL_LOWERCASE": lower,
+    "DOUBLE_QUOTED_STRING": surround('"'),
+    "SINGLE_QUOTED_STRING": surround("'"),
+    "REMOVE_FORMATTING": formatter(" ", lower),
+    "CAPITALIZE_ALL_WORDS": formatter(" ", capitalize),
+    "CAPITALIZE_FIRST_WORD": formatter(" ", capitalize, noop),
+    "CAMEL_CASE": formatter("", lower, capitalize),
+    "PASCAL_CASE": formatter("", capitalize),
+    "SNAKE_CASE": formatter("_", lower),
+    "ALL_CAPS_SNAKE_CASE": formatter("_", upper),
+    "DASH_SEPARATED": formatter("-", lower),
+    "DOT_SEPARATED": formatter(".", lower),
+    "SLASH_SEPARATED": formatter("/", lower),
+    "DOUBLE_UNDERSCORE": formatter("__", lower),
+    "DOUBLE_COLON_SEPARATED": formatter("::", lower),
+    "NO_SPACES": formatter("", noop),
 }
 
 # This is the mapping from spoken phrases to formatters
@@ -59,7 +68,6 @@ ctx.lists["self.formatter_code"] = {
     "lower": "ALL_LOWERCASE",
     "dubstring": "DOUBLE_QUOTED_STRING",
     "string": "SINGLE_QUOTED_STRING",
-    # Splitting formatters
     "title": "CAPITALIZE_ALL_WORDS",
     "unformat": "REMOVE_FORMATTING",
     "camel": "CAMEL_CASE",
@@ -78,8 +86,8 @@ mod.list("formatter_prose", desc="List of prose formatters")
 ctx.lists["self.formatter_prose"] = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST_WORD",
-    "dubstring sentence": "DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
-    "string sentence": "SINGLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
+    "dubquote": "DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
+    "quote": "SINGLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
 }
 
 
@@ -91,25 +99,16 @@ ctx.lists["self.formatter_word"] = {
     "leap": "TRAILING_PADDING,CAPITALIZE_FIRST_WORD",
 }
 
-mod.list(
-    "formatter_hidden", desc="List of hidden formatters. Are only used for reformat"
-)
-ctx.lists["self.formatter_hidden"] = {
-    "list": "COMMA_SEPARATED",
-}
-
 
 @mod.capture(rule="{self.formatter_code}+")
 def formatters_code(m) -> str:
-    "Returns a comma-separated string of formatters e.g. 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'"
+    """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m.formatter_code_list)
 
 
-@mod.capture(
-    rule="({self.formatter_code} | {self.formatter_prose} | {self.formatter_hidden})+"
-)
+@mod.capture(rule="({self.formatter_code} | {self.formatter_prose})+")
 def formatters(m) -> str:
-    "Returns a comma-separated string of formatters e.g. 'SNAKE,DUBSTRING'"
+    """Return a comma-separated string of formatters e.g. 'SNAKE,DUBSTRING'"""
     return ",".join(m)
 
 
@@ -122,9 +121,8 @@ def gui(gui: imgui.GUI):
         **ctx.lists["self.formatter_prose"],
     }
     for name in sorted(set(formatters)):
-        gui.text(
-            f"{name.ljust(30)}{actions.user.format_text('one two three', formatters[name])}"
-        )
+        example = actions.user.format_text("one two three", formatters[name])
+        gui.text(f"{name.ljust(30)}{example}")
     gui.spacer()
     if gui.button("Hide"):
         actions.user.formatters_help_toggle()
@@ -133,38 +131,33 @@ def gui(gui: imgui.GUI):
 @mod.action_class
 class Actions:
     def format_text(text: str, formatters: str) -> str:
-        """Formats a text according to formatters. formatters is a comma-separated string of formatters (e.g. 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING')"""
+        """
+        Formats a text according to <formatters>.
+
+        Args:
+            formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+        """
+        global formatters_dict
         for fmtr in reversed(formatters.split(",")):
             text = formatters_dict[fmtr](text)
         return text
 
     def formatted_text(text: str, formatters: str) -> str:
-        """Formats a text according to formatters. formatters is a comma-separated string of formatters (e.g. 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING')"""
+        """
+        Formats a text according to <formatters>.
+
+        Args:
+            formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+        """
         return actions.user.format_text(text, formatters)
 
-    def unformat_text(text: str, formatters: str = None) -> str:
+    def unformat_text(text: str) -> str:
         """Remove format from text"""
-        # Some formatters don't use unformat before
-        if formatters in formatters_no_unformat:
-            return text
-        # Remove quotes
         text = de_string(text)
-        # Split on delimiters. A delimiter char followed by a blank space is no delimiter.
-        result = re.sub(r"[-_.:/](?!\s)+", " ", text)
-        # Split camel case. Including numbers
-        result = actions.user.de_camel(result)
-        # Delimiter/camel case successfully split. Lower case to restore "original" text.
-        if text != result:
-            result = result.lower()
-        return result
-
-    def de_camel(text: str) -> str:
-        """Replacing camelCase boundaries with blank space"""
-        return re.sub(
-            r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[a-zA-Z])(?=[0-9])|(?<=[0-9])(?=[a-zA-Z])",
-            " ",
-            text,
-        )
+        text = de_delim(r"[-_.:/](?!\s)+", " ", text)
+        text = de_camel(text)
+        text = text.lower()
+        return text
 
     def formatters_help_toggle():
         """Toggle list all formatters gui"""
@@ -176,48 +169,43 @@ class Actions:
             actions.mode.enable("user.help_formatters")
 
 
-def format_words(text, splitter, delimiter, func_first=None, func_rest=None):
-    words = splitter(text)
-    result = []
-    for i, word in enumerate(words):
-        if i == 0:
-            if func_first:
-                word = func_first(word)
-        elif func_rest:
-            word = func_rest(word)
-        result.append(word)
-    return delimiter.join(result)
+# NOTE: This is different from the definition of a camelCase boundary
+#       in create_spoken_form: this one splits "IOError" as "IO Error",
+#       whereas the other splits it as "I O Error", which is important
+#       when creating a spoken form as each capitalized letter should
+#       be pronounced separately, but which would reformat "IOError"
+#       as i_o_error in snake_case.
+REGEX_CAMEL_BOUNDARY = re.compile(
+    "|".join(
+        (
+            r"(?<=[a-z])(?=[A-Z])",
+            r"(?<=[A-Z])(?=[A-Z][a-z])",
+            r"(?<=[A-Za-z])(?=[0-9])",
+            r"(?<=[0-9])(?=[A-Za-z])",
+        )
+    )
+)
 
 
-def capitalize(text: str) -> str:
-    return text.lower().capitalize()
+def de_camel(text: str) -> str:
+    global REGEX_CAMEL_BOUNDARY
+    return re.sub(REGEX_CAMEL_BOUNDARY, " ", text)
 
 
-def lower(text: str) -> str:
-    return text.lower()
+# NOTE: A delimiter char followed by a blank space is no delimiter.
+REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
 
-def upper(text: str) -> str:
-    return text.upper()
-
-
-def surround(text: str, char: str) -> str:
-    return char + de_string(text) + char
-
-
-def split(text: str) -> str:
-    return text.split()
-
-
-def split_no_symbols(text: str) -> str:
-    return re.sub(r"[^a-zA-Z0-9 ]+", "", text).split()
+def de_delim(text: str) -> str:
+    global REGEX_DELIMITER
+    return re.sub(r"[-_.:/](?!\s)+", " ", text)
 
 
 def de_string(text: str) -> str:
-    if text[0] == "'" or text[0] == '"':
-        text = text[1:]
-    if text[-1] == "'" or text[-1] == '"':
-        text = text[:-1]
+    if text.startswith('"') and text.endswith('"'):
+        return text[1:-1]
+    if text.startswith("'") and text.endswith("'"):
+        return text[1:-1]
     return text
 
 

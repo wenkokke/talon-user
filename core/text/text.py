@@ -46,11 +46,10 @@ class Actions:
 
     def reformat_text(text: str, formatters: str) -> str:
         """Reformat the text. Used by Cursorless"""
-        lines = text.split("\n")
-        for i in range(len(lines)):
-            unformatted = actions.user.unformat_text(lines[i], formatters)
-            lines[i] = actions.user.format_text(unformatted, formatters)
-        return "\n".join(lines)
+        return "\n".join(
+            actions.user.format_text(actions.user.unformat_text(line), formatters)
+            for line in text.splitlines()
+        )
 
 
 def reformat_single_selection(selected: str, formatters: str):
