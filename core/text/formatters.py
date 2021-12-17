@@ -39,6 +39,8 @@ def formatter(delimiter: str, *formatters: Formatter) -> Formatter:
 formatters_dict = {
     "NOOP": noop,
     "TRAILING_PADDING": suffix(" "),
+    "TRAILING_QUESTION_MARK": suffix("?"),
+    "TRAILING_EXCLAMATION_MARK": suffix("!"),
     "ALL_CAPS": upper,
     "ALL_LOWERCASE": lower,
     "DOUBLE_QUOTED_STRING": surround('"'),
@@ -83,10 +85,11 @@ mod.list("formatter_prose", desc="List of prose formatters")
 ctx.lists["self.formatter_prose"] = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST_WORD",
+    "query": "TRAILING_QUESTION_MARK,CAPITALIZE_FIRST_WORD",
+    "shout": "TRAILING_EXCLAMATION_MARK,CAPITALIZE_FIRST_WORD",
     "dubquote": "DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
     "quote": "SINGLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
 }
-
 
 mod.list("formatter_word", desc="List of word formatters")
 ctx.lists["self.formatter_word"] = {
