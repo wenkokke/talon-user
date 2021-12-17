@@ -9,3 +9,9 @@
 ^help scope$:                          user.help_scope_toggle()
 ^help (format|formatters)$:            user.formatters_help_toggle()
 ^help focus$:                          user.focus_help_toggle()
+
+^help hide all$:
+  user.help_alphabet_hide()
+  user.help_search_hide()
+  user.help_scope_hide()
+  user.help_hide()

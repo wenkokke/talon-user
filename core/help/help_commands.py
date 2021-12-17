@@ -307,14 +307,6 @@ def draw_commands_title(gui: imgui.GUI, title: str):
 def draw_commands(gui: imgui.GUI, commands: Iterable[Tuple[str, str]]):
     for key, val in commands:
         gui.text(key)
-        # val = val.split("\n")
-        # if len(val) > 1:
-        #     gui.text("{}:".format(key))
-        #     for line in val:
-        #         gui.text("    {}".format(line))
-        # else:
-        #     gui.text("{}: {}".format(key, val[0]))
-
 
 def reset():
     global current_context_page

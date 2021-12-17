@@ -29,3 +29,15 @@ class Actions:
         else:
             actions.mode.enable("user.help_alphabet")
             gui.show()
+
+    def help_alphabet_show():
+        """Show help alphabet gui"""
+        if not gui.showing:
+            actions.mode.enable("user.help_alphabet")
+            gui.show()
+
+    def help_alphabet_hide():
+        """Hide help alphabet gui"""
+        if gui.showing:
+            actions.mode.disable("user.help_alphabet")
+            gui.hide()

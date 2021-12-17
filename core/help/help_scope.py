@@ -60,3 +60,15 @@ class Actions:
         else:
             actions.mode.enable("user.help_scope")
             gui.show()
+
+    def help_scope_show():
+        """Show help scope gui"""
+        if not gui.showing:
+            actions.mode.enable("user.help_scope")
+            gui.show()
+
+    def help_scope_hide():
+        """Hide help scope gui"""
+        if gui.showing:
+            actions.mode.disable("user.help_scope")
+            gui.hide()

@@ -69,7 +69,6 @@ class Actions:
         actions.mode.disable("user.help_search")
         gui.hide()
 
-
 def format_context_name(context_name: str):
     splits = context_name.split(".")
     if "talon" in splits[-1]:
