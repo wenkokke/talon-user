@@ -8,5 +8,8 @@
 {user.key_number}: key(key_number)
 
 # Press a key with optional modifiers
-press [<user.key_modifiers>] <user.key_unmodified>:
+press <user.key_unmodified>:
+    key(key_unmodified)
+
+press <user.key_modifiers> <user.key_unmodified>:
     key("{key_modifiers}-{key_unmodified}")
