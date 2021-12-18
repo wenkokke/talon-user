@@ -39,7 +39,7 @@ def words(
     """
     formatters = chain(formatters, repeat(formatters[-1]))
     return lambda text: delimiter.join(
-        formatter(word) for formatter, word in zip(formatters, text.split())
+        formatter(word) for formatter, word in zip(formatters, text.split(splitter))
     )
 
 
@@ -54,11 +54,11 @@ formatters_dict = {
     "ALL_LOWERCASE": lower,
     "DOUBLE_QUOTED_STRING": surround('"'),
     "SINGLE_QUOTED_STRING": surround("'"),
-    "REMOVE_FORMATTING": words(lower, delimiter=" "),
-    "CAPITALIZE_ALL_WORDS": words(capitalize, delimiter=" "),
-    "CAPITALIZE_FIRST_WORD": words(capitalize, noop, delimiter=" "),
-    "CAMEL_CASE": words("", lower, capitalize),
-    "PASCAL_CASE": words("", capitalize),
+    "REMOVE_FORMATTING": words(lower),
+    "CAPITALIZE_ALL_WORDS": words(capitalize),
+    "CAPITALIZE_FIRST_WORD": words(capitalize, noop),
+    "CAMEL_CASE": words(lower, capitalize, delimiter=""),
+    "PASCAL_CASE": words(capitalize, delimiter=""),
     "SNAKE_CASE": words(lower, delimiter="_"),
     "ALL_CAPS_SNAKE_CASE": words(upper, delimiter="_"),
     "DASH_SEPARATED": words(lower, delimiter="-"),
@@ -66,7 +66,7 @@ formatters_dict = {
     "SLASH_SEPARATED": words(lower, delimiter="/"),
     "DOUBLE_UNDERSCORE": words(lower, delimiter="__"),
     "DOUBLE_COLON_SEPARATED": words(lower, delimiter="::"),
-    "NO_SPACES": words("", noop),
+    "NO_SPACES": words(noop, delimiter=""),
 }
 
 # This is the mapping from spoken phrases to formatters
