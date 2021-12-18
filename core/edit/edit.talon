@@ -143,6 +143,11 @@ grab tailor:
 
 # Delete
 
+gobble:
+    edit.extend_word_right()
+    edit.extend_word_left()
+	  edit.delete()
+
 wipe goal:
 	  edit.delete()
 
@@ -154,11 +159,11 @@ clear word:
     edit.select_word()
     edit.delete()
 
-clear word left:
+clear (moon|word left):
     edit.extend_word_left()
     edit.delete()
 
-clear word right:
+clear (step|word right)):
     edit.extend_word_right()
     edit.delete()
 
@@ -196,11 +201,11 @@ copy word:
     edit.select_word()
     edit.copy()
 
-copy word left:
+copy (moon|word left):
     edit.extend_word_left()
     edit.copy()
 
-copy word right:
+copy (step|word right):
     edit.extend_word_right()
     edit.copy()
 
@@ -238,11 +243,11 @@ cut word:
     edit.select_word()
     edit.cut()
 
-cut word left:
+cut (moon|word left):
     edit.extend_word_left()
     edit.cut()
 
-cut word right:
+cut (step|word right):
     edit.extend_word_right()
     edit.cut()
 
