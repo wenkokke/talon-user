@@ -101,9 +101,6 @@ class EditActions:
         actions.user.vscode("editor.action.outdentLines")
 
     # support for #user.line_commands
-    def extend_line(n: int):
-        actions.user.vscode("andreas.selectTo", n)
-
     def jump_line(n: int):
         actions.user.vscode("workbench.action.gotoLine")
         actions.insert(n)

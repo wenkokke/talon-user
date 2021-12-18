@@ -267,7 +267,8 @@ class EditActions:
     @staticmethod
     def select_line(n: int = None):
         # If jump_line is not implemented, this action simply selects the current line.
-        actions.edit.jump_line(n)
+        if n:
+            actions.edit.jump_line(n)
         actions.key("cmd-right cmd-shift-left")
 
     @staticmethod
