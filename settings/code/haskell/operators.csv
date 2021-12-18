@@ -20,5 +20,7 @@ Operator, Spoken form
 <=      , less than or equal
 &&      , and
 ||      , or
-<$>     , map
-<*>     , over
+<$>     , F map
+<*>     , F apply
+->      , to
+<-      , from

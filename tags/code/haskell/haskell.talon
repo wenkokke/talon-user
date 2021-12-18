@@ -36,9 +36,8 @@ import {user.code_library} qualified letter:
   insert("import {code_library} qualified as {qualified_name}")
 
 # equivalent of snippet "data type"
-(deaf|define) data type <user.text>:
-  type_name = user.format_text(text, "PASCAL_CASE")
-  insert("data {type_name}")
+(deaf|define) data type <user.code_type>:
+  insert("data {code_type}")
   edit.line_insert_down()
   insert("= ")
 
@@ -48,52 +47,38 @@ add constructor:
 
 
 # equivalent of snippet "generalized data type"
-(deaf|define) (gene|generalized) data type <user.text>:
-  type_name = user.format_text(text, "PASCAL_CASE")
-  insert("data {type_name} where")
+(deaf|define) (gene|generalized) data type <user.code_type>:
+  insert("data {code_type} where")
   edit.line_insert_down()
   insert("   :: ")
   edit.left()
   repeat(4)
 
 # equivalent of snippet "new type"
-(deaf|define) new type <user.text>:
-  type_name = user.format_text(text, "PASCAL_CASE")
-  insert("newtype {type_name} = {type_name} ")
+(deaf|define) new type <user.code_type>:
+  insert("newtype {code_type} = {code_type} ")
 
 # equivalent of snippet "type alias"
-(deaf|define) type alias <user.text>:
-  type_name = user.format_text(text, "PASCAL_CASE")
-  insert("type {type_name} = ")
+(deaf|define) type alias <user.code_type>:
+  insert("type {code_type} = ")
 
 # equivalent of snippet "function"
-(funk|function) <user.text>:
-  function_name = user.format_text(text, "CAMEL_CASE")
-  insert("{function_name} :: ")
+(funk|function) <user.code_function>:
+  insert("{code_function} :: ")
   edit.line_insert_down()
-  insert("{function_name} = _")
+  insert("{code_function} = _")
   edit.up()
   edit.line_end()
 
 # equivalent of snippet "function type"
-(funk|function) sig <user.text>:
-  function_name = user.format_text(text, "CAMEL_CASE")
-  insert("{function_name} :: ")
+(funk|function) sig <user.code_function>:
+  insert("{code_function} :: ")
 
 # equivalent of snippet "function body"
-(funk|function) def <user.text>:
-  function_name = user.format_text(text, "CAMEL_CASE")
-  insert("{function_name}  = _")
+(funk|function) def <user.code_function>:
+  insert("{code_function}  = _")
   edit.left()
   repeat(3)
-
-# equivalent of snippet "to"
-op to:
-  insert(" -> ")
-
-# equivalent of snippet "from"
-op from:
-  insert(" <- ")
 
 # equivalent of snippet "annotated expression"
 has type:
@@ -122,11 +107,10 @@ ex if:
   edit.line_end()
 
 # equivalent of snippet "let"
-ex let [<user.text>]:
-  function_name = user.format_text(text or "_", "CAMEL_CASE")
+ex let <user.code_function>:
   insert("let")
   edit.line_insert_down()
-  insert("{function_name} = _")
+  insert("{code_function} = _")
   edit.line_insert_down()
   insert("in _")
   edit.up()
@@ -139,3 +123,8 @@ ex where:
   insert("where")
   edit.line_insert_down()
 
+# language pragma
+language pragma:
+  insert("{{-# LANGUAGE  #-}}")
+  edit.left()
+  repeat(3)
