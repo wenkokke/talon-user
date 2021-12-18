@@ -136,20 +136,10 @@ class Actions:
         Args:
             formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
-        print(text, formatter_names)
         global formatters_dict
         for formatter_name in reversed(formatter_names.split(",")):
             text = formatters_dict[formatter_name](text)
         return text
-
-    def formatted_text(text: str, formatters: str) -> str:
-        """
-        Formats a text according to <formatters>.
-
-        Args:
-            formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
-        """
-        return actions.user.format_text(text, formatters)
 
     def unformat_text(text: str) -> str:
         """Remove format from text"""
