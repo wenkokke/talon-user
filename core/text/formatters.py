@@ -144,7 +144,7 @@ class Actions:
     def unformat_text(text: str) -> str:
         """Remove format from text"""
         text = de_string(text)
-        text = de_delim(r"[-_.:/](?!\s)+", " ", text)
+        text = de_delim(text)
         text = de_camel(text)
         text = text.lower()
         return text
@@ -179,7 +179,7 @@ REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
 def de_delim(text: str) -> str:
     global REGEX_DELIMITER
-    return re.sub(r"[-_.:/](?!\s)+", " ", text)
+    return re.sub(REGEX_DELIMITER, " ", text)
 
 
 def de_string(text: str) -> str:
