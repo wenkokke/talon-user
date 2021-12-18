@@ -163,7 +163,7 @@ clear (moon|word left):
     edit.extend_word_left()
     edit.delete()
 
-clear (step|word right)):
+clear (step|word right):
     edit.extend_word_right()
     edit.delete()
 
