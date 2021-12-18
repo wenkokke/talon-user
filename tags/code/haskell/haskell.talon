@@ -10,6 +10,14 @@ settings():
   user.code_function_catchall = "CAMEL_CASE"
   user.code_type_catchall = "PASCAL_CASE"
 
+# special cases for #user.code_type
+type list:
+  insert("[]")
+  edit.left()
+
+type list of <user.code_type>:
+  insert("[{code_type}]")
+
 # support for #user.code_library
 import {user.code_library}:
   insert("import {code_library}")
@@ -36,6 +44,11 @@ import {user.code_library} qualified letter:
   insert("data {type_name}")
   edit.line_insert_down()
   insert("= ")
+
+add constructor:
+  edit.line_insert_down()
+  insert("| ")
+
 
 # equivalent of snippet "generalized data type"
 (deaf|define) (gene|generalized) data type <user.text>:
