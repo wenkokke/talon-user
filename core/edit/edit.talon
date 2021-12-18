@@ -24,7 +24,7 @@ file save all:
 nope:
 	edit.undo()
 
-actually yes:
+redo:
 	edit.redo()
 
 # Navigation
@@ -143,13 +143,10 @@ grab tailor:
 
 # Delete
 
-clear (it | that):
-	edit.delete()
+wipe goal:
+	  edit.delete()
 
-clear left:
-    edit.delete()
-
-gobble:
+wipe gore:
     edit.right()
     edit.delete()
 
