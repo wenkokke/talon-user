@@ -1,6 +1,9 @@
 tag: terminal
 -
 
+short <user.letters>:
+    "-{letters} "
+
 lisa: 
     user.terminal_list_directories()
 

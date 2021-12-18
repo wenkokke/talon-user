@@ -1,4 +1,13 @@
-from talon import Module, actions
+from talon import Module, Context, actions
+
+ctx = Context()
+ctx.matches = r"""
+tag: terminal
+"""
+
+ctx.lists["self.formatter_code_extra"] = {
+    'long': "LEADING_DOUBLE_DASH,DASH_SEPARATED,TRAILING_PADDING"
+}
 
 mod = Module()
 @mod.action_class
