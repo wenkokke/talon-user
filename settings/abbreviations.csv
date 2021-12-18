@@ -6,6 +6,7 @@ adv          , advance
 adv          , advanced
 ab           , alberta
 alt          , alternative
+app          , apply
 app          , application
 apps         , applications
 arg          , argument
@@ -117,6 +118,7 @@ lang         , language
 lg           , large
 len          , length
 lib          , library
+lam          , lambda
 mb           , manitoba
 md           , markdown
 max          , maximum
