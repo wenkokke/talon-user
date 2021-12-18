@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import reduce
 from itertools import chain, repeat
 from typing import Callable
 from talon import Module, Context, actions, imgui
@@ -9,21 +10,27 @@ ctx = Context()
 
 Formatter = Callable[[str], str]
 
-noop = lambda text: text
-lower = str.lower
-upper = str.upper
-capitalize = str.capitalize
+noop: Formatter = lambda text: text
+lower: Formatter = str.lower
+upper: Formatter = str.upper
+capitalize: Formatter = str.capitalize
 
 
 def surround(char: str) -> Formatter:
     return lambda text: f"{char}{text}{char}"
 
 
+def prefix(text_prefix: str) -> Formatter:
+    return lambda text: f"{text_prefix}{text}"
+
+
 def suffix(text_suffix: str) -> Formatter:
     return lambda text: f"{text}{text_suffix}"
 
 
-def formatter(delimiter: str, *formatters: Formatter) -> Formatter:
+def words(
+    *formatters: Formatter, delimiter: str = " ", splitter: str = " "
+) -> Formatter:
     """
     Create a formatter from a delimiter and a list of formatters.
 
@@ -41,23 +48,25 @@ formatters_dict = {
     "TRAILING_PADDING": suffix(" "),
     "TRAILING_QUESTION_MARK": suffix("?"),
     "TRAILING_EXCLAMATION_MARK": suffix("!"),
+    "LEADING_SINGLE_DASH": prefix("-"),
+    "LEADING_DOUBLE_DASH": prefix("--"),
     "ALL_CAPS": upper,
     "ALL_LOWERCASE": lower,
     "DOUBLE_QUOTED_STRING": surround('"'),
     "SINGLE_QUOTED_STRING": surround("'"),
-    "REMOVE_FORMATTING": formatter(" ", lower),
-    "CAPITALIZE_ALL_WORDS": formatter(" ", capitalize),
-    "CAPITALIZE_FIRST_WORD": formatter(" ", capitalize, noop),
-    "CAMEL_CASE": formatter("", lower, capitalize),
-    "PASCAL_CASE": formatter("", capitalize),
-    "SNAKE_CASE": formatter("_", lower),
-    "ALL_CAPS_SNAKE_CASE": formatter("_", upper),
-    "DASH_SEPARATED": formatter("-", lower),
-    "DOT_SEPARATED": formatter(".", lower),
-    "SLASH_SEPARATED": formatter("/", lower),
-    "DOUBLE_UNDERSCORE": formatter("__", lower),
-    "DOUBLE_COLON_SEPARATED": formatter("::", lower),
-    "NO_SPACES": formatter("", noop),
+    "REMOVE_FORMATTING": words(lower, delimiter=" "),
+    "CAPITALIZE_ALL_WORDS": words(capitalize, delimiter=" "),
+    "CAPITALIZE_FIRST_WORD": words(capitalize, noop, delimiter=" "),
+    "CAMEL_CASE": words("", lower, capitalize),
+    "PASCAL_CASE": words("", capitalize),
+    "SNAKE_CASE": words(lower, delimiter="_"),
+    "ALL_CAPS_SNAKE_CASE": words(upper, delimiter="_"),
+    "DASH_SEPARATED": words(lower, delimiter="-"),
+    "DOT_SEPARATED": words(lower, delimiter="."),
+    "SLASH_SEPARATED": words(lower, delimiter="/"),
+    "DOUBLE_UNDERSCORE": words(lower, delimiter="__"),
+    "DOUBLE_COLON_SEPARATED": words(lower, delimiter="::"),
+    "NO_SPACES": words("", noop),
 }
 
 # This is the mapping from spoken phrases to formatters
@@ -81,6 +90,9 @@ ctx.lists["self.formatter_code"] = {
     "smash": "NO_SPACES",
 }
 
+# A list of extra code formatters which is meant to be overwritten
+mod.list("formatter_code_extra", desc="List of extra code formatters")
+
 mod.list("formatter_prose", desc="List of prose formatters")
 ctx.lists["self.formatter_prose"] = {
     "say": "NOOP",
@@ -91,6 +103,9 @@ ctx.lists["self.formatter_prose"] = {
     "quote": "SINGLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
 }
 
+# A list of extra prose formatters which is meant to be overwritten
+mod.list("formatter_prose_extra", desc="List of extra prose formatters")
+
 mod.list("formatter_word", desc="List of word formatters")
 ctx.lists["self.formatter_word"] = {
     "word": "ALL_LOWERCASE",
@@ -100,13 +115,13 @@ ctx.lists["self.formatter_word"] = {
 }
 
 
-@mod.capture(rule="{self.formatter_code}+")
+@mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra})+")
 def formatters_code(m) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m.formatter_code_list)
 
 
-@mod.capture(rule="({self.formatter_code} | {self.formatter_prose})+")
+@mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra} | {self.formatter_prose} | {self.formatter_prose_extra})+")
 def formatters(m) -> str:
     """Return a comma-separated string of formatters e.g. 'SNAKE,DUBSTRING'"""
     return ",".join(m)
@@ -114,7 +129,7 @@ def formatters(m) -> str:
 
 @mod.action_class
 class Actions:
-    def format_text(text: str, formatters: str) -> str:
+    def format_text(text: str, formatter_names: str) -> str:
         """
         Formats a text according to <formatters>.
 
@@ -122,8 +137,8 @@ class Actions:
             formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
         global formatters_dict
-        for fmtr in reversed(formatters.split(",")):
-            text = formatters_dict[fmtr](text)
+        for formatter_name in reversed(formatter_names.split(",")):
+            text = formatters_dict[formatter_name](text)
         return text
 
     def formatted_text(text: str, formatters: str) -> str:
