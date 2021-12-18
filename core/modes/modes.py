@@ -23,7 +23,6 @@ mod = Module()
 class Modes:
     """A standard action class for mode changes."""
 
-    @staticmethod
     def toggle_sleep_mode() -> None:
         """Toggle Talon sleep mode."""
         if actions.speech.enabled():
@@ -31,19 +30,16 @@ class Modes:
         else:
             actions.user.talon_wake()
 
-    @staticmethod
     def talon_add_mode_hook(cb: Callable[[str], None]) -> None:
         """Add a callback to run when Talon enters sleep mode."""
         global MODE_CHANGE_HOOKS
         MODE_CHANGE_HOOKS.append(cb)
 
-    @staticmethod
     def talon_clear_mode_hooks() -> None:
         """Removes all existing mode change hooks."""
         global MODE_CHANGE_HOOKS
         MODE_CHANGE_HOOKS.clear()
 
-    @staticmethod
     def talon_sleep() -> None:
         """Sleep Talon."""
         actions.speech.disable()
@@ -51,7 +47,6 @@ class Modes:
         for cb in MODE_CHANGE_HOOKS:
             cb("+sleep")
 
-    @staticmethod
     def talon_wake() -> None:
         """Wake Talon."""
         actions.speech.enable()
@@ -59,7 +54,6 @@ class Modes:
         for cb in MODE_CHANGE_HOOKS:
             cb("-sleep")
 
-    @staticmethod
     def talon_command_mode() -> None:
         """Enter command mode."""
         # actions.mode.disable("sleep")
@@ -69,7 +63,6 @@ class Modes:
         for cb in MODE_CHANGE_HOOKS:
             cb("+command,-dictation")
 
-    @staticmethod
     def talon_dictation_mode() -> None:
         """Enter dictation mode."""
         # actions.mode.disable("sleep")

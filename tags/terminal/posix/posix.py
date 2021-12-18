@@ -14,32 +14,26 @@ tag: user.terminal_posix
 
 @ctx.action_class("user")
 class Actions:
-    @staticmethod
     def terminal_list_directories():
         actions.insert("ls")
         actions.key("enter")
 
-    @staticmethod
     def terminal_list_all_directories():
         actions.insert("ls -lAF -G")
         actions.key("enter")
 
-    @staticmethod
     def terminal_change_directory(path: str):
         actions.insert(f"cd {path}")
         if path:
             actions.key("enter")
 
-    @staticmethod
     def terminal_change_directory_root():
         actions.user.terminal_change_directory("/")
 
-    @staticmethod
     def terminal_open_talon_repl():
         actions.insert(join(actions.path.talon_home(), "bin", "repl"))
         actions.key("enter")
 
-    @staticmethod
     def terminal_open_talon_log():
         actions.insert(join(actions.path.talon_home(), "bin", "tail_log"))
         actions.key("enter")
