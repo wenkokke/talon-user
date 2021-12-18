@@ -4,7 +4,9 @@ mod = Module()
 mod.tag("code_function", desc="Tag which provides a general list for functions")
 mod.list("code_function", desc="List of functions")
 
-setting_code_function_formatter = mod.setting("code_function_formatter", str)
+setting_code_function_formatter = mod.setting(
+    name="code_function_formatter", type=str, default="NOOP"
+)
 
 
 @mod.capture(rule="<user.text>")
