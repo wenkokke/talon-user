@@ -19,8 +19,8 @@ def on_ready_and_change(langs: list[list[str]]):
         if lang and ext:
             if not ext in extension_to_lang or extension_to_lang[ext] != lang:
                 extension_to_lang[ext] = lang
-                mod.tag(lang)
-                mod.tag(f"{lang}_forced")
+                mod.tag(lang, desc=f"A tag for the {lang.capitalize()} language mode.")
+                mod.tag(f"{lang}_forced", desc=f"A tag for the {lang.capitalize()} language mode (forced).")
                 ctx_lang = Context()
                 ctx_lang.matches = f"""
                 tag: user.{lang}_forced
