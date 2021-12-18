@@ -100,6 +100,7 @@ ctx.lists["self.key_symbol"] = {
     "plus": "+",
     "tilde": "~",
     "bang": "!",
+    "down score": "_",
     "under score": "_",
     "question": "?",
     "snow": "*",
