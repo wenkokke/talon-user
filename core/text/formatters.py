@@ -97,10 +97,10 @@ mod.list("formatter_prose", desc="List of prose formatters")
 ctx.lists["self.formatter_prose"] = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST_WORD",
-    "query": "TRAILING_QUESTION_MARK,CAPITALIZE_FIRST_WORD",
-    "shout": "TRAILING_EXCLAMATION_MARK,CAPITALIZE_FIRST_WORD",
-    "dubquote": "DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
-    "quote": "SINGLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD",
+    "query": "CAPITALIZE_FIRST_WORD,TRAILING_QUESTION_MARK",
+    "shout": "CAPITALIZE_FIRST_WORD,TRAILING_EXCLAMATION_MARK",
+    "dubquote": "CAPITALIZE_FIRST_WORD,DOUBLE_QUOTED_STRING",
+    "quote": "CAPITALIZE_FIRST_WORD,SINGLE_QUOTED_STRING",
 }
 
 # A list of extra prose formatters which is meant to be overwritten
@@ -109,9 +109,9 @@ mod.list("formatter_prose_extra", desc="List of extra prose formatters")
 mod.list("formatter_word", desc="List of word formatters")
 ctx.lists["self.formatter_word"] = {
     "word": "ALL_LOWERCASE",
-    "trot": "TRAILING_PADDING,ALL_LOWERCASE",
+    "trot": "ALL_LOWERCASE,TRAILING_PADDING",
     "proud": "CAPITALIZE_FIRST_WORD",
-    "leap": "TRAILING_PADDING,CAPITALIZE_FIRST_WORD",
+    "leap": "CAPITALIZE_FIRST_WORD,TRAILING_PADDING",
 }
 
 
@@ -136,6 +136,7 @@ class Actions:
         Args:
             formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
+        print(text, formatter_names)
         global formatters_dict
         for formatter_name in reversed(formatter_names.split(",")):
             text = formatters_dict[formatter_name](text)

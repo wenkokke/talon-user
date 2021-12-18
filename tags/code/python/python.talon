@@ -8,6 +8,9 @@ tag(): user.code_function
 tag(): user.code_library
 tag(): user.code_operator
 tag(): user.code_type
+settings():
+    user.code_function_formatter = "SNAKE_CASE"
+    user.code_type_formatter = "PASCAL_CASE"
 
 # support for #user.code_exception
 raise {user.code_exception}:
@@ -28,11 +31,11 @@ from {user.code_library}:
     "from {code_library_1} "
 
 # support for #user.code_type
-is type {user.code_type}:
+is type <user.code_type>:
     ": {code_type}"
 
-returns type {user.code_type}:
-    "-> {code_type}"
+returns type <user.code_type>:
+    " -> {code_type}"
 
 # snippet for function definition
 (deaf|define) funk <user.text>:

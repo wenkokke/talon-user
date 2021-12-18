@@ -10,6 +10,14 @@ tag: user.auto_lang
 and code.language: haskell
 """
 
+# support for #user.code_function
+csv.register(
+    csv_file="code/haskell/functions.csv",
+    list_name="user.code_function",
+    column_name="Function",
+    ctx=ctx,
+)
+
 # support for #user.code_library
 csv.register(
     csv_file="code/haskell/libraries.csv",
@@ -26,6 +34,13 @@ csv.register(
     ctx=ctx,
 )
 
+# support for #user.code_type
+csv.register(
+    csv_file="code/haskell/types.csv",
+    list_name="user.code_type",
+    column_name="Type",
+    ctx=ctx,
+)
 @mod.action_class
 class UserActions:
     def haskell_qualified_letter(library: str) -> str:

@@ -1,4 +1,8 @@
 # Formatted code phrase: "camel hello there" -> helloThere
+<user.formatters_code> lit <user.text>$:
+    user.insert_and_format(text, formatters_code)
+<user.formatters_code> lit <user.text> over:
+    user.insert_and_format(text, formatters_code)
 <user.formatters_code> <user.text>$:
     user.insert_and_format(text, formatters_code)
 <user.formatters_code> <user.text> over:
@@ -21,12 +25,6 @@
 <user.formatters> format word:
     edit.select_word()
     user.reformat_selection(formatters)
-
-# Only words, no symbols or numbers
-escape words <user.words>$:
-    user.insert_string(words)
-escape words <user.words> over:
-    user.insert_string(words)
 
 # Single word
 {user.formatter_word} <user.word>:
