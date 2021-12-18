@@ -11,9 +11,16 @@ setting_code_type_catchall = mod.setting(
 
 @mod.capture(rule="<user.text>")
 def code_type_catchall(m) -> str:
-    return actions.user.format_text(str(m), str(setting_code_type_catchall.get()))
+    return actions.user.format_text(str(m), setting_code_type_catchall.get())
 
 
 @mod.capture(rule="{self.code_type} | <user.code_type_catchall>")
 def code_type(m) -> str:
     return str(m)
+
+
+@mod.action_class
+class TypeActions:
+    def insert_type(code_type: str):
+        """Insert <code_type>"""
+        actions.insert(code_type)

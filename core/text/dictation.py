@@ -54,7 +54,7 @@ def capture_to_words(m):
     words = []
     for item in m:
         words.extend(
-            actions.dictate.replace_words(actions.dictate.parse_words(item))
+            actions.user.replace_phrases(actions.dictate.parse_words(item))
             if isinstance(item, grammar.vm.Phrase) else
             item.split(" "))
     return words

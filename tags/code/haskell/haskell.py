@@ -51,3 +51,8 @@ class UserActions:
         """Abbreviate module name using a single word, e.g., Data.Map -> Map."""
         return library.split(".")[-1]
 
+@ctx.action_class("user")
+class TypeActions:
+    def insert_type(code_type: str):
+        """Insert <code_type>"""
+        actions.insert(f"{code_type} ")

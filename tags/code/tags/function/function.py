@@ -17,3 +17,10 @@ def code_function_catchall(m) -> str:
 @mod.capture(rule="{self.code_function} | <user.code_function_catchall>")
 def code_function(m) -> str:
     return str(m)
+
+
+@mod.action_class
+class FunctionActions:
+    def insert_function(code_function: str):
+        """Insert <code_function>"""
+        actions.insert(code_function)

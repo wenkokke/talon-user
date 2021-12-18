@@ -2,10 +2,10 @@ tag: user.code_function
 -
 
 funk {user.code_function}:
-  insert(code_function)
+  user.insert_function(code_function)
 
 funk <user.code_function>$:
-  insert(code_function)
+  user.insert_function(code_function)
 
 funk <user.code_function> over:
-  insert(code_function)
+  user.insert_function(code_function)
