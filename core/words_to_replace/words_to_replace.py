@@ -12,12 +12,13 @@ ctx = Context()
 
 header = ["Word", "Replacement"]
 
-words_to_replace = {}
+phrase_replacer = None
 
 
-def on_ready_and_change(words_and_replacements: list[list[str]]):
-    global ctx, words_to_replace
-    words_to_replace = dict(words_and_replacements)
+def on_ready_and_change(words_to_replace: list[list[str]]):
+    global ctx, phrase_replacer
+    words_to_replace = dict(words_to_replace)
+    phrase_replacer = PhraseReplacer(words_to_replace)
     ctx.settings["dictate.word_map"] = words_to_replace
 
 
@@ -36,7 +37,6 @@ csv.watch("words_to_replace.csv", header, on_ready_and_change)
 #
 # <https://github.com/knausj85/knausj_talon/pull/641>
 
-phrase_replacer = PhraseReplacer(words_to_replace)
 
 mod = Module()
 
@@ -45,6 +45,7 @@ mod = Module()
 class Actions:
     def replace_phrases(words: Sequence[str]) -> Sequence[str]:
         """Replace phrases according to words_to_replace.csv"""
+        global phrase_replacer
         try:
             return phrase_replacer.replace(words)
         except:
