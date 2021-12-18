@@ -53,7 +53,7 @@ class Actions:
 
 
 def reformat_single_selection(selected: str, formatters: str):
-    unformatted = actions.user.unformat_text(selected, formatters)
+    unformatted = actions.user.unformat_text(selected)
     formatted = actions.user.format_text(unformatted, formatters)
     insert_string(formatted, unformatted)
 
@@ -62,7 +62,7 @@ def reformat_multiple_selections(selections: list[str], formatters: str):
     actions.user.homophones_hide()
     formatted_parts = []
     for selected in selections:
-        unformatted = actions.user.unformat_text(selected, formatters)
+        unformatted = actions.user.unformat_text(selected)
         formatted = actions.user.format_text(unformatted, formatters)
         actions.user.history_add_phrase(formatted, unformatted)
         formatted_parts.append(formatted)
