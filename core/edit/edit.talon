@@ -116,10 +116,10 @@ grab right:
 (take|grab) word:
   edit.select_word()
 
-grab word left:
+grab (moon|word left):
   edit.extend_word_left()
 
-grab word right:
+grab (step|word right):
   edit.extend_word_right()
 
 (take|grab) line:
