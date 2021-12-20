@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Callable
 from talon import Module, Context, actions, app, fs
+from logging import warn
 import csv
 
 mod = Module()
@@ -52,11 +53,10 @@ def watch(
             if csv_path.match(path):
                 cb(get_csv_list(csv_path, header))
 
-        parent = csv_path.parent
-        while not parent.exists():
-            parent = parent.parent
-
-        fs.watch(parent, on_change)
+        if csv_path.parent.exists():
+            fs.watch(csv_path.parent, on_change)
+        else:
+            warn(f"csv: Directory not found: {csv_path.parent}")
 
     app.register("ready", on_ready)
 
