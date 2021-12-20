@@ -34,12 +34,12 @@ def delimiter_pair(m) -> list[str]:
 class Actions:
     def delimiters_pair_insert(pair: list[str]):
         """Insert matching pair delimiters"""
-        actions.insert(pair[0] + pair[1])
+        actions.insert(f"{pair[0]}{pair[1]}")
         actions.edit.left()
 
     def delimiters_pair_wrap_selection(pair: list[str]):
         """Wrap selection with matching pair delimiters"""
         selection = actions.edit.selected_text()
-        actions.insert(pair[0])
-        actions.insert(selection)
-        actions.insert(pair[1])
+        text = f"{pair[0]}{selection}{pair[1]}"
+        actions.user.insert_paste(text)
+

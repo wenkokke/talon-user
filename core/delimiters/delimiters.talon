@@ -1,5 +1,5 @@
 # ----- Matching delimiter pairs -----
-<user.delimiter_pair>:
+<user.delimiter_pair> pair:
     user.delimiters_pair_insert(delimiter_pair)
 
 # Wrap selection with delimiter pair
