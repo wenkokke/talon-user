@@ -19,6 +19,5 @@
   - `formatters.py`: `formatter_code`
   - `formatters.py`: `formatter_prose`
   - `formatters.py`: `formatter_word`
-+ Enable VSCode to pick up snippets based on the programming language mode, by subscribing to `languages.csv`
 + Migrate snippet help into its own file, and make it consistent with the remainder of the help functions
 + Debug Talon HUD

@@ -1,3 +1,4 @@
 Library    , Spoken form
-Data.Map   , data map
-Data.List  , data list
+Data.Map   , map
+Data.List  , list
+Data.Text  , text

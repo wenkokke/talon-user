@@ -76,17 +76,19 @@ enc          , encode
 ent          , entry
 enum         , enumerate
 env          , environment
+err          , error
 esc          , escape
 etc          , etcetera
 ex           , example
 exc          , exception
 exec         , execute
+expl         , explicit
 expr         , expression
 ext          , extend
 ext          , extension
 fs           , file system
 fw           , framework
-func         , function
+fun          , function
 lol          , funny
 gen          , generic
 gen          , generate
@@ -96,6 +98,8 @@ ID           , identification
 img          , image
 iat          , import table
 iat          , import address table
+impl         , implicit
+impl         , implementation
 inc          , increment
 info         , information
 init         , initialize
@@ -180,6 +184,7 @@ sp           , service pack
 sid          , session id
 sh           , shell
 sc           , shellcode
+simp         , simple
 sm           , small
 src          , source
 spec         , special
