@@ -146,7 +146,7 @@ grab tailor:
 gobble:
     edit.extend_word_right()
     edit.extend_word_left()
-	  edit.delete()
+    insert(" ")
 
 wipe goal:
 	  edit.delete()
