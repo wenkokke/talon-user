@@ -9,8 +9,9 @@ tag(): user.code_library
 tag(): user.code_operator
 tag(): user.code_type
 settings():
-    user.code_function_catchall = "SNAKE_CASE"
-    user.code_type_catchall = "PASCAL_CASE"
+    user.code_function_catch_all = "SNAKE_CASE"
+    user.code_library_catch_all = "DOT_SEPARATED"
+    user.code_type_catch_all = "PASCAL_CASE"
 
 # support for #user.code_exception
 raise {user.code_exception}:
