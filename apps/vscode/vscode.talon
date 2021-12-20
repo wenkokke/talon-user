@@ -27,7 +27,7 @@ suggest param:                   user.vscode("editor.action.triggerParameterHint
 imports organize:                user.vscode("editor.action.organizeImports")
 problem next:                    user.vscode("editor.action.marker.nextInFiles")
 problem last:                    user.vscode("editor.action.marker.prevInFiles")
-problem fix:                     user.vscode("problems.action.showQuickFixes")
+problem fix:                     user.vscode("editor.action.quickFix")
 refactor this:                   user.vscode("editor.action.refactor")
 
 # Sidebar
