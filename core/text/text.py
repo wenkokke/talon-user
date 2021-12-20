@@ -5,7 +5,7 @@ mod = Module()
 
 @mod.action_class
 class Actions:
-    def insert_unicode(text: str):
+    def insert_paste(text: str):
         """Inserts <text> via the clipboard."""
         with clip.revert():
             clip.set_text(text)
