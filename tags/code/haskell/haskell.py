@@ -41,6 +41,8 @@ csv.register(
     column_name="Type",
     ctx=ctx,
 )
+
+
 @mod.action_class
 class UserActions:
     def haskell_qualified_letter(library: str) -> str:
@@ -50,6 +52,7 @@ class UserActions:
     def haskell_qualified_word(library: str) -> str:
         """Abbreviate module name using a single word, e.g., Data.Map -> Map."""
         return library.split(".")[-1]
+
 
 @ctx.action_class("user")
 class TypeActions:

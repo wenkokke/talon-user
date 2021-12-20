@@ -5,8 +5,26 @@ from typing import Callable
 from talon import Module, Context, actions, imgui
 import re
 
-mod = Module()
-ctx = Context()
+# NOTE: This is different from the definition of a camelCase boundary
+#       in create_spoken_form: this one splits "IOError" as "IO Error",
+#       whereas the other splits it as "I O Error", which is important
+#       when creating a spoken form as each capitalized letter should
+#       be pronounced separately, but which would reformat "IOError"
+#       as i_o_error in snake_case.
+REGEX_CAMEL_BOUNDARY = re.compile(
+    "|".join(
+        (
+            r"(?<=[a-z])(?=[A-Z])",
+            r"(?<=[A-Z])(?=[A-Z][a-z])",
+            r"(?<=[A-Za-z])(?=[0-9])",
+            r"(?<=[0-9])(?=[A-Za-z])",
+        )
+    )
+)
+
+
+# NOTE: A delimiter char followed by a blank space is no delimiter.
+REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
 Formatter = Callable[[str], str]
 
@@ -14,6 +32,10 @@ noop: Formatter = lambda text: text
 lower: Formatter = str.lower
 upper: Formatter = str.upper
 capitalize: Formatter = str.capitalize
+
+
+def alphanum(text: str) -> str:
+    return lambda text: re.sub(r"[A-Za-z0-9]", "", text)
 
 
 def surround(char: str) -> Formatter:
@@ -37,9 +59,11 @@ def words(
     Each of the formatters will be applied to successive words,
     and the last one will be repeated for the rest of the words.
     """
-    formatters = chain(formatters, repeat(formatters[-1]))
     return lambda text: delimiter.join(
-        formatter(word) for formatter, word in zip(formatters, text.split(splitter))
+        formatter(word)
+        for formatter, word in zip(
+            chain(formatters, repeat(formatters[-1])), text.split(splitter)
+        )
     )
 
 
@@ -67,10 +91,25 @@ formatters_dict = {
     "DOUBLE_UNDERSCORE": words(lower, delimiter="__"),
     "DOUBLE_COLON_SEPARATED": words(lower, delimiter="::"),
     "NO_SPACES": words(noop, delimiter=""),
+    "ALPHANUM": alphanum,
 }
+
+mod = Module()
+ctx = Context()
 
 # This is the mapping from spoken phrases to formatters
 mod.list("formatter_code", desc="List of code formatters")
+mod.list(
+    "formatter_code_extra",
+    desc="List of extra code formatters, meant to be overwritten",
+)
+mod.list("formatter_prose", desc="List of prose formatters")
+mod.list(
+    "formatter_prose_extra",
+    desc="List of extra prose formatters, meant to be overwritten",
+)
+mod.list("formatter_word", desc="List of word formatters")
+
 ctx.lists["self.formatter_code"] = {
     "upper": "ALL_CAPS",
     "lower": "ALL_LOWERCASE",
@@ -90,10 +129,6 @@ ctx.lists["self.formatter_code"] = {
     "smash": "NO_SPACES",
 }
 
-# A list of extra code formatters which is meant to be overwritten
-mod.list("formatter_code_extra", desc="List of extra code formatters")
-
-mod.list("formatter_prose", desc="List of prose formatters")
 ctx.lists["self.formatter_prose"] = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST_WORD",
@@ -103,10 +138,6 @@ ctx.lists["self.formatter_prose"] = {
     "quote": "CAPITALIZE_FIRST_WORD,SINGLE_QUOTED_STRING",
 }
 
-# A list of extra prose formatters which is meant to be overwritten
-mod.list("formatter_prose_extra", desc="List of extra prose formatters")
-
-mod.list("formatter_word", desc="List of word formatters")
 ctx.lists["self.formatter_word"] = {
     "word": "ALL_LOWERCASE",
     "trot": "ALL_LOWERCASE,TRAILING_PADDING",
@@ -121,7 +152,9 @@ def formatters_code(m) -> str:
     return ",".join(m)
 
 
-@mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra} | {self.formatter_prose} | {self.formatter_prose_extra})+")
+@mod.capture(
+    rule="({self.formatter_code} | {self.formatter_code_extra} | {self.formatter_prose} | {self.formatter_prose_extra})+"
+)
 def formatters(m) -> str:
     """Return a comma-separated string of formatters e.g. 'SNAKE,DUBSTRING'"""
     return ",".join(m)
@@ -137,6 +170,8 @@ class Actions:
             formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
         global formatters_dict
+        print(f"{text} {formatter_names}")
+        print(formatters_dict)
         for formatter_name in reversed(formatter_names.split(",")):
             text = formatters_dict[formatter_name](text)
         return text
@@ -150,31 +185,9 @@ class Actions:
         return text
 
 
-# NOTE: This is different from the definition of a camelCase boundary
-#       in create_spoken_form: this one splits "IOError" as "IO Error",
-#       whereas the other splits it as "I O Error", which is important
-#       when creating a spoken form as each capitalized letter should
-#       be pronounced separately, but which would reformat "IOError"
-#       as i_o_error in snake_case.
-REGEX_CAMEL_BOUNDARY = re.compile(
-    "|".join(
-        (
-            r"(?<=[a-z])(?=[A-Z])",
-            r"(?<=[A-Z])(?=[A-Z][a-z])",
-            r"(?<=[A-Za-z])(?=[0-9])",
-            r"(?<=[0-9])(?=[A-Za-z])",
-        )
-    )
-)
-
-
 def de_camel(text: str) -> str:
     global REGEX_CAMEL_BOUNDARY
     return re.sub(REGEX_CAMEL_BOUNDARY, " ", text)
-
-
-# NOTE: A delimiter char followed by a blank space is no delimiter.
-REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
 
 def de_delim(text: str) -> str:
@@ -188,22 +201,3 @@ def de_string(text: str) -> str:
     if text.startswith("'") and text.endswith("'"):
         return text[1:-1]
     return text
-
-
-# Test unformat_text
-# tests = {
-#     "say": "hello, I'm ip address 2!",
-#     "sentence": "Hello, I'm ip address 2!",
-#     "allcaps": "HELLO, I'M IP ADDRESS 2!",
-#     "camel": "helloThereIPAddressA2a2",
-#     "Pascal": "HelloThereIPAddressA2a2",
-#     "snake": "hello_there_ip_address_2",
-#     "kebab": "hello-there-ip-address-2",
-#     "packed": "hello::there::ip::address::2",
-#     "dotted": "hello.there.ip.address.2",
-#     "slasher": "hello/there/ip/address/2",
-#     "dunder": "hello__there__ip_address__2"
-# }
-# for key, value in tests.items():
-#     text = actions.user.unformat_text(value)
-#     print(f"{key.ljust(15)}{value.ljust(35)}{text}")

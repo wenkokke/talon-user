@@ -22,16 +22,16 @@ tag: user.find
 ^replace all [<user.text>]$:
     user.find_replace_everywhere(text or "")
 
-^scout case$:
+^scout toggle case$:
     user.find_toggle_match_by_case()
 
-^scout word$:
+^scout toggle word$:
     user.find_toggle_match_by_word()
 
-^scout expression$:
+^scout toggle regex$:
     user.find_toggle_match_by_regex()
 
-^replace case$:
+^replace toggle case$:
     user.find_replace_toggle_preserve_case()
 
 ^scout last$:
