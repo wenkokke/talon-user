@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Callable
 from talon import Module, Context, actions, app, fs
-from logging import warn
+from logging import warning
 import csv
 
 mod = Module()
@@ -56,7 +56,7 @@ def watch(
         if csv_path.parent.exists():
             fs.watch(csv_path.parent, on_change)
         else:
-            warn(f"csv: Directory not found: {csv_path.parent}")
+            warning(f"csv: Directory not found: {csv_path.parent}")
 
     app.register("ready", on_ready)
 
