@@ -10,7 +10,7 @@ ctx = Context()
 # to rewrite words Talon recognized. Entries in word_map don't change the
 # priority with which Talon recognizes some words over others.
 
-header = ["Word", "Replacement"]
+header = ("Word", "Replacement")
 
 phrase_replacer = None
 

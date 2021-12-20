@@ -2,16 +2,16 @@
 from talon import Module, imgui, registry
 
 mod = Module()
-mod.tag("snippets", desc="Tag for enabling code snippet-related commands")
-mod.list("snippets", desc="List of code snippets")
+mod.tag("code_snippet", desc="Tag for enabling code snippet-related commands")
+mod.list("code_snippet", desc="List of code snippets")
 
 
 @imgui.open()
 def gui(gui: imgui.GUI):
     gui.text("snippets")
     gui.line()
-    if "user.snippets" in registry.lists:
-        function_list = sorted(registry.lists["user.snippets"][0].keys())
+    if "user.code_snippet" in registry.lists:
+        function_list = sorted(registry.lists["user.code_snippet"][0].keys())
         if function_list:
             for i, entry in enumerate(function_list):
                 gui.text("{}".format(entry, function_list))
@@ -28,10 +28,19 @@ class Actions:
     def snippet_create():
         """Triggers snippet creation"""
 
-    def snippet_toggle():
+    def help_snippet_toggle():
         """Toggles UI for available snippets"""
         if gui.showing:
             gui.hide()
         else:
             gui.show()
 
+    def help_snippet_show():
+        """Show UI for available snippets"""
+        if not gui.showing:
+            gui.show()
+
+    def help_snippet_hide():
+        """Hide UI for available snippets"""
+        if gui.showing:
+            gui.hide()

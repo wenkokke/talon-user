@@ -5,13 +5,13 @@ mod = Module()
 
 mod.list("lang", desc="List of programming languages.")
 
-header = ["Programming language", "File extension", "Spoken form", "Icon"]
+header = ("Programming language", "File extension", "Spoken form", "Icon")
 
 ctx = Context()
 extension_to_lang = {}
 spoken_form_to_lang = {}
 
-def on_ready_and_change(langs: list[list[str]]):
+def on_ready_and_change(langs: tuple[tuple[str]]):
     global ctx, extension_to_lang
     for lang, ext, spoken_form, icon in langs:
         if spoken_form and lang:

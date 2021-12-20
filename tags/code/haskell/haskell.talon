@@ -1,4 +1,4 @@
-tag: user.haskell
+tag: user.haskell_forced
 tag: user.auto_lang
 and code.language: haskell
 -

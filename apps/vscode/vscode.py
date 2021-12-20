@@ -1,4 +1,5 @@
-from talon import Module, Context, actions, ui, ctrl, app
+from talon import Module, Context, actions
+from user.util import csv
 
 mod = Module()
 
@@ -22,6 +23,28 @@ ctx.matches = r"""
 app: vscode
 """
 
+# support for #user.code_snippet
+header = ("Programming language", "File extension", "Spoken form", "Icon")
+
+def on_ready_and_change(langs: tuple[tuple[str]]):
+    for lang, ext, spoken_form, icon in langs:
+        ctx_for_lang = Context()
+        ctx_for_lang.matches = f"""
+        app: vscode
+        and tag: user.{lang}_forced
+        app: vscode
+        tag: user.auto_lang
+        and code.language: {lang}
+        """
+        # support for #user.snippets
+        csv.register(
+            csv_file=f"code/{lang}/snippets_vscode.csv",
+            list_name="user.code_snippet",
+            column_name="Snippet name",
+            ctx=ctx_for_lang,
+        )
+
+csv.watch("languages.csv", header, on_ready_and_change)
 
 @ctx.action_class("app")
 class AppActions:

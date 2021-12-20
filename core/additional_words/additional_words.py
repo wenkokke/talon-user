@@ -11,21 +11,9 @@ mod = Module()
 mod.list("vocabulary", desc="Additional vocabulary")
 
 ctx = Context()
-
-header = ["Word", "Spoken form"]
-
-
-def on_ready_and_change(additional_words: list[list[str]]):
-    global ctx
-    additional_word_dict = {}
-    for row in additional_words:
-        try:
-            v, k = row
-            additional_word_dict[k] = v
-        except ValueError:
-            (k,) = row
-            additional_word_dict[k] = k
-    ctx.lists["user.vocabulary"] = additional_word_dict
-
-
-csv.watch("additional_words.csv", header, on_ready_and_change)
+csv.register(
+    csv_file="additional_words.csv",
+    list_name="user.vocabulary",
+    column_name="Word",
+    ctx=ctx,
+)

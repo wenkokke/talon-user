@@ -1,10 +1,11 @@
-tag: user.snippets
+tag: user.code_snippet
 -
-snip {user.snippets}:
-  user.snippet_insert(user.snippets)
+
+snip {user.code_snippet}:
+  user.snippet_insert(code_snippet)
 
 snip hunt <user.text>:
-  user.snippet_search(user.text)
+  user.snippet_search(text)
 
 snip hunt:
   user.snippet_search("")
@@ -12,5 +13,5 @@ snip hunt:
 snip create:
   user.snippet_create()
 
-snip helpwhat language noticed:
-  user.snippet_toggle()
+snip help:
+  user.help_snippet_toggle()

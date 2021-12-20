@@ -53,7 +53,7 @@ app.register("ready", on_ready)
 # Monitor CSV file with application name overrides
 app_name_overrides = {}
 
-header = ["Application name", "Override"]
+header = ("Application name", "Override")
 
 
 def on_csv_change(apps: list[list[str]]):

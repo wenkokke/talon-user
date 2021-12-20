@@ -1,4 +1,4 @@
-tag: user.python
+tag: user.python_forced
 tag: user.auto_lang
 and code.language: python
 -

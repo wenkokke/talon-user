@@ -3,7 +3,7 @@ from user.util import csv
 
 ctx = Context()
 ctx.matches = r"""
-tag: user.python
+tag: user.python_forced
 tag: user.auto_lang
 and code.language: python
 """
