@@ -170,8 +170,6 @@ class Actions:
             formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
         global formatters_dict
-        print(f"{text} {formatter_names}")
-        print(formatters_dict)
         for formatter_name in reversed(formatter_names.split(",")):
             text = formatters_dict[formatter_name](text)
         return text
