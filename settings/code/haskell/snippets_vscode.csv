@@ -15,3 +15,16 @@ if                       , if
 let                      , let
 where                    , where
 tuple                    , tuple
+main                     , main
+type family              , type family
+type instance            , type instance
+closed type family       , closed type family
+class                    , class
+instance                 , instance
+has instance             , has instance
+guard                    , guard
+haddock                  , haddock
+haddock post             , haddock post
+case                     , case
+lambda case              , lambda case
+deriving                 , deriving
