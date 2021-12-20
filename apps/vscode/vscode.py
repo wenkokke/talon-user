@@ -1,3 +1,4 @@
+from logging import warning
 from talon import Module, Context, actions
 from user.util import csv
 
@@ -26,6 +27,7 @@ app: vscode
 # support for #user.code_snippet
 header = ("Programming language", "File extension", "Spoken form", "Icon")
 
+
 def on_ready_and_change(langs: tuple[tuple[str]]):
     for lang, ext, spoken_form, icon in langs:
         ctx_for_lang = Context()
@@ -36,15 +38,20 @@ def on_ready_and_change(langs: tuple[tuple[str]]):
         tag: user.auto_lang
         and code.language: {lang}
         """
-        # support for #user.snippets
+        csv_path = f"code/{lang}/snippets_vscode.csv"
         csv.register(
-            csv_file=f"code/{lang}/snippets_vscode.csv",
+            csv_file=csv_path,
             list_name="user.code_snippet",
             column_name="Snippet name",
             ctx=ctx_for_lang,
+            on_error=lambda: warning(
+                f"Could not find snippet list for {lang} at {csv_path}"
+            ),
         )
 
+
 csv.watch("languages.csv", header, on_ready_and_change)
+
 
 @ctx.action_class("app")
 class AppActions:
@@ -54,7 +61,7 @@ class AppActions:
         actions.user.vscode("workbench.action.closeActiveEditor")
 
     def tab_detach():
-        pass # don't allow detaching tabs
+        pass  # don't allow detaching tabs
 
     def tab_next():
         actions.user.vscode("workbench.action.nextEditorInGroup")

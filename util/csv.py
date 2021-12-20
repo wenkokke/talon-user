@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 from talon import Module, Context, actions, app, fs
-from logging import warning
 import csv
 
 mod = Module()
@@ -14,7 +13,13 @@ settings_directory = mod.setting(
 )
 
 
-def register(csv_file: str, list_name: str, column_name: str, ctx: Context) -> None:
+def register(
+    csv_file: str,
+    list_name: str,
+    column_name: str,
+    ctx: Context,
+    on_error: Optional[Callable[[], None]] = None,
+) -> None:
     """Register a CSV file as the source for a Talon list.
 
     Note:
@@ -33,11 +38,14 @@ def register(csv_file: str, list_name: str, column_name: str, ctx: Context) -> N
                 csv_dict[k] = k
         ctx.lists[list_name] = csv_dict
 
-    watch(csv_file, (column_name, "Spoken form"), on_ready_and_change)
+    watch(csv_file, (column_name, "Spoken form"), on_ready_and_change, on_error)
 
 
 def watch(
-    csv_file: str, header: tuple[str], cb: Callable[[tuple[tuple[str]]], None]
+    csv_file: str,
+    header: tuple[str],
+    on_success: Callable[[tuple[tuple[str]]], None],
+    on_error: Optional[Callable[[], None]] = None,
 ) -> None:
     """Watch a CSV file for changes, and calls a callback with the new values when the file is changed.
 
@@ -47,16 +55,16 @@ def watch(
 
     def on_ready():
         csv_path = get_path(csv_file)
-        cb(get_csv_list(csv_path, header))
+        if csv_path.exists():
+            on_success(get_csv_list(csv_path, header))
 
-        def on_change(path, flags):
-            if csv_path.match(path):
-                cb(get_csv_list(csv_path, header))
+            def on_change(path, flags):
+                if csv_path.match(path):
+                    on_success(get_csv_list(csv_path, header))
 
-        if csv_path.parent.exists():
             fs.watch(csv_path.parent, on_change)
-        else:
-            warning(f"csv: Directory not found: {csv_path.parent}")
+        elif on_error:
+            on_error()
 
     app.register("ready", on_ready)
 
@@ -81,7 +89,9 @@ def get_csv_list(csv_path: Path, header: tuple[str] = []) -> tuple[tuple[str]]:
     if csv_path.exists():
         with csv_path.open(newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
-            csv_header, *csv_rows = tuple(tuple(csv_sanitize(fld) for fld in row) for row in reader)
+            csv_header, *csv_rows = tuple(
+                tuple(csv_sanitize(fld) for fld in row) for row in reader
+            )
             assert header == csv_header
             return tuple(csv_rows)
     else:
