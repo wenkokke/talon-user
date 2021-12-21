@@ -7,9 +7,10 @@ RE_CAMEL = r"(?<=[A-Za-z])([A-Z][a-z]*)"
 RE_NUM = r"([0-9])"
 RE_WORD = re.compile(f"{RE_SNAKE}|{RE_CAMEL}|{RE_NUM}")
 DIGITS = {str(k): v for k, v in zip(range(0,9),numbers.digits)}
+ALPHABET = active_list("user.key_alphabet")
 
 def create_spoken_form(text: str) -> str:
-    ALPHABET = active_list("user.key_alphabet")
+    global ALPHABET, DIGITS
     chunks = RE_WORD.finditer(text)
     chunks = [m.group(0) for m in chunks]
     chunks = list(map(str.lower, chunks))
