@@ -231,7 +231,8 @@ class EditActions:
             a, b = b, a
         # If jump_line is not implemented, this action simply selects
         # a number of lines equal to the difference between <a> and <b>.
-        actions.edit.select_line(a)
+        actions.edit.jump_line(a)
+        actions.edit.line_start()
         for _ in range(0, b - a):
             actions.edit.extend_line_down()
         actions.edit.extend_line_end()

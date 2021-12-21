@@ -148,7 +148,7 @@ gobble:
     edit.extend_word_left()
     insert(" ")
 
-wipe goal:
+wipe [goal]:
 	  edit.delete()
 
 wipe gore:
