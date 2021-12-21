@@ -1,7 +1,23 @@
 tag: browser
 -
-# browser.address() -> str
-#   Get page URL
+copy address:
+  clip.set_text(browser.address())
+
+focus address:
+  browser.focus_page()
+
+focus page:
+  browser.focus_page()
+
+reload:
+  browser.reload()
+
+reload hard:
+  browser.reload_hard()
+
+reload hardest:
+  browser.reload_hardest()
+
 # browser.bookmark()
 #   Bookmark the current page
 # browser.bookmark_tabs()
@@ -10,10 +26,6 @@ tag: browser
 #   Open the Bookmarks editor
 # browser.bookmarks_bar()
 #   Toggle the bookmarks bar
-# browser.focus_address()
-#   Focus address bar
-# browser.focus_page()
-#   Focus the page body
 # browser.focus_search()
 #   Focus the search box
 # browser.go(url: str)
@@ -28,8 +40,6 @@ tag: browser
 #   Go to home page
 # browser.open_private_window()
 #   Open a private browsing window
-# browser.reload()
-#   Reload current page
 # browser.reload_hard()
 #   Reload current page (harder)
 # browser.reload_hardest()
