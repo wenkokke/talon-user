@@ -59,7 +59,6 @@ def reformat_single_selection(selected: str, formatters: str):
 
 
 def reformat_multiple_selections(selections: list[str], formatters: str):
-    actions.user.homophones_hide()
     formatted_parts = []
     for selected in selections:
         unformatted = actions.user.unformat_text(selected)
@@ -71,6 +70,5 @@ def reformat_multiple_selections(selections: list[str], formatters: str):
 
 
 def insert_string(formatted: str, unformatted: str):
-    actions.user.homophones_hide()
     actions.insert(formatted)
     actions.user.history_add_phrase(formatted, unformatted)

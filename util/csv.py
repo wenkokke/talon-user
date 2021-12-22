@@ -53,7 +53,7 @@ def watch(
         If you simply wish to update a Talon list, see `register`.
     """
 
-    def on_ready():
+    def on_launch():
         csv_path = get_path(csv_file)
         if csv_path.exists():
             on_success(get_csv_list(csv_path, header))
@@ -66,7 +66,7 @@ def watch(
         elif on_error:
             on_error()
 
-    app.register("ready", on_ready)
+    app.register("launch", on_launch)
 
 
 def csv_sanitize(text: str) -> str:

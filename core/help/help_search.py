@@ -1,10 +1,8 @@
-from talon import Module, actions, imgui, Module, registry, ui
+from talon import Module, actions, app, imgui, Module, registry, ui
 
 mod = Module()
-mod.mode("help_search", "Mode for showing the search help gui")
 
 
-main_screen = ui.main_screen()
 search_text = None
 search_type = None
 
@@ -19,6 +17,13 @@ def gui(gui: imgui.GUI):
         gui_commands(gui)
     if gui.button("Hide"):
         actions.user.help_search_hide()
+
+
+def format_context_name(context_name: str):
+    splits = context_name.split(".")
+    if "talon" in splits[-1]:
+        return splits[-2].replace("_", " ")
+    return splits[-1].replace("_", " ")
 
 
 def gui_actions(gui: imgui.GUI):
@@ -45,32 +50,27 @@ def gui_commands(gui: imgui.GUI):
                 gui.spacer()
 
 
-def show_gui(text: str, type: str):
-    global search_text, search_type
-    search_text = text
-    search_type = type
-    if not gui.showing:
-        actions.mode.enable("user.help_search")
-        gui.show()
-
-
 @mod.action_class
 class Actions:
     def help_search_commands(text: str):
-        """Show help search gui with command results"""
-        show_gui(text, "commands")
+        """Show help search GUI with results"""
+        global search_text
+        search_text = text
+        actions.user.help_show("search")
+
+    def help_search_commands(text: str):
+        """Show help search GUI with command results"""
+        global search_text, search_type
+        search_text = text
+        search_type = "commands"
+        actions.user.help_show("search")
 
     def help_search_actions(text: str):
-        """Show help search gui with actions results"""
-        show_gui(text, "actions")
+        """Show help search GUI with actions results"""
+        global search_text, search_type
+        search_text = text
+        search_type = "actions"
+        actions.user.help_show("search")
 
-    def help_search_hide():
-        """Hide help search gui"""
-        actions.mode.disable("user.help_search")
-        gui.hide()
 
-def format_context_name(context_name: str):
-    splits = context_name.split(".")
-    if "talon" in splits[-1]:
-        return splits[-2].replace("_", " ")
-    return splits[-1].replace("_", " ")
+app.register("ready", lambda: actions.user.help_register("search", gui))

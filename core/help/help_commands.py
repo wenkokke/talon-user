@@ -5,9 +5,6 @@ from talon import Module, Context, actions, imgui, Module, registry, ui, app, cl
 
 mod = Module()
 mod.list("help_contexts", desc="List of available contexts")
-mod.mode(
-    "help_commands", "Mode for commands that are available only when help is visible"
-)
 
 setting_help_commands_max_contexts_per_page = mod.setting(
     "help_commands_max_contexts_per_page",
@@ -152,10 +149,7 @@ def get_pages(item_line_counts: list[int]) -> list[int]:
     return pages
 
 
-main_screen = ui.main_screen()
-
-
-@imgui.open(x=main_screen.x, y=main_screen.y)
+@imgui.open(x=ui.main_screen().x, y=ui.main_screen().y)
 def gui_context_help(gui: imgui.GUI):
     global context_command_map
     global current_context_page
@@ -228,7 +222,7 @@ def gui_context_help(gui: imgui.GUI):
         actions.user.help_commands_refresh()
 
     if gui.button("Hide"):
-        actions.user.help_commands_hide()
+        actions.user.help_hide("commands")
 
 
 def draw_context_commands(gui: imgui.GUI):
@@ -415,27 +409,14 @@ def register_events(register: bool):
     if register:
         if not events_registered and live_update:
             events_registered = True
-            # registry.register('post:update_contexts', contexts_updated)
             registry.register("update_commands", commands_updated)
     else:
         events_registered = False
-        # registry.unregister('post:update_contexts', contexts_updated)
         registry.unregister("update_commands", commands_updated)
 
 
 @mod.action_class
 class Actions:
-    def help_commands_active_toggle():
-        """Display contextual command info"""
-        if gui_context_help.showing:
-            actions.user.help_commands_hide()
-        else:
-            reset()
-            refresh_context_command_map(enabled_only=True)
-            gui_context_help.show()
-            register_events(True)
-            actions.mode.enable("user.help_commands")
-
     def help_commands_search(phrase: str):
         """Display command info for search phrase"""
         global search_phrase
@@ -544,14 +525,6 @@ class Actions:
             else:
                 update_active_contexts_cache(registry.active_contexts())
 
-    def help_commands_hide():
-        """Hides the help"""
-        reset()
-        gui_context_help.hide()
-        refresh_context_command_map()
-        register_events(False)
-        actions.mode.disable("user.help_commands")
-
     def help_commands_copy_all_commands():
         """Copy all commands to clipboard"""
         commands = {}
@@ -577,4 +550,20 @@ def commands_updated(_):
     update_title()
 
 
-app.register("ready", refresh_context_command_map)
+def help_commands_hook(showing: bool):
+    if showing:
+        reset()
+        refresh_context_command_map(enabled_only=True)
+        register_events(True)
+    else:
+        reset()
+        refresh_context_command_map()
+        register_events(False)
+
+
+def on_ready():
+    refresh_context_command_map()
+    actions.user.help_register("commands", gui_context_help, help_commands_hook)
+
+
+app.register("ready", on_ready)

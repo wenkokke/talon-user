@@ -1,8 +1,7 @@
 from __future__ import annotations
-from functools import reduce
 from itertools import chain, repeat
 from typing import Callable
-from talon import Module, Context, actions, imgui
+from talon import Module, Context, actions, app, imgui, ui
 import re
 
 # NOTE: This is different from the definition of a camelCase boundary
@@ -110,7 +109,7 @@ mod.list(
 )
 mod.list("formatter_word", desc="List of word formatters")
 
-ctx.lists["self.formatter_code"] = {
+FORMATTER_CODE = {
     "upper": "ALL_CAPS",
     "lower": "ALL_LOWERCASE",
     "dubstring": "DOUBLE_QUOTED_STRING",
@@ -128,8 +127,9 @@ ctx.lists["self.formatter_code"] = {
     "packed": "DOUBLE_COLON_SEPARATED",
     "smash": "NO_SPACES",
 }
+ctx.lists["self.formatter_code"] = FORMATTER_CODE
 
-ctx.lists["self.formatter_prose"] = {
+FORMATTER_PROSE = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST_WORD",
     "query": "CAPITALIZE_FIRST_WORD,TRAILING_QUESTION_MARK",
@@ -137,13 +137,15 @@ ctx.lists["self.formatter_prose"] = {
     "dubquote": "CAPITALIZE_FIRST_WORD,DOUBLE_QUOTED_STRING",
     "quote": "CAPITALIZE_FIRST_WORD,SINGLE_QUOTED_STRING",
 }
+ctx.lists["self.formatter_prose"] = FORMATTER_PROSE
 
-ctx.lists["self.formatter_word"] = {
+FORMATTER_WORD = {
     "word": "ALL_LOWERCASE",
     "trot": "ALL_LOWERCASE,TRAILING_PADDING",
     "proud": "CAPITALIZE_FIRST_WORD",
     "leap": "CAPITALIZE_FIRST_WORD,TRAILING_PADDING",
 }
+ctx.lists["self.formatter_word"] = FORMATTER_WORD
 
 
 @mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra})+")
@@ -199,3 +201,23 @@ def de_string(text: str) -> str:
     if text.startswith("'") and text.endswith("'"):
         return text[1:-1]
     return text
+
+
+# Help menus
+
+
+@imgui.open(x=ui.main_screen().x)
+def gui(gui: imgui.GUI):
+    global FORMATTER_CODE, FORMATTER_PROSE, FORMATTER_WORD
+    gui.text("Formatters")
+    gui.line()
+    formatters = {**FORMATTER_CODE, **FORMATTER_PROSE, **FORMATTER_WORD}
+    for name in frozenset(formatters):
+        example = actions.user.format_text("one two three", formatters[name])
+        gui.text(f"{name.ljust(30)}{example}")
+    gui.spacer()
+    if gui.button("Hide"):
+        actions.user.help_hide("formatters")
+
+
+app.register("ready", lambda: actions.user.help_register("formatters", gui))

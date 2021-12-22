@@ -1,9 +1,4 @@
-from talon import Module, actions, imgui, Module, scope, ui
-
-mod = Module()
-mod.mode("help_scope", "Mode for showing the scope help gui")
-
-main_screen = ui.main_screen()
+from talon import actions, app, imgui, scope, ui
 
 
 @imgui.open(x=ui.main_screen().x)
@@ -31,7 +26,7 @@ def gui(gui: imgui.GUI):
             print_value(gui, key, value, ignore)
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_active_context_toggle()
+        actions.user.help_hide('scope')
 
 
 def print_value(gui: imgui.GUI, path: str, value, ignore: set[str] = {}):
@@ -50,25 +45,4 @@ def format_value(value):
     return value
 
 
-@mod.action_class
-class Actions:
-    def help_scope_toggle():
-        """Toggle help scope gui"""
-        if gui.showing:
-            actions.mode.disable("user.help_scope")
-            gui.hide()
-        else:
-            actions.mode.enable("user.help_scope")
-            gui.show()
-
-    def help_scope_show():
-        """Show help scope gui"""
-        if not gui.showing:
-            actions.mode.enable("user.help_scope")
-            gui.show()
-
-    def help_scope_hide():
-        """Hide help scope gui"""
-        if gui.showing:
-            actions.mode.disable("user.help_scope")
-            gui.hide()
+app.register("ready", lambda: actions.user.help_register("scope", gui))

@@ -1,23 +1,35 @@
-from collections.abc import Iterable
-from talon import Module, Context
+from talon import Module, Context, actions, app, imgui, registry, ui
+from user.util import csv
 
 mod = Module()
 ctx = Context()
 mod.tag("keys")
 
-alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
-digits = "zero one two three four five six seven eight nine ten eleven twelve".split()
-
 mod.list("key_alphabet", desc="The spoken phonetic alphabet")
-ctx.lists["self.key_alphabet"] = {
-    alphabet[i]: chr(ord("a") + i) for i in range(len(alphabet))
-}
+
+KEY_ALPHABET = {}
+
+
+def on_ready_and_change(letters: tuple[tuple[str]]):
+    global ctx, KEY_ALPHABET
+    KEY_ALPHABET = dict(letters)
+    ctx.lists["self.key_alphabet"] = KEY_ALPHABET
+
+
+csv.watch(
+    csv_file="alphabet.csv",
+    header=("Letter", "Spoken form"),
+    on_success=on_ready_and_change,
+)
+
+DIGITS = "zero one two three four five six seven eight nine ten eleven twelve".split()
+KEY_NUMBER = {DIGITS[i]: str(i) for i in range(10)}
 
 mod.list("key_number", desc="All number keys")
-ctx.lists["self.key_number"] = {digits[i]: str(i) for i in range(10)}
+ctx.lists["self.key_number"] = KEY_NUMBER
 
 mod.list("key_function", desc="All function keys")
-ctx.lists["self.key_function"] = {f"F {digits[i]}": f"f{i}" for i in range(1, 13)}
+ctx.lists["self.key_function"] = {f"F {DIGITS[i]}": f"f{i}" for i in range(1, 13)}
 
 mod.list("key_arrow", desc="All arrow keys")
 ctx.lists["self.key_arrow"] = {"up", "down", "left", "right"}
@@ -142,3 +154,21 @@ def letter(m) -> str:
 def letters(m) -> str:
     """One or more letters in the alphabet"""
     return "".join(m.key_alphabet_list)
+
+
+# Help menus
+
+
+@imgui.open(x=ui.main_screen().x)
+def gui(gui: imgui.GUI):
+    global KEY_ALPHABET
+    gui.text("Alphabet")
+    gui.line()
+    for spoken_form, letter in KEY_ALPHABET.items():
+        gui.text(f"{letter}:  {spoken_form}")
+    gui.spacer()
+    if gui.button("Hide"):
+        actions.user.help_hide("alphabet")
+
+
+app.register("ready", lambda: actions.user.help_register("alphabet", gui))
