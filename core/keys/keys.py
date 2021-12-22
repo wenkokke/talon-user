@@ -12,7 +12,8 @@ KEY_ALPHABET = {}
 
 def on_ready_and_change(letters: tuple[tuple[str]]):
     global ctx, KEY_ALPHABET
-    KEY_ALPHABET = dict(letters)
+    for letter, spoken_form in letters:
+        KEY_ALPHABET[spoken_form] = letter
     ctx.lists["self.key_alphabet"] = KEY_ALPHABET
 
 
