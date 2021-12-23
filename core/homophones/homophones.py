@@ -50,7 +50,6 @@ def phones_cycle(step: int):
     word = actions.edit.selected_text()
     if word != active_word:
         actions.user.phones_set(word)
-    print(step, active_word, active_word_list, active_index, word)
     if phones_active():
         active_index = (active_index + step) % len(active_word_list)
         active_word = active_word_list[active_index]
