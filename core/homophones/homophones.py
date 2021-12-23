@@ -8,8 +8,11 @@ import re
 # a suitable one can be found here:
 # https://github.com/pimentel/homophones
 
-ctx = Context()
 mod = Module()
+mod.mode(
+    "help_phones", desc="A mode which is active if the help GUI for phones is showing"
+)
+
 
 all_homophones: Dict[str, Sequence[str]] = {}
 
@@ -22,16 +25,11 @@ def word_to_key(word: str) -> str:
     return word.lower().strip()
 
 
-def on_ready_and_change(homophones: tuple[tuple[str]]):
-    global all_homophones
-    for new_words in homophones:
-        for word in new_words:
-            key = word_to_key(word)
-            old_words = all_homophones.get(key, ())
-            all_homophones[key] = sorted((*old_words, *new_words))
-
-
-csv.watch("homophones.csv", ("Homophones",), on_ready_and_change)
+for new_words in csv.read_rows("homophones.csv", ("Homophones",)):
+    for word in new_words:
+        key = word_to_key(word)
+        old_words = all_homophones.get(key, ())
+        all_homophones[key] = sorted((*old_words, *new_words))
 
 
 def phones_active() -> bool:
@@ -94,7 +92,7 @@ class Actions:
             word = active_word_list[number - 1]
             actions.user.history_add_phrase(word)
             actions.insert(word)
-            actions.user.help_hide("phones")
+            actions.user.help_hide_phones()
 
 
 # Help menus
@@ -114,18 +112,28 @@ def gui(gui: imgui.GUI):
         gui.text(f"No word selected")
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_hide("phones")
+        actions.user.help_hide_phones()
 
 
-def phones_help_hook(showing: bool):
-    if showing:
-        actions.user.phones_set_selected()
-    else:
-        phones_reset()
+@mod.action_class
+class HelpActions:
+    def help_show_phones():
+        """Show help GUI for phones"""
+        if not gui.showing:
+            actions.user.phones_set_selected()
+            actions.mode.enable("user.help_phones")
+            gui.show()
 
+    def help_hide_phones():
+        """Hide help GUI for phones"""
+        if gui.showing:
+            phones_reset()
+            actions.mode.disable("user.help_phones")
+            gui.hide()
 
-def on_ready():
-    actions.user.help_register("phones", gui, cb=phones_help_hook)
-
-
-app.register("ready", on_ready)
+    def help_toggle_phones():
+        """Toggle help GUI for phones"""
+        if gui.showing:
+            actions.user.help_hide_phones()
+        else:
+            actions.user.help_show_phones()

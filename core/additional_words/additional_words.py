@@ -11,9 +11,9 @@ mod = Module()
 mod.list("vocabulary", desc="Additional vocabulary")
 
 ctx = Context()
-csv.register(
+csv.register_spoken_forms(
     csv_file="additional_words.csv",
-    list_name="user.vocabulary",
-    column_name="Word",
     ctx=ctx,
+    list_name="user.vocabulary",
+    value_name="Word",
 )

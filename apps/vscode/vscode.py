@@ -28,9 +28,15 @@ app: vscode
 header = ("Programming language", "File extension", "Spoken form", "Icon")
 
 
-def on_ready_and_change(langs: tuple[tuple[str]]):
-    for lang, ext, spoken_form, icon in langs:
+for lang, ext, spoken_form, icon in csv.read_rows("languages.csv", header):
+    try:
         ctx_for_lang = Context()
+        csv.register_spoken_forms(
+            csv_file=f"code/{lang}/snippets_vscode.csv",
+            ctx=ctx_for_lang,
+            list_name="user.code_snippet",
+            value_name="Snippet name",
+        )
         ctx_for_lang.matches = f"""
         app: vscode
         and tag: user.{lang}_forced
@@ -38,19 +44,8 @@ def on_ready_and_change(langs: tuple[tuple[str]]):
         tag: user.auto_lang
         and code.language: {lang}
         """
-        csv_path = f"code/{lang}/snippets_vscode.csv"
-        csv.register(
-            csv_file=csv_path,
-            list_name="user.code_snippet",
-            column_name="Snippet name",
-            ctx=ctx_for_lang,
-            on_error=lambda: warning(
-                f"Could not find snippet list for {lang} at {csv_path}"
-            ),
-        )
-
-
-csv.watch("languages.csv", header, on_ready_and_change)
+    except FileNotFoundError:
+        pass
 
 
 @ctx.action_class("app")

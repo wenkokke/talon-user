@@ -2,6 +2,8 @@ from talon import Module, Context, registry
 from user.util import csv
 from user.util.speech import create_spoken_form
 
+mod = Module()
+
 
 ctx = Context()
 ctx.matches = r"""
@@ -11,15 +13,12 @@ and code.language: talon
 """
 
 # support for #user.code_operator
-csv.register(
+csv.register_spoken_forms(
     csv_file="code/talon/operators.csv",
-    list_name="user.code_operator",
-    column_name="Operator",
     ctx=ctx,
+    list_name="user.code_operator",
+    value_name="Operator",
 )
-
-
-mod = Module()
 
 
 @mod.action_class

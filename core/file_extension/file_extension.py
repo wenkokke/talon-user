@@ -5,11 +5,11 @@ mod = Module()
 mod.list("file_extension", desc="List of file extensions")
 
 ctx = Context()
-csv.register(
+csv.register_spoken_forms(
     csv_file="file_extensions.csv",
-    list_name="user.file_extension",
-    column_name="File extension",
     ctx=ctx,
+    list_name="user.file_extension",
+    value_name="File extension",
 )
 
 @mod.capture(rule="dot {user.file_extension}")

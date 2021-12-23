@@ -4,25 +4,18 @@ from user.util import csv
 from user.util.phrase_replacer import PhraseReplacer
 import logging
 
+mod = Module()
 ctx = Context()
 
 # The setting "dictate.word_map" is used by `actions.dictate.replace_words`
 # to rewrite words Talon recognized. Entries in word_map don't change the
 # priority with which Talon recognizes some words over others.
 
-header = ("Word", "Replacement")
-
-phrase_replacer = None
-
-
-def on_ready_and_change(words_to_replace: list[list[str]]):
-    global ctx, phrase_replacer
-    words_to_replace = dict(words_to_replace)
-    phrase_replacer = PhraseReplacer(words_to_replace)
-    ctx.settings["dictate.word_map"] = words_to_replace
-
-
-csv.watch("words_to_replace.csv", header, on_ready_and_change)
+WORDS_TO_REPLACE = csv.read_spoken_forms(
+    "words_to_replace.csv", value_name="Replacement"
+)
+PHRASE_REPLACER = PhraseReplacer(WORDS_TO_REPLACE)
+ctx.settings["dictate.word_map"] = WORDS_TO_REPLACE
 
 
 # The phrase replacer allows phrases of more than one word to be specified in
@@ -38,16 +31,13 @@ csv.watch("words_to_replace.csv", header, on_ready_and_change)
 # <https://github.com/knausj85/knausj_talon/pull/641>
 
 
-mod = Module()
-
-
 @mod.action_class
 class Actions:
     def replace_phrases(words: Sequence[str]) -> Sequence[str]:
         """Replace phrases according to words_to_replace.csv"""
-        global phrase_replacer
+        global PHRASE_REPLACER
         try:
-            return phrase_replacer.replace(words)
+            return PHRASE_REPLACER.replace(words)
         except:
             # fall back to dictate.replace_words for error-robustness
             logging.error("phrase replacer failed!")

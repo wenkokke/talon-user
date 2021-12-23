@@ -1,30 +1,19 @@
-from talon import app
-from user.util import numbers
-from user.util import csv
 import re
+from user.util import csv
 
 RE_SNAKE = r"(?<![A-Za-z])([A-Z]?[a-z]+)"
 RE_CAMEL = r"(?<=[A-Za-z])([A-Z][a-z]*)"
 RE_NUM = r"([0-9])"
 RE_WORD = re.compile(f"{RE_SNAKE}|{RE_CAMEL}|{RE_NUM}")
-DIGITS = {str(k): v for k, v in zip(range(0, 9), numbers.digits)}
-ALPHABET = {}
-
-
-def on_ready_and_change(letters: tuple[tuple[str]]):
-    global ALPHABET
-    for letter, spoken_form in letters:
-        ALPHABET[letter] = spoken_form
-
-
-csv.watch(
-    csv_file="alphabet.csv",
-    header=("Letter", "Spoken form"),
-    on_success=on_ready_and_change,
+DIGITS = csv.read_dict("numbers/digits.csv", key_name="Digit", value_name="Spoken form")
+ALPHABET = csv.read_dict("alphabet.csv", key_name="Letter", value_name="Spoken form")
+APP_NAME_OVERRIDES = csv.read_dict(
+    "app_name_overrides.csv", key_name="Application name", value_name="Spoken form"
 )
 
 
 def create_spoken_form(text: str) -> str:
+    """Create a spoken form for an arbitrary string"""
     global ALPHABET, DIGITS
     chunks = RE_WORD.finditer(text)
     chunks = [m.group(0) for m in chunks]
@@ -38,14 +27,19 @@ def create_spoken_form(text: str) -> str:
     return spoken_form
 
 
-def test():
-    def create_spoken_form_test(input, expected):
-        actual = create_spoken_form(input)
-        assert actual == expected, f"Expected '{expected}', found '{actual}'"
-
-    create_spoken_form_test("user.get_match1", "user get match one")
-    create_spoken_form_test("user.macro_play", "user macro play")
-    create_spoken_form_test("BlockingIOError", "blocking sit odd error")
+assert create_spoken_form("user.get_match1") == "user get match one"
+assert create_spoken_form("user.macro_play") == "user macro play"
+assert create_spoken_form("BlockingIOError") == "blocking sit odd error"
 
 
-app.register("ready", test)
+def create_spoken_form_app(name: str) -> str:
+    """Create a spoken form for an application name"""
+    global APP_NAME_OVERRIDES
+    try:
+        return APP_NAME_OVERRIDES[name]
+    except KeyError:
+        name = name.removesuffix(".exe")
+        name = name.split("-")[0]
+        name = name.strip()
+        name = create_spoken_form(name)
+        return name

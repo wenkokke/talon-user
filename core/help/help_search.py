@@ -1,6 +1,9 @@
 from talon import Module, actions, app, imgui, Module, registry, ui
 
 mod = Module()
+mod.mode(
+    "help_search", desc="A mode which is active if the help GUI for search is showing"
+)
 
 
 search_text = None
@@ -51,7 +54,26 @@ def gui_commands(gui: imgui.GUI):
 
 
 @mod.action_class
-class Actions:
+class HelpActions:
+    def help_show_search():
+        """Show help GUI for search"""
+        if not gui.showing:
+            actions.mode.enable("user.help_search")
+            gui.show()
+
+    def help_hide_search():
+        """Hide help GUI for search"""
+        if gui.showing:
+            actions.mode.disable("user.help_search")
+            gui.hide()
+
+    def help_toggle_search():
+        """Toggle help GUI for search"""
+        if gui.showing:
+            actions.user.help_hide_search()
+        else:
+            actions.user.help_show_search()
+
     def help_search_commands(text: str):
         """Show help search GUI with results"""
         global search_text
@@ -71,6 +93,3 @@ class Actions:
         search_text = text
         search_type = "actions"
         actions.user.help_show("search")
-
-
-app.register("ready", lambda: actions.user.help_register("search", gui))

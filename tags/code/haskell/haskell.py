@@ -11,35 +11,35 @@ and code.language: haskell
 """
 
 # support for #user.code_function
-csv.register(
+csv.register_spoken_forms(
     csv_file="code/haskell/functions.csv",
-    list_name="user.code_function",
-    column_name="Function",
     ctx=ctx,
+    list_name="user.code_function",
+    value_name="Function",
 )
 
 # support for #user.code_library
-csv.register(
+csv.register_spoken_forms(
     csv_file="code/haskell/libraries.csv",
-    list_name="user.code_library",
-    column_name="Library",
     ctx=ctx,
+    list_name="user.code_library",
+    value_name="Library",
 )
 
 # support for #user.code_operator
-csv.register(
+csv.register_spoken_forms(
     csv_file="code/haskell/operators.csv",
-    list_name="user.code_operator",
-    column_name="Operator",
     ctx=ctx,
+    list_name="user.code_operator",
+    value_name="Operator",
 )
 
 # support for #user.code_type
-csv.register(
+csv.register_spoken_forms(
     csv_file="code/haskell/types.csv",
-    list_name="user.code_type",
-    column_name="Type",
     ctx=ctx,
+    list_name="user.code_type",
+    value_name="Type",
 )
 
 

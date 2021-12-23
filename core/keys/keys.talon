@@ -8,7 +8,7 @@
 {user.key_number}: key(key_number)
 
 # Press a key with optional modifiers
-confirm:
+firm:
     key(enter)
 
 press <user.key_unmodified>:

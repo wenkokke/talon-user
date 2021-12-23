@@ -11,27 +11,27 @@ ctx = Context()
 extension_to_lang = {}
 spoken_form_to_lang = {}
 
-def on_ready_and_change(langs: tuple[tuple[str]]):
-    global ctx, extension_to_lang
-    for lang, ext, spoken_form, icon in langs:
-        if spoken_form and lang:
-            spoken_form_to_lang[spoken_form] = lang
-        if lang and ext:
-            if not ext in extension_to_lang or extension_to_lang[ext] != lang:
-                extension_to_lang[ext] = lang
-                mod.tag(lang, desc=f"A tag for the {lang.capitalize()} language mode.")
-                mod.tag(f"{lang}_forced", desc=f"A tag for the {lang.capitalize()} language mode (forced).")
-                ctx_lang = Context()
-                ctx_lang.matches = f"""
-                tag: user.{lang}_forced
-                tag: user.auto_lang
-                and code.language: {lang}
-                """
-                ctx_lang.tags = [f"user.{lang}"]
-    ctx.lists["user.lang"] = spoken_form_to_lang
 
+for lang, ext, spoken_form, icon in csv.read_rows("languages.csv", header):
+    if spoken_form and lang:
+        spoken_form_to_lang[spoken_form] = lang
+    if lang and ext:
+        if not ext in extension_to_lang or extension_to_lang[ext] != lang:
+            extension_to_lang[ext] = lang
+            mod.tag(lang, desc=f"A tag for the {lang.capitalize()} language mode.")
+            mod.tag(
+                f"{lang}_forced",
+                desc=f"A tag for the {lang.capitalize()} language mode (forced).",
+            )
+            ctx_lang = Context()
+            ctx_lang.matches = f"""
+            tag: user.{lang}_forced
+            tag: user.auto_lang
+            and code.language: {lang}
+            """
+            ctx_lang.tags = [f"user.{lang}"]
+ctx.lists["user.lang"] = spoken_form_to_lang
 
-csv.watch("languages.csv", header, on_ready_and_change)
 
 # Create a mode for the automated language detection. This is active when no lang is forced.
 mod.tag("auto_lang")

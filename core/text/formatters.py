@@ -217,7 +217,28 @@ def gui(gui: imgui.GUI):
         gui.text(f"{name.ljust(30)}{example}")
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_hide("formatters")
+        actions.user.help_hide_formatters()
 
+mod = Module()
+mod.mode("help_formatters", desc="A mode which is active if the help GUI for formatters is showing")
 
-app.register("ready", lambda: actions.user.help_register("formatters", gui))
+@mod.action_class
+class HelpActions:
+    def help_show_formatters():
+        """Show help GUI for formatters"""
+        if not gui.showing:
+            actions.mode.enable("user.help_formatters")
+            gui.show()
+
+    def help_hide_formatters():
+        """Hide help GUI for formatters"""
+        if gui.showing:
+            actions.mode.disable("user.help_formatters")
+            gui.hide()
+
+    def help_toggle_formatters():
+        """Toggle help GUI for formatters"""
+        if gui.showing:
+            actions.user.help_hide_formatters()
+        else:
+            actions.user.help_show_formatters()

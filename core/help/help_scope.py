@@ -1,5 +1,10 @@
-from talon import actions, app, imgui, scope, ui
+from talon import Module, actions, imgui, scope, ui
 
+
+mod = Module()
+mod.mode(
+    "help_scope", desc="A mode which is active if the help GUI for scope is showing"
+)
 
 @imgui.open(x=ui.main_screen().x)
 def gui(gui: imgui.GUI):
@@ -26,7 +31,7 @@ def gui(gui: imgui.GUI):
             print_value(gui, key, value, ignore)
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_hide('scope')
+        actions.user.help_hide_scope()
 
 
 def print_value(gui: imgui.GUI, path: str, value, ignore: set[str] = {}):
@@ -45,4 +50,24 @@ def format_value(value):
     return value
 
 
-app.register("ready", lambda: actions.user.help_register("scope", gui))
+
+@mod.action_class
+class HelpActions:
+    def help_show_scope():
+        """Show help GUI for scope"""
+        if not gui.showing:
+            actions.mode.enable("user.help_scope")
+            gui.show()
+
+    def help_hide_scope():
+        """Hide help GUI for scope"""
+        if gui.showing:
+            actions.mode.disable("user.help_scope")
+            gui.hide()
+
+    def help_toggle_scope():
+        """Toggle help GUI for scope"""
+        if gui.showing:
+            actions.user.help_hide_scope()
+        else:
+            actions.user.help_show_scope()

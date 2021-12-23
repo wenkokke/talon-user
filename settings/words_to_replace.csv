@@ -1,27 +1,27 @@
-Word          , Replacement
-i             , I
-i'm           , I'm
-i've          , I've
-i'll          , I'll
-i'd           , I'd
-monday        , Monday
-mondays       , Mondays
-tuesday       , Tuesday
-tuesdays      , Tuesdays
-wednesday     , Wednesday
-wednesdays    , Wednesdays
-thursday      , Thursday
-thursdays     , Thursdays
-friday        , Friday
-fridays       , Fridays
-saturday      , Saturday
-saturdays     , Saturdays
-sunday        , Sunday
-sundays       , Sundays
-otto          , auto
-Tallon        , talon
-Jason         , json
-Rangel        , wrangle
-Wrangell      , Wrangell
-forma text    , format text
-catchall      , catch all
+Replacement , Spoken form
+I           , i
+I'm         , i'm
+I've        , i've
+I'll        , i'll
+I'd         , i'd
+Monday      , monday
+Mondays     , mondays
+Tuesday     , tuesday
+Tuesdays    , tuesdays
+Wednesday   , wednesday
+Wednesdays  , wednesdays
+Thursday    , thursday
+Thursdays   , thursdays
+Friday      , friday
+Fridays     , fridays
+Saturday    , saturday
+Saturdays   , saturdays
+Sunday      , sunday
+Sundays     , sundays
+auto        , otto
+talon       , Tallon
+json        , Jason
+wrangle     , Rangel
+Wrangell    , Wrangell
+format text , forma text
+catch all   , catchall

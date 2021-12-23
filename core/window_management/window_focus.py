@@ -2,7 +2,7 @@ from talon import Context, Module, app, imgui, ui, actions
 from talon.grammar import Phrase
 from itertools import *
 from user.util import csv
-from user.util.speech import create_spoken_form
+from user.util.speech import create_spoken_form_app
 
 import os
 import re
@@ -10,70 +10,36 @@ import time
 
 mod = Module()
 mod.mode("focus")
-mod.list("running_application", desc="List of running applications.")
+mod.list("running_application", desc="List of running applications")
 
 ctx = Context()
 ctx.lists["self.running_application"] = {}
 
 
 # Monitor running applications
-def on_app_launch_or_close():
+def on_ready_app_launch_or_close():
     """Update list of running applications."""
-    running_application = {}
-    for app in ui.apps(background=False):
-        spoken_form = creates_spoken_form_app(app.name)
-        if spoken_form:
-            running_application[spoken_form] = app.name
-        else:
-            print(f"Could not pronounce {app.name}")
-    ctx.lists["self.running_application"] = running_application
-
-
-def creates_spoken_form_app(name: str) -> str:
-    """Create a spoken form for an application name."""
-    global app_name_overrides
-    try:
-        return app_name_overrides[name]
-    except KeyError:
-        name = name.removesuffix(".exe")
-        name = name.split("-")[0]
-        name = name.strip()
-        name = create_spoken_form(name)
-        return name
+    ctx.lists["self.running_application"] = {
+        create_spoken_form_app(app.name): app.name for app in ui.apps(background=False)
+    }
 
 
 def on_ready():
-    ui.register("app_launch", lambda _: on_app_launch_or_close())
-    ui.register("app_close", lambda _: on_app_launch_or_close())
+    on_ready_app_launch_or_close()
+    ui.register("app_launch", lambda _: on_ready_app_launch_or_close())
+    ui.register("app_close", lambda _: on_ready_app_launch_or_close())
 
 
 app.register("ready", on_ready)
-
-
-# Monitor CSV file with application name overrides
-app_name_overrides = {}
-
-header = ("Application name", "Override")
-
-
-def on_csv_change(apps: list[list[str]]):
-    """Update list of application name overrides."""
-    global app_name_overrides
-    for app_name, app_name_override in apps:
-        app_name_overrides[app_name] = app_name_override
-    on_app_launch_or_close()
-
-
-csv.watch("app_name_overrides.csv", header, on_csv_change)
 
 
 def get_app(name: str) -> ui.App:
     for app in ui.apps(background=False):
         if app.name == name:
             return app
-    spoken_form = creates_spoken_form_app(name)
+    spoken_form = create_spoken_form_app(name)
     for app in ui.apps(background=False):
-        if creates_spoken_form_app(app.name) == spoken_form:
+        if create_spoken_form_app(app.name) == spoken_form:
             return app
     raise RuntimeError(f'App not running: "{name}"')
 

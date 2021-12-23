@@ -5,11 +5,11 @@ mod = Module()
 mod.list("abbreviation", desc="Common abbreviations")
 
 ctx = Context()
-csv.register(
+csv.register_spoken_forms(
     csv_file="abbreviations.csv",
+    ctx=ctx,
     list_name="user.abbreviation",
-    column_name="Abbreviation",
-    ctx=ctx
+    value_name="Abbreviation",
 )
 
 @mod.capture(rule="brief {self.abbreviation}")

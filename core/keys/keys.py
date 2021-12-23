@@ -7,21 +7,8 @@ mod.tag("keys")
 
 mod.list("key_alphabet", desc="The spoken phonetic alphabet")
 
-KEY_ALPHABET = {}
-
-
-def on_ready_and_change(letters: tuple[tuple[str]]):
-    global ctx, KEY_ALPHABET
-    for letter, spoken_form in letters:
-        KEY_ALPHABET[spoken_form] = letter
-    ctx.lists["self.key_alphabet"] = KEY_ALPHABET
-
-
-csv.watch(
-    csv_file="alphabet.csv",
-    header=("Letter", "Spoken form"),
-    on_success=on_ready_and_change,
-)
+KEY_ALPHABET = csv.read_spoken_forms("alphabet.csv", value_name="Letter")
+ctx.lists["self.key_alphabet"] = KEY_ALPHABET
 
 DIGITS = "zero one two three four five six seven eight nine ten eleven twelve".split()
 KEY_NUMBER = {DIGITS[i]: str(i) for i in range(10)}
@@ -169,7 +156,33 @@ def gui(gui: imgui.GUI):
         gui.text(f"{letter}:  {spoken_form}")
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_hide("alphabet")
+        actions.user.help_hide_alphabet()
 
 
-app.register("ready", lambda: actions.user.help_register("alphabet", gui))
+mod = Module()
+mod.mode(
+    "help_alphabet",
+    desc="A mode which is active if the help GUI for alphabet is showing",
+)
+
+
+@mod.action_class
+class HelpActions:
+    def help_show_alphabet():
+        """Show help GUI for alphabet"""
+        if not gui.showing:
+            actions.mode.enable("user.help_alphabet")
+            gui.show()
+
+    def help_hide_alphabet():
+        """Hide help GUI for alphabet"""
+        if gui.showing:
+            actions.mode.disable("user.help_alphabet")
+            gui.hide()
+
+    def help_toggle_alphabet():
+        """Toggle help GUI for alphabet"""
+        if gui.showing:
+            actions.user.help_hide_alphabet()
+        else:
+            actions.user.help_show_alphabet()
