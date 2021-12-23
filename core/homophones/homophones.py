@@ -13,9 +13,6 @@ mod.mode(
     "help_phones", desc="A mode which is active if the help GUI for phones is showing"
 )
 
-
-all_homophones: Dict[str, Sequence[str]] = {}
-
 active_word: Optional[str] = None
 active_word_list: Optional[Sequence[str]] = None
 active_index: Optional[int] = None
@@ -25,11 +22,12 @@ def word_to_key(word: str) -> str:
     return word.lower().strip()
 
 
+ALL_HOMOPHONES: Dict[str, Sequence[str]] = {}
 for new_words in csv.read_rows("homophones.csv", ("Homophones",)):
     for word in new_words:
         key = word_to_key(word)
-        old_words = all_homophones.get(key, ())
-        all_homophones[key] = sorted((*old_words, *new_words))
+        old_words = ALL_HOMOPHONES.get(key, ())
+        ALL_HOMOPHONES[key] = sorted((*old_words, *new_words))
 
 
 def phones_active() -> bool:
@@ -52,6 +50,7 @@ def phones_cycle(step: int):
     word = actions.edit.selected_text()
     if word != active_word:
         actions.user.phones_set(word)
+    print(step, active_word, active_word_list, active_index, word)
     if phones_active():
         active_index = (active_index + step) % len(active_word_list)
         active_word = active_word_list[active_index]
@@ -61,12 +60,33 @@ def phones_cycle(step: int):
 
 @mod.action_class
 class Actions:
+    def help_show_phones():
+        """Show help GUI for phones"""
+        if not gui.showing:
+            actions.user.phones_set_selected()
+            actions.mode.enable("user.help_phones")
+            gui.show()
+
+    def help_hide_phones():
+        """Hide help GUI for phones"""
+        if gui.showing:
+            phones_reset()
+            actions.mode.disable("user.help_phones")
+            gui.hide()
+
+    def help_toggle_phones():
+        """Toggle help GUI for phones"""
+        if gui.showing:
+            actions.user.help_hide_phones()
+        else:
+            actions.user.help_show_phones()
+
     def phones_set(word: str):
         """Get homophones for <word>"""
-        global all_homophones, active_word, active_word_list, active_index
+        global ALL_HOMOPHONES, active_word, active_word_list, active_index
         try:
             active_word = word_to_key(word)
-            active_word_list = all_homophones.get(active_word, ())
+            active_word_list = ALL_HOMOPHONES.get(active_word, ())
             active_index = active_word_list.index(active_word)
         except ValueError:
             app.notify(f"No homophones for {word}")
@@ -113,27 +133,3 @@ def gui(gui: imgui.GUI):
     gui.spacer()
     if gui.button("Hide"):
         actions.user.help_hide_phones()
-
-
-@mod.action_class
-class HelpActions:
-    def help_show_phones():
-        """Show help GUI for phones"""
-        if not gui.showing:
-            actions.user.phones_set_selected()
-            actions.mode.enable("user.help_phones")
-            gui.show()
-
-    def help_hide_phones():
-        """Hide help GUI for phones"""
-        if gui.showing:
-            phones_reset()
-            actions.mode.disable("user.help_phones")
-            gui.hide()
-
-    def help_toggle_phones():
-        """Toggle help GUI for phones"""
-        if gui.showing:
-            actions.user.help_hide_phones()
-        else:
-            actions.user.help_show_phones()
