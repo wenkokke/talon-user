@@ -12,3 +12,5 @@ Monad       , monad
 Foldable    , foldable
 Traversable , traversable
 Pi          , pie
+Nil         , Nil
+Cons        , Cons

@@ -1,4 +1,4 @@
-from talon import Context, Module
+from talon import Context, Module, actions
 from user.util import csv
 
 ctx = Context()
@@ -55,3 +55,11 @@ csv.register_spoken_forms(
     list_name="user.code_type",
     value_name="Type",
 )
+
+
+@ctx.action_class("user")
+class TypeActions:
+    def insert_function(code_function: str):
+        """Insert <code_function>"""
+        actions.insert(f"{code_function}()")
+        actions.edit.left()

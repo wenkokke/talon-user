@@ -24,3 +24,6 @@ Operator, Spoken form
 <*>     , F apply
 ->      , to
 <-      , from
+:       , cons
+=       , define
+=       , deaf

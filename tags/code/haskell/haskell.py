@@ -59,3 +59,7 @@ class TypeActions:
     def insert_type(code_type: str):
         """Insert <code_type>"""
         actions.insert(f"{code_type} ")
+
+    def insert_function(code_function: str):
+        """Insert <code_function>"""
+        actions.insert(f"{code_function} ")

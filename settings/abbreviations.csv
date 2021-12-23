@@ -94,7 +94,8 @@ gen          , generic
 gen          , generate
 http         , hypertext
 hist         , history
-ID           , identification
+id           , identity
+id           , identifier
 img          , image
 iat          , import table
 iat          , import address table
@@ -109,6 +110,7 @@ inst         , instance
 int          , integer
 int          , interrupt
 iter         , iterate
+ix           , index
 jar          , java archive
 js           , javascript
 json         , jason
@@ -123,6 +125,7 @@ lg           , large
 len          , length
 lib          , library
 lam          , lambda
+lvl          , level
 mb           , manitoba
 md           , markdown
 max          , maximum
@@ -196,6 +199,8 @@ stdout       , standard out
 std          , standard
 str          , string
 struct       , structure
+subst        , substitute
+subst        , substitution
 sync         , synchronize
 sync         , synchronous
 sys          , system
