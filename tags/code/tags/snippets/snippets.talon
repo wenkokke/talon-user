@@ -14,4 +14,4 @@ snip create:
   user.snippet_create()
 
 snip help:
-  user.help_snippet_toggle()
+  user.help_toggle_snippet()

@@ -206,7 +206,7 @@ def de_string(text: str) -> str:
 # Help menus
 
 
-@imgui.open(x=ui.main_screen().x)
+@imgui.open(x=ui.main_screen().x, y=ui.main_screen().y)
 def gui(gui: imgui.GUI):
     global FORMATTER_CODE, FORMATTER_PROSE, FORMATTER_WORD
     gui.text("Formatters")

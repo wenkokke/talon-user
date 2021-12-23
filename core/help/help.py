@@ -4,14 +4,16 @@ mod = Module()
 mod.list("help_menu", desc="")
 
 help_menus = {
-    "search": (actions.user.help_show_search, actions.user.help_hide_search),
-    "context": (actions.user.help_show_context, actions.user.help_hide_context),
-    "scope": (actions.user.help_show_scope, actions.user.help_hide_scope),
     "alphabet": (actions.user.help_show_alphabet, actions.user.help_hide_alphabet),
+    "context": (actions.user.help_show_context, actions.user.help_hide_context),
     "formatters": (
         actions.user.help_show_formatters,
         actions.user.help_hide_formatters,
     ),
+    "history": (actions.user.help_show_history, actions.user.help_hide_history),
+    "scope": (actions.user.help_show_scope, actions.user.help_hide_scope),
+    "search": (actions.user.help_show_search, actions.user.help_hide_search),
+    "snippet": (actions.user.help_show_snippet, actions.user.help_hide_snippet),
 }
 
 ctx = Context()

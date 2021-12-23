@@ -2,17 +2,18 @@ from talon import Module, actions, imgui, ui
 import logging
 
 mod = Module()
-mod.mode("history")
+mod.mode(
+    "help_history", desc="A mode which is active if the help GUI for history is showing"
+)
+
 
 # list of recent phrases, most recent first
 phrase_history = []
 phrase_history_display_length = 30
 last_unformated = ""
 
-main_screen = ui.main_screen()
 
-
-@imgui.open(x=main_screen.x, y=main_screen.y)
+@imgui.open(x=ui.main_screen().x, y=ui.main_screen().y)
 def gui(gui: imgui.GUI):
     gui.text("History")
     gui.line()
@@ -25,11 +26,30 @@ def gui(gui: imgui.GUI):
     if gui.button("Clear"):
         actions.user.history_clear()
     if gui.button("Hide"):
-        actions.user.history_hide()
+        actions.user.help_hide_history()
 
 
 @mod.action_class
-class Actions:
+class HistoryActions:
+    def help_show_history():
+        """Show help GUI for history"""
+        if not gui.showing:
+            actions.mode.enable("user.help_history")
+            gui.show()
+
+    def help_hide_history():
+        """Hide help GUI for history"""
+        if gui.showing:
+            actions.mode.disable("user.help_history")
+            gui.hide()
+
+    def help_toggle_history():
+        """Toggle help GUI for history"""
+        if gui.showing:
+            actions.user.help_hide_history()
+        else:
+            actions.user.help_show_history()
+
     def history_get_last_phrase() -> str:
         """Gets the last phrase"""
         return phrase_history[0] if phrase_history else ""
@@ -41,7 +61,7 @@ class Actions:
     def history_get_phrase(number: int) -> str:
         """Gets the nth most recent phrase"""
         try:
-            return phrase_history[number-1]
+            return phrase_history[number - 1]
         except IndexError:
             return ""
 
@@ -58,8 +78,7 @@ class Actions:
     def history_select_last_phrase():
         """Selects the last phrase"""
         if not phrase_history:
-            logging.warning(
-                "history_select_last_phrase(): No last phrase to select!")
+            logging.warning("history_select_last_phrase(): No last phrase to select!")
             return
         for _ in phrase_history[0]:
             actions.edit.extend_left()
@@ -72,21 +91,8 @@ class Actions:
         phrase_history.insert(0, text)
         last_unformated = unformatted
 
-    def history_toggle_show():
-        """Toggles list of recent phrases"""
-        if gui.showing:
-            actions.user.history_hide()
-        else:
-            gui.show()
-            actions.mode.enable("user.history")
-
-    def history_hide():
-        """Hide list of recent phrases"""
-        actions.mode.disable("user.history")
-        gui.hide()
-
     def history_replace_last_phrase(text: str, unformatted: str = ""):
-        """Replace last phrase in hostiry list"""
+        """Replace last phrase in history list"""
         global last_unformated
         phrase_history[0] = text
         last_unformated = unformatted
@@ -105,6 +111,6 @@ class Actions:
         global last_unformated
         if number < 1 or number > len(phrase_history):
             return
-        phrase_history.pop(number-1)
+        phrase_history.pop(number - 1)
         if number - 1 == 0:
             last_unformated = ""
