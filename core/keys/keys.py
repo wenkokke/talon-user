@@ -126,11 +126,6 @@ def spell(m) -> str:
     return "".join(m.key_alphabet_list)
 
 
-@mod.capture(rule="({self.key_alphabet} | {self.key_number} | {self.key_symbol})")
-def any_alphanumeric_key(m) -> str:
-    "any alphanumeric key"
-    return str(m)
-
 
 @mod.capture(rule="{self.key_alphabet}")
 def letter(m) -> str:
@@ -144,8 +139,19 @@ def letters(m) -> str:
     return "".join(m.key_alphabet_list)
 
 
-# Help menus
+@mod.capture(rule="{self.key_alphabet}+")
+def letters(m) -> str:
+    """One or more letters in the alphabet"""
+    return "".join(m.key_alphabet_list)
 
+
+@mod.capture(rule="spell {self.key_alphabet}+")
+def spell(m) -> str:
+    """One or more letters in the alphabet, prefixed by 'spell'"""
+    return "".join(m.key_alphabet_list)
+
+
+# Help menus
 
 @imgui.open(x=ui.main_screen().x)
 def gui(gui: imgui.GUI):

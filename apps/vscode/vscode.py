@@ -24,17 +24,16 @@ ctx.matches = r"""
 app: vscode
 """
 
-# support for #user.code_snippet
-header = ("Programming language", "File extension", "Spoken form", "Icon")
+# support for #user.editor_snippets
+HEADER = ("Programming language", "File extension", "Spoken form", "Icon")
 
-
-for lang, ext, spoken_form, icon in csv.read_rows("languages.csv", header):
+for lang, ext, spoken_form, icon in csv.read_rows("language_modes.csv", HEADER):
     try:
         ctx_for_lang = Context()
         csv.register_spoken_forms(
             csv_file=f"code/{lang}/snippets_vscode.csv",
             ctx=ctx_for_lang,
-            list_name="user.code_snippet",
+            list_name="user.snippet",
             value_name="Snippet name",
         )
         ctx_for_lang.matches = f"""
@@ -125,14 +124,14 @@ class EditActions:
     def indent_less():
         actions.user.vscode("editor.action.outdentLines")
 
-    # support for #user.line_commands
+    # support for #user.editor_jump
     def jump_line(n: int):
         actions.user.vscode("workbench.action.gotoLine")
         actions.insert(n)
         actions.key("enter")
         actions.edit.line_start()
 
-    # support for #user.find
+    # support for #user.editor_find
     def find_next():
         actions.user.vscode("editor.action.nextMatchFindAction")
 
@@ -152,8 +151,8 @@ class EditActions:
 
 @ctx.action_class("user")
 class UserActions:
-    # support for #user.code_format
-    def code_format():
+    # support for #user.editor_format
+    def editor_format():
         actions.user.vscode("editor.action.formatDocument")
 
     # support for #user.splits
@@ -246,7 +245,7 @@ class UserActions:
         """Triggers snippet creation"""
         actions.user.vscode("workbench.action.openSnippets")
 
-    # support for #user.find
+    # support for #user.editor_find
     def find_file(text: str = None):
         actions.user.vscode("workbench.action.quickOpen")
         if text:

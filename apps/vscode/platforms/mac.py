@@ -15,7 +15,7 @@ class WinActions:
 
 @ctx.action_class("user")
 class UserActions:
-    # support for #user.find
+    # support for #user.editor_find
     def find_replace_confirm():
         """Confirm replace current"""
         actions.key("enter")

@@ -1,8 +1,8 @@
-tag: user.code_snippet
+tag: user.editor_snippets
 -
 
-snip {user.code_snippet}:
-  user.snippet_insert(code_snippet)
+snip {user.snippet}:
+  user.snippet_insert(snippet)
 
 snip hunt <user.text>:
   user.snippet_search(text)

@@ -44,12 +44,12 @@ csv.register_spoken_forms(
 
 
 @mod.action_class
-class UserActions:
-    def haskell_qualified_letter(library: str) -> str:
+class HaskellActions:
+    def haskell_insert_library_qualified_letter(library: str) -> str:
         """Abbreviate module name using a single letter, e.g., Data.Map -> M."""
         return library.split(".")[-1][0]
 
-    def haskell_qualified_word(library: str) -> str:
+    def haskell_insert_library_qualified_word(library: str) -> str:
         """Abbreviate module name using a single word, e.g., Data.Map -> Map."""
         return library.split(".")[-1]
 
@@ -63,3 +63,7 @@ class TypeActions:
     def insert_function(code_function: str):
         """Insert <code_function>"""
         actions.insert(f"{code_function} ")
+
+    def insert_library(code_library: str):
+        """Insert <code_library>"""
+        actions.insert(code_library)

@@ -1,4 +1,4 @@
-tag: user.code_suggest
+tag: user.editor_suggest
 -
 ^suggest$:
   code.complete()

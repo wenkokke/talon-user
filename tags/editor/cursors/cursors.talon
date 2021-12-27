@@ -1,4 +1,4 @@
-tag: user.multiple_cursors
+tag: user.editor_cursors
 -
 cursor nope:
   user.multi_cursor_undo()

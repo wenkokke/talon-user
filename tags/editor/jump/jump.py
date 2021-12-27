@@ -1,7 +1,7 @@
 from talon import Module
 
 mod = Module()
-mod.tag("line_commands", desc="Editor commands which rely on jump-to-line")
+mod.tag("editor_jump", desc="Editor commands which rely on jump-to-line")
 
 # Minimal complete definition:
 #

@@ -1,12 +1,12 @@
 app: vscode
 -
 tag(): user.code_comment
-tag(): user.code_format
-tag(): user.code_snippet
-tag(): user.code_suggest
-tag(): user.find
-tag(): user.line_commands
-tag(): user.multiple_cursors
+tag(): user.editor_cursors
+tag(): user.editor_find
+tag(): user.editor_format
+tag(): user.editor_snippets
+tag(): user.editor_suggest
+tag(): user.editor_jump
 tag(): user.splits
 tag(): user.tabs
 tag(): user.zoom

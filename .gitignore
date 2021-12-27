@@ -1,4 +1,4 @@
 .vscode/
-personal/**
+core/personal/**
 *.app
 settings/icons/devicon

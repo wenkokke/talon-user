@@ -1,4 +1,4 @@
-tag: user.line_commands
+tag: user.editor_jump
 -
 jump <number>:
   edit.jump_line(number)

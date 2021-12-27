@@ -1,8 +1,8 @@
 tag: user.haskell_forced
-and tag: user.find
+and tag: user.editor_find
 tag: user.auto_lang
 and code.language: haskell
-and tag: user.find
+and tag: user.editor_find
 -
 ^hole step$:
   edit.find(" _")

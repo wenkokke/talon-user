@@ -1,7 +1,7 @@
 from talon import Module, actions, clip
 
 mod = Module()
-mod.tag("find")
+mod.tag("editor_find")
 
 
 @mod.action_class

@@ -24,26 +24,29 @@ except {user.code_exception} as:
     "except {code_exception} as :"
     edit.left()
 
-# support for #user.code_library
-import {user.code_library}:
-    "import {code_library}"
-
-from {user.code_library}:
-    "from {code_library_1} "
-
-# support for #user.code_type
-is type <user.code_type>:
-    ": {code_type}"
-
-returns type <user.code_type>:
-    " -> {code_type}"
-
-# snippet for function definition
-(deaf|define) funk <user.text>:
-    function_name = user.format_text(text, "SNAKE_CASE")
-    "def {function_name}():"
+# support for #user.code_function
+(deaf|define) funk <user.code_function_catch_all>:
+    "def {code_function_catch_all}():"
     edit.insert_line_below()
+    "pass"
     edit.up()
     edit.line_end()
     edit.left()
     edit.left()
+
+# support for #user.code_library
+import <user.code_library>$:
+    "import {code_library}"
+
+from <user.code_library> import everything$:
+    "from {code_library} import {code_library_catch_all}\n"
+
+from <user.code_library> import <user.code_library_catch_all>$:
+    "from {code_library} import {code_library_catch_all}\n"
+
+# support for #user.code_type
+has type <user.code_type>$:
+    ": {code_type}"
+
+returns type <user.code_type>:
+    " -> {code_type}"

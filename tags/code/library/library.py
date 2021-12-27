@@ -14,11 +14,6 @@ def code_library_catch_all(m) -> str:
     return actions.user.format_text(str(m), setting_code_library_catch_all.get())
 
 
-@mod.capture(rule="{self.code_library} | <self.code_library_catch_all>")
-def code_library(m) -> str:
-    return str(m)
-
-
 @mod.action_class
 class LibraryActions:
     def insert_library(code_library: str):

@@ -1,4 +1,4 @@
-tag: user.find
+tag: user.editor_find
 -
 ^scout clipboard$:
     user.find_clipboard()

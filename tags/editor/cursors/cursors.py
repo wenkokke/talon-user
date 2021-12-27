@@ -1,7 +1,7 @@
-from talon import Context, actions, ui, Module, app
+from talon import Module
 
 mod = Module()
-mod.tag("multiple_cursors", desc="Tag for enabling generic multiple cursor commands")
+mod.tag("editor_cursors", desc="Tag for enabling generic multiple cursor commands")
 
 
 @mod.action_class
