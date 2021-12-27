@@ -5,14 +5,14 @@ mod = Module()
 
 mod.list("lang", desc="List of programming languages.")
 
-header = ("Programming language", "File extension", "Spoken form", "Icon")
+HEADER = ("Programming language", "File extension", "Spoken form", "Icon")
 
 ctx = Context()
 extension_to_lang = {}
 spoken_form_to_lang = {}
 
 
-for lang, ext, spoken_form, icon in csv.read_rows("languages.csv", header):
+for lang, ext, spoken_form, icon in csv.read_rows("language_modes.csv", HEADER):
     if spoken_form and lang:
         spoken_form_to_lang[spoken_form] = lang
     if lang and ext:

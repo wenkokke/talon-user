@@ -28,8 +28,8 @@ class KeybowActions:
             run(f'{SETLEDS} -num -name "Keybow 2040"', shell=True)
 
 
-def on_launch():
+def on_ready():
     actions.user.keybow2040_set_talon_led(True)
 
 
-app.register("launch", on_launch)
+app.register("ready", on_ready)

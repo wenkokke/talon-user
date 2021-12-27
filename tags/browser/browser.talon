@@ -1,5 +1,6 @@
 tag: browser
 -
+tag(): user.tabs
 
 copy address:
   clip.set_text(browser.address())

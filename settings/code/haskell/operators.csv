@@ -22,6 +22,7 @@ Operator, Spoken form
 ||      , or
 <$>     , F map
 <*>     , F apply
+<|>     , F alter
 ->      , to
 <-      , from
 :       , cons

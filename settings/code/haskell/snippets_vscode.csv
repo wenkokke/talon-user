@@ -28,3 +28,4 @@ haddock post             , haddock post
 case                     , case
 lambda case              , lambda case
 deriving                 , deriving
+language pragma          , language pragma
