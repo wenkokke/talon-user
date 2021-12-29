@@ -1,6 +1,7 @@
 from pathlib import Path
 from user.util import applescript
 from talon import Context, actions
+from talon.mac import applescript
 
 ctx = Context()
 ctx.matches = r"""
@@ -18,7 +19,19 @@ def firefox_run_applescript(name: str) -> None:
 @ctx.action_class("browser")
 class BrowserActions:
     def address() -> str:
-        return firefox_run_applescript('address')
+        applescript.run(
+            r"""
+            tell application "System Events"
+                try
+                    tell application process "Firefox"
+                    return value of UI element 1 of combo box 1 of toolbar "Navigation" of first group of front window
+                    end tell
+                on error
+                    return ""
+                end try
+            end tell
+            """
+        )
 
     def bookmark():
         actions.key("cmd-shift-d")
@@ -37,7 +50,7 @@ class BrowserActions:
 
     def focus_page():
         actions.browser.focus_address()
-        actions.key('f6')
+        actions.key("f6")
 
     def focus_search():
         actions.key("cmd-k")
@@ -51,7 +64,7 @@ class BrowserActions:
         actions.key("cmd-[")
 
     def go_blank():
-        actions.browser.go('about:blank')
+        actions.browser.go("about:blank")
 
     def go_forward():
         actions.key("cmd-]")
@@ -84,7 +97,17 @@ class BrowserActions:
         actions.key("enter")
 
     def title() -> str:
-        return firefox_run_applescript('title')
+        applescript.run(
+            r"""
+            try
+                tell application "Firefox"
+                    return name of front window
+                end tell
+            on error
+                return ""
+            end try
+            """
+        )
 
     def toggle_dev_tools():
         actions.key("cmd-alt-i")

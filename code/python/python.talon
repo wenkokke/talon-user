@@ -41,8 +41,8 @@ import <user.code_library>$:
 from <user.code_library> import everything$:
     "from {code_library} import {code_library_catch_all}\n"
 
-from <user.code_library> import <user.code_library_catch_all>$:
-    "from {code_library} import {code_library_catch_all}\n"
+from <user.code_library> import:
+    "from {code_library} import "
 
 # support for #user.code_type
 has type <user.code_type>$:
