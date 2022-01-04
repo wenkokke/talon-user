@@ -29,13 +29,13 @@ class ZoomUsActions:
 
     def zoomus_toggle() -> None:
         resp = zoomus_run_applescript("toggle")
-        actions.user.keybow2040_set_talon_led("-mute" in resp)
+        actions.user.keybow2040_set_zoom_led("-mute" in resp)
 
     def zoomus_mute() -> None:
         resp = zoomus_run_applescript("mute")
-        actions.user.keybow2040_set_talon_led(False)
+        actions.user.keybow2040_set_zoom_led(False)
 
     def zoomus_unmute() -> None:
         actions.user.talon_sleep()
         zoomus_run_applescript("unmute")
-        actions.user.keybow2040_set_talon_led(True)
+        actions.user.keybow2040_set_zoom_led(True)
