@@ -1,7 +1,7 @@
 from talon import Context, actions
+from talon.mac import applescript
 from pathlib import *
 import subprocess
-from user.util import applescript
 
 
 ctx = Context()
@@ -9,17 +9,96 @@ ctx.matches = r"""
 os: mac
 """
 
+ZOOMUS_STATUS = r"""
+    if application "zoom.us" is running then
+        tell application "System Events"
+            try
+                tell application process "zoom.us"
+                    if exists (menu item "Mute audio" of menu 1 of menu bar item "Meeting" of menu bar 1) then
+                        return "on,unmuted"
+                    else
+                        return "on,muted"
+                    end if
+                end tell
+            on error
+                return "off"
+            end try
+        end tell
+    else
+        return "off"
+    end if
+    """
 
-def zoomus_run_applescript(name: str) -> None:
-    """Runs one of the AppleScript scripts in the AppleScript subdirectory."""
-    APPLESCRIPT_DIR = (Path(__file__).parent / "applescript").resolve()
-    return applescript.run(APPLESCRIPT_DIR, name)
+ZOOMUS_TOGGLE = r"""
+    if application "zoom.us" is running then
+        tell application "System Events"
+            try
+                tell application process "zoom.us"
+                    if exists (menu item "Mute audio" of menu 1 of menu bar item "Meeting" of menu bar 1) then
+                        click menu item "Mute audio" of menu 1 of menu bar item "Meeting" of menu bar 1
+                        return "on,muted"
+                    else
+                        click menu item "Unmute audio" of menu 1 of menu bar item "Meeting" of menu bar 1
+                        return "on,unmuted"
+                    end if
+                end tell
+            on error
+                return "off"
+            end try
+        end tell
+    else
+        return "off"
+    end if
+    """
+
+ZOOMUS_MUTE = r"""
+    if application "zoom.us" is running then
+        tell application "System Events"
+            try
+                tell application process "zoom.us"
+                    if exists (menu item "Mute audio" of menu 1 of menu bar item "Meeting" of menu bar 1) then
+                        click menu item "Mute audio" of menu 1 of menu bar item "Meeting" of menu bar 1
+                        return "on,muted"
+                    else
+                        return "on,muted"
+                    end if
+                end tell
+            on error
+                return "off"
+            end try
+        end tell
+    else
+        return "off"
+    end if
+    """
+
+ZOOMUS_UNMUTE = r"""
+    if application "zoom.us" is running then
+        tell application "System Events"
+            try
+                tell application process "zoom.us"
+                    if exists (menu item "Unmute audio" of menu of menu bar item "Meeting" of menu bar 1) then
+                        click menu item "Unmute audio" of menu 1 of menu bar item "Meeting" of menu bar 1
+                        return "on,unmuted"
+                    else
+                        return "on,unmuted"
+                    end if
+                end tell
+            on error
+                return "off"
+            end try
+        end tell
+    else
+        return "off"
+    end if
+    """
 
 
 @ctx.action_class("user")
 class ZoomUsActions:
     def zoomus_status() -> str:
-        return zoomus_run_applescript("status")
+        global ZOOMUS_STATUS
+        return applescript.run(ZOOMUS_STATUS)
 
     def zoomus_join_meeting(meeting_id: str, pwd: str) -> None:
         subprocess.run(
@@ -28,14 +107,19 @@ class ZoomUsActions:
         )
 
     def zoomus_toggle() -> None:
-        resp = zoomus_run_applescript("toggle")
-        actions.user.keybow2040_set_zoom_led("-mute" in resp)
+        status = actions.user.zoomus_status()
+        if status == "on,unmuted":
+            actions.user.zoomus_mute()
+        if status == "on,muted":
+            actions.user.zoomus_unmute()
 
     def zoomus_mute() -> None:
-        resp = zoomus_run_applescript("mute")
-        actions.user.keybow2040_set_zoom_led(False)
+        global ZOOMUS_MUTE
+        status = applescript.run(ZOOMUS_MUTE)
+        actions.user.keybow2040_set_zoom_led(status == "on,unmuted")
 
     def zoomus_unmute() -> None:
         actions.user.talon_sleep()
-        zoomus_run_applescript("unmute")
-        actions.user.keybow2040_set_zoom_led(True)
+        global ZOOMUS_UNMUTE
+        status = applescript.run(ZOOMUS_UNMUTE)
+        actions.user.keybow2040_set_zoom_led(status == "on,unmuted")
