@@ -1,5 +1,4 @@
 from pathlib import Path
-from user.util import applescript
 from talon import Context, actions
 from talon.mac import applescript
 
@@ -10,28 +9,42 @@ app: firefox
 """
 
 
-def firefox_run_applescript(name: str) -> None:
-    """Runs one of the AppleScript scripts in the AppleScript subdirectory."""
-    APPLESCRIPT_DIR = (Path(__file__).parent / "applescript").resolve()
-    return applescript.run(APPLESCRIPT_DIR, name)
+GET_FIREFOX_ADDRESS = r"""
+    if application "Firefox" is running then
+        tell application "System Events"
+            try
+                tell application process "Firefox"
+                    return value of UI element 1 of combo box 1 of toolbar "Navigation" of first group of front window
+                end tell
+            on error
+                return ""
+            end try
+        end tell
+    else
+        return ""
+    end if
+    """
+
+GET_FIREFOX_TITLE = r"""
+    if application "Firefox" is running then
+        try
+            tell application "Firefox"
+                return name of front window
+            end tell
+        on error
+            return ""
+        end try
+    else
+        return ""
+    end if
+    """
 
 
 @ctx.action_class("browser")
 class BrowserActions:
     def address() -> str:
-        applescript.run(
-            r"""
-            tell application "System Events"
-                try
-                    tell application process "Firefox"
-                    return value of UI element 1 of combo box 1 of toolbar "Navigation" of first group of front window
-                    end tell
-                on error
-                    return ""
-                end try
-            end tell
-            """
-        )
+        global GET_FIREFOX_ADDRESS
+        return applescript.run(GET_FIREFOX_ADDRESS)
 
     def bookmark():
         actions.key("cmd-shift-d")
@@ -97,17 +110,8 @@ class BrowserActions:
         actions.key("enter")
 
     def title() -> str:
-        applescript.run(
-            r"""
-            try
-                tell application "Firefox"
-                    return name of front window
-                end tell
-            on error
-                return ""
-            end try
-            """
-        )
+        global GET_FIREFOX_TITLE
+        return applescript.run(GET_FIREFOX_TITLE)
 
     def toggle_dev_tools():
         actions.key("cmd-alt-i")
