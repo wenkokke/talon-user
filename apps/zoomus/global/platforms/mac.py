@@ -112,6 +112,8 @@ class ZoomUsActions:
             actions.user.zoomus_mute()
         if status == "on,muted":
             actions.user.zoomus_unmute()
+        if status == "off":
+            actions.user.keybow2040_set_zoom_led(False)
 
     def zoomus_mute() -> None:
         global ZOOMUS_MUTE
