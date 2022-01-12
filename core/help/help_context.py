@@ -224,7 +224,7 @@ def gui_context_help(gui: imgui.GUI):
         actions.user.help_context_refresh()
 
     if gui.button("Hide"):
-        actions.user.help_hide_commands()
+        actions.user.help_hide_context()
 
 
 def draw_context_commands(gui: imgui.GUI):
