@@ -1,4 +1,4 @@
-mode: user.focus
+mode: user.help_focus
 -
 
 ^focus <number_small>$:

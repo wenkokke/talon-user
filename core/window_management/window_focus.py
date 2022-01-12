@@ -1,15 +1,12 @@
 from talon import Context, Module, app, imgui, ui, actions
 from talon.grammar import Phrase
 from itertools import *
-from user.util import csv
 from user.util.speech import create_spoken_form_app
 
-import os
-import re
 import time
 
 mod = Module()
-mod.mode("focus")
+mod.mode("help_focus")
 mod.list("running_application", desc="List of running applications")
 
 ctx = Context()
@@ -91,19 +88,6 @@ class Actions:
         if index > -1 and index < len(names):
             actions.user.focus_name(names[index])
 
-    def help_focus_toggle():
-        """Shows/hides all running applications"""
-        if gui.showing:
-            actions.user.help_focus_hide()
-        else:
-            actions.mode.enable("user.focus")
-            gui.show()
-
-    def help_focus_hide():
-        """Hides list of running applications"""
-        actions.mode.disable("user.focus")
-        gui.hide()
-
     def focus_app(app: ui.App):
         """Focus app and wait until finished"""
         app.focus()
@@ -123,6 +107,25 @@ class Actions:
                 raise RuntimeError(f"Can't focus window: {window.title}")
             actions.sleep("50ms")
 
+    def help_show_focus():
+        """Show help GUI for focus"""
+        if not gui.showing:
+            actions.mode.enable("user.help_focus")
+            gui.show()
+
+    def help_hide_focus():
+        """Hide help GUI for focus"""
+        if gui.showing:
+            actions.mode.disable("user.help_focus")
+            gui.hide()
+
+    def help_toggle_focus():
+        """Toggle help GUI for focus"""
+        if gui.showing:
+            actions.user.help_hide_focus()
+        else:
+            actions.user.help_show_focus()
+
 
 @imgui.open(x=ui.main_screen().x)
 def gui(gui: imgui.GUI):
@@ -134,4 +137,4 @@ def gui(gui: imgui.GUI):
         index += 1
     gui.spacer()
     if gui.button("Hide"):
-        actions.user.help_focus_hide()
+        actions.user.help_hide_focus()
