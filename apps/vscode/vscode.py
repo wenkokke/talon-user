@@ -271,3 +271,17 @@ class UserActions:
         if text:
             actions.sleep("50ms")
             actions.insert(text)
+
+    # support for #user.version_control
+    def version_control_stage_everything():
+        actions.user.vscode("git.stageAll")
+
+    def version_control_commit(message: str):
+        actions.user.vscode("git.commit")
+
+    def version_control_push():
+        actions.user.vscode("git.push")
+
+    def version_control_pull():
+        actions.user.vscode("git.pull")
+

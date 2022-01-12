@@ -9,6 +9,7 @@ tag(): user.editor_suggest
 tag(): user.editor_jump
 tag(): user.splits
 tag(): user.tabs
+tag(): user.version_control
 tag(): user.zoom
 
 # Alignment
