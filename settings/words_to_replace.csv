@@ -24,4 +24,6 @@ json        , Jason
 wrangle     , Rangel
 Wrangell    , Wrangell
 format text , forma text
-catch all   , catchall
+catchall    , catch all
+filename    , file name
+filepath    , file path

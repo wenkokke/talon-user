@@ -181,6 +181,7 @@ repr         , representation
 req          , request
 ret          , return
 rev          , revision
+rev          , reverse
 rb           , ruby
 sk           , saskatchewan
 sp           , service pack
