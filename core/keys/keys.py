@@ -64,6 +64,12 @@ ctx.lists["self.key_punctuation"] = {
     "percent sign": "%",
 }
 
+# Symbols immune to formatting.
+mod.list("key_symbol_immune", desc="All symbols from the keyboard")
+ctx.lists["self.key_symbol_immune"] = {
+    "dot": ".",
+}
+
 # Symbols available in command mode, but NOT during dictation.
 mod.list("key_symbol", desc="All symbols from the keyboard")
 ctx.lists["self.key_symbol"] = {
@@ -120,13 +126,6 @@ def key_unmodified(m) -> str:
     return str(m)
 
 
-@mod.capture(rule="spell {self.key_alphabet}+")
-def spell(m) -> str:
-    """Spell word phoneticly"""
-    return "".join(m.key_alphabet_list)
-
-
-
 @mod.capture(rule="{self.key_alphabet}")
 def letter(m) -> str:
     """One letter in the alphabet"""
@@ -134,24 +133,25 @@ def letter(m) -> str:
 
 
 @mod.capture(rule="{self.key_alphabet}+")
-def letters(m) -> str:
+def lowercase(m) -> str:
     """One or more letters in the alphabet"""
-    return "".join(m.key_alphabet_list)
+    return "".join(m.key_alphabet_list).lower()
 
 
-@mod.capture(rule="{self.key_alphabet}+")
-def letters(m) -> str:
+@mod.capture(rule="ship {self.key_alphabet}+ [over]")
+def uppercase(m) -> str:
     """One or more letters in the alphabet"""
-    return "".join(m.key_alphabet_list)
+    return "".join(m.key_alphabet_list).upper()
 
 
-@mod.capture(rule="spell {self.key_alphabet}+")
+@mod.capture(rule="spell (<user.lowercase> | <user.uppercase>)+")
 def spell(m) -> str:
     """One or more letters in the alphabet, prefixed by 'spell'"""
-    return "".join(m.key_alphabet_list)
+    return "".join(m[1:])
 
 
 # Help menus
+
 
 @imgui.open(x=ui.main_screen().x)
 def gui(gui: imgui.GUI):

@@ -16,11 +16,6 @@ class Actions:
         """Inserts <text>."""
         insert_string(text, text)
 
-    def insert_and_format(text: str, formatters: str):
-        """Inserts a text formatted according to formatters. Formatters is a comma separated list of formatters (e.g. 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING')"""
-        formatted = actions.user.format_text(text, formatters)
-        insert_string(formatted, text)
-
     def reformat_last(formatters: str):
         """Clears and reformats last formatted phrase"""
         last_phrase = actions.user.history_get_last_phrase()

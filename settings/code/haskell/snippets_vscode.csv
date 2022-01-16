@@ -29,3 +29,9 @@ case                     , case
 lambda case              , lambda case
 deriving                 , deriving
 language pragma          , language pragma
+import                   , import
+import qualified         , import qualified
+import qualified post    , import qualified post
+using                    , using
+hiding                   , hiding
+as                       , as

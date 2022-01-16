@@ -1,5 +1,6 @@
 from talon import Module, Context, ui, actions, grammar
-from typing import Optional
+from talon.grammar.vm import Phrase, Capture
+from typing import Any, Optional, Sequence
 import re
 
 mod = Module()
@@ -15,7 +16,7 @@ setting_context_sensitive_dictation = mod.setting(
 @mod.capture(rule="({self.vocabulary} | <word>)")
 def word(m) -> str:
     """A single word, including user-defined vocabulary."""
-    words = capture_to_words(m)
+    words = capture_to_chunks(m)
     return words[0]
 
 # Used to escape numbers and symbols
@@ -24,40 +25,43 @@ def words(m) -> str:
     """A sequence of words, including user-defined vocabulary."""
     return format_phrase(m)
 
-@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | <phrase>)+")
+@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | <user.immune_string> | <phrase>)+")
+def chunks(m) -> Sequence[Any]:
+    return capture_to_chunks(m)
+
+@mod.capture(rule="<self.chunks>")
 def text(m) -> str:
     """Sequence of words, including user-defined vocabulary, abbreviations and spelling."""
-    return format_phrase(m)
+    return format_phrase(m.chunks)
 
 @mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | {self.key_punctuation} | <phrase>)+")
 def prose(m) -> str:
     """Mixed words and punctuation, including user-defined vocabulary, abbreviations and spelling, auto-spaced & capitalized."""
-    text, _state = auto_capitalize(format_phrase(m))
+    text, _state = auto_capitalize(format_phrase(capture_to_chunks(m)))
     return text
 
-@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <phrase> | <user.number_string>)+")
-def variable_name(m) -> str:
-    """Acceptable variable names."""
-    return format_phrase(m)
-
 # ---------- FORMATTING ---------- #
-def format_phrase(m):
-    words = capture_to_words(m)
-    result = ""
-    for i, word in enumerate(words):
-        if i > 0 and needs_space_between(words[i-1], word):
-            result += " "
-        result += word
-    return result
+def format_phrase(chunks: Sequence[Any]) -> str:
+    prhrase = ""
+    for i, chunk in enumerate(chunks):
+        word = str(chunk)
+        if i > 0 and needs_space_between(prhrase, word):
+            prhrase += " "
+        prhrase += word
+    return prhrase
 
-def capture_to_words(m):
-    words = []
+def capture_to_chunks(m: Capture) -> Sequence[Any]:
+    chunks = []
     for item in m:
-        words.extend(
-            actions.user.replace_phrases(actions.dictate.parse_words(item))
-            if isinstance(item, grammar.vm.Phrase) else
-            item.split(" "))
-    return words
+        if isinstance(item, Phrase):
+            item = actions.dictate.parse_words(item)
+            item = actions.user.replace_phrases(item)
+            chunks.extend(item)
+        elif isinstance(item, str):
+            chunks.extend(item.split(" "))
+        else:
+            chunks.append(item)
+    return chunks
 
 # There must be a simpler way to do this, but I don't see it right now.
 no_space_after = re.compile(r"""

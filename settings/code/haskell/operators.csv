@@ -31,3 +31,4 @@ Operator, Spoken form
 </>     , file path
 <.>     , file extension
 -<.>    , replace file extension
+<>      , monoid

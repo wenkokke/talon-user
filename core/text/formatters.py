@@ -1,8 +1,13 @@
 from __future__ import annotations
 from itertools import chain, repeat
-from typing import Callable
-from talon import Module, Context, actions, app, imgui, ui
+from typing import Any, Callable, Iterable, Optional, Sequence, Union
+from talon import Module, Context, actions, imgui, ui
+from talon.grammar.vm import Phrase
+
 import re
+
+mod = Module()
+ctx = Context()
 
 # NOTE: This is different from the definition of a camelCase boundary
 #       in create_spoken_form: this one splits "IOError" as "IO Error",
@@ -21,80 +26,120 @@ REGEX_CAMEL_BOUNDARY = re.compile(
     )
 )
 
-
 # NOTE: A delimiter char followed by a blank space is no delimiter.
 REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
-Formatter = Callable[[str], str]
 
-noop: Formatter = lambda text: text
-lower: Formatter = str.lower
-upper: Formatter = str.upper
-capitalize: Formatter = str.capitalize
+class ImmuneString(object):
+    """Wrapper that makes a string immune from formatting."""
 
-
-def alphanum(text: str) -> str:
-    return lambda text: re.sub(r"[A-Za-z0-9]", "", text)
+    def __init__(self, string):
+        self.string = string
 
 
-def surround(char: str) -> Formatter:
-    return lambda text: f"{char}{text}{char}"
+@mod.capture(rule="({user.key_symbol_immune} | <user.number_prefix>)")
+def immune_string(m) -> ImmuneString:
+    return ImmuneString(str(m[0]))
 
 
-def prefix(text_prefix: str) -> Formatter:
-    return lambda text: f"{text_prefix}{text}"
+Chunk = Union[str, ImmuneString]
+StringFormatter = Optional[Callable[[str], str]]
 
 
-def suffix(text_suffix: str) -> Formatter:
-    return lambda text: f"{text}{text_suffix}"
+class Formatter(object):
+    @staticmethod
+    def from_description(formatter_names: str) -> Formatter:
+        global FORMATTERS_DICT
+        formatter = Formatter()
+        for formatter_name in formatter_names.split(","):
+            formatter += FORMATTERS_DICT[formatter_name]
+        return formatter
 
+    def __init__(
+        self,
+        delimiter: Optional[str] = None,
+        chunk_formatters: Sequence[StringFormatter] = (None,),
+        string_formatters: Sequence[StringFormatter] = (),
+    ):
+        """"""
+        self.delimiter = delimiter
+        self.chunk_formatters = tuple(chunk_formatters)
+        self.string_formatters = tuple(string_formatters)
 
-def words(
-    *formatters: Formatter, delimiter: str = " ", splitter: str = " "
-) -> Formatter:
-    """
-    Create a formatter from a delimiter and a list of formatters.
-
-    Each of the formatters will be applied to successive words,
-    and the last one will be repeated for the rest of the words.
-    """
-    return lambda text: delimiter.join(
-        formatter(word)
-        for formatter, word in zip(
-            chain(formatters, repeat(formatters[-1])), text.split(splitter)
+    def __add__(self, other: Formatter) -> Formatter:
+        """"""
+        return Formatter(
+            other.delimiter or self.delimiter,
+            other.chunk_formatters or self.chunk_formatters,
+            other.string_formatters + self.string_formatters,
         )
-    )
+
+    def chunk_formatter(self, i: int) -> Optional[Callable[[str], str]]:
+        return self.chunk_formatters[min(i, len(self.chunk_formatters) - 1)]
+
+    def __call__(self, chunks: Sequence[Chunk]):
+        """"""
+        delimiter = self.delimiter or " "
+        formatted_string = ""
+        for i in range(0, len(chunks)):
+            current_chunk = chunks[i]
+            current_chunk_is_last = i == len(chunks) - 1
+            current_chunk_is_immune = isinstance(current_chunk, ImmuneString)
+            current_formatter = self.chunk_formatter(i)
+
+            if current_chunk_is_immune:
+                formatted_string += current_chunk.string
+            else:
+                if current_formatter:
+                    formatted_string += current_formatter(current_chunk)
+                else:
+                    formatted_string += current_chunk
+
+                if not current_chunk_is_last:
+                    next_chunk = chunks[i + 1]
+                    next_chunk_is_immune = isinstance(next_chunk, ImmuneString)
+                    if not next_chunk_is_immune:
+                        formatted_string += delimiter
+
+        for format in self.string_formatters:
+            formatted_string = format(formatted_string)
+        return formatted_string
 
 
-formatters_dict = {
-    "NOOP": noop,
-    "TRAILING_PADDING": suffix(" "),
-    "TRAILING_QUESTION_MARK": suffix("?"),
-    "TRAILING_EXCLAMATION_MARK": suffix("!"),
-    "LEADING_SINGLE_DASH": prefix("-"),
-    "LEADING_DOUBLE_DASH": prefix("--"),
-    "ALL_CAPS": upper,
-    "ALL_LOWERCASE": lower,
-    "DOUBLE_QUOTED_STRING": surround('"'),
-    "SINGLE_QUOTED_STRING": surround("'"),
-    "REMOVE_FORMATTING": words(lower),
-    "CAPITALIZE_ALL_WORDS": words(capitalize),
-    "CAPITALIZE_FIRST_WORD": words(capitalize, noop),
-    "CAMEL_CASE": words(lower, capitalize, delimiter=""),
-    "PASCAL_CASE": words(capitalize, delimiter=""),
-    "SNAKE_CASE": words(lower, delimiter="_"),
-    "ALL_CAPS_SNAKE_CASE": words(upper, delimiter="_"),
-    "DASH_SEPARATED": words(lower, delimiter="-"),
-    "DOT_SEPARATED": words(lower, delimiter="."),
-    "SLASH_SEPARATED": words(lower, delimiter="/"),
-    "DOUBLE_UNDERSCORE": words(lower, delimiter="__"),
-    "DOUBLE_COLON_SEPARATED": words(lower, delimiter="::"),
-    "NO_SPACES": words(noop, delimiter=""),
-    "ALPHANUM": alphanum,
+def FormatTopLevel(prefix: str = "", suffix: str = "") -> Formatter:
+    return Formatter(string_formatters=(lambda text: f"{prefix}{text}{suffix}",))
+
+
+def FormatChunk(chunk_formatters: list[StringFormatter]) -> Formatter:
+    return Formatter(chunk_formatters=chunk_formatters)
+
+
+def JoinBy(delimiter: str) -> Formatter:
+    return Formatter(delimiter=delimiter)
+
+
+FORMATTERS_DICT = {
+    "NOOP": Formatter(),
+    "TRAILING_PADDING": FormatTopLevel(suffix=" "),
+    "TRAILING_QUESTION_MARK": FormatTopLevel(suffix="?"),
+    "TRAILING_EXCLAMATION_MARK": FormatTopLevel(suffix="!"),
+    "LEADING_SINGLE_DASH": FormatTopLevel(prefix="-"),
+    "LEADING_DOUBLE_DASH": FormatTopLevel(prefix="--"),
+    "DOUBLE_QUOTED_STRING": FormatTopLevel(prefix='"', suffix='"'),
+    "SINGLE_QUOTED_STRING": FormatTopLevel(prefix="'", suffix="'"),
+    "ALL_UPPERCASE": FormatChunk([str.upper]),
+    "ALL_LOWERCASE": FormatChunk([str.lower]),
+    "CAPITALIZE_ALL": FormatChunk([str.capitalize]),
+    "CAPITALIZE_FIRST": FormatChunk([str.capitalize, None]),
+    "CAPITALIZE_REST": FormatChunk([None, str.capitalize]),
+    "SNAKE_CASE": JoinBy("_"),
+    "DASH_SEPARATED": JoinBy("-"),
+    "DOT_SEPARATED": JoinBy("."),
+    "SLASH_SEPARATED": JoinBy("/"),
+    "DOUBLE_UNDERSCORE": JoinBy("__"),
+    "DOUBLE_COLON_SEPARATED": JoinBy("::"),
+    "NO_SPACES": JoinBy(""),
 }
-
-mod = Module()
-ctx = Context()
 
 # This is the mapping from spoken phrases to formatters
 mod.list("formatter_code", desc="List of code formatters")
@@ -110,70 +155,96 @@ mod.list(
 mod.list("formatter_word", desc="List of word formatters")
 
 FORMATTER_CODE = {
-    "upper": "ALL_CAPS",
+    "upper": "ALL_UPPERCASE",
     "lower": "ALL_LOWERCASE",
-    "dubstring": "DOUBLE_QUOTED_STRING",
-    "string": "SINGLE_QUOTED_STRING",
-    "title": "CAPITALIZE_ALL_WORDS",
-    "unformat": "REMOVE_FORMATTING",
-    "camel": "CAMEL_CASE",
-    "pascal": "PASCAL_CASE",
+    "string": "DOUBLE_QUOTED_STRING",
+    "quote": "SINGLE_QUOTED_STRING",
+    "title": "CAPITALIZE_ALL",
+    "camel": "NO_SPACES,CAPITALIZE_REST",
+    "pascal": "NO_SPACES,CAPITALIZE_ALL",
     "snake": "SNAKE_CASE",
-    "constant": "ALL_CAPS_SNAKE_CASE",
+    "constant": "ALL_UPPERCASE,SNAKE_CASE",
     "kebab": "DASH_SEPARATED",
     "dotted": "DOT_SEPARATED",
     "slasher": "SLASH_SEPARATED",
-    "dunder": "DOUBLE_UNDERSCORE",
+    "dunder": "ALL_LOWERCASE,DOUBLE_UNDERSCORE",
     "packed": "DOUBLE_COLON_SEPARATED",
     "smash": "NO_SPACES",
+    "trot": "TRAILING_PADDING",
 }
 ctx.lists["self.formatter_code"] = FORMATTER_CODE
 
 FORMATTER_PROSE = {
     "say": "NOOP",
-    "sentence": "CAPITALIZE_FIRST_WORD",
-    "query": "CAPITALIZE_FIRST_WORD,TRAILING_QUESTION_MARK",
-    "shout": "CAPITALIZE_FIRST_WORD,TRAILING_EXCLAMATION_MARK",
-    "dubquote": "CAPITALIZE_FIRST_WORD,DOUBLE_QUOTED_STRING",
-    "quote": "CAPITALIZE_FIRST_WORD,SINGLE_QUOTED_STRING",
+    "sentence": "CAPITALIZE_FIRST",
 }
 ctx.lists["self.formatter_prose"] = FORMATTER_PROSE
 
-FORMATTER_WORD = {
-    "word": "ALL_LOWERCASE",
-    "trot": "ALL_LOWERCASE,TRAILING_PADDING",
-    "proud": "CAPITALIZE_FIRST_WORD",
-    "leap": "CAPITALIZE_FIRST_WORD,TRAILING_PADDING",
-}
+FORMATTER_WORD = {"word": "NOOP"}
 ctx.lists["self.formatter_word"] = FORMATTER_WORD
 
 
 @mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra})+")
-def formatters_code(m) -> str:
+def formatters(m) -> str:
+    """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
+    return ",".join(m)
+
+# copied from dication.py
+def capture_to_words(m):
+    words = []
+    for item in m:
+        if isinstance(item, Phrase):
+            item = actions.dictate.parse_words(item)
+            item = actions.user.replace_phrases(item)
+            words.extend(item)
+        elif isinstance(item, str):
+            words.extend(item.split(" "))
+        else:
+            words.append(item)
+    return words
+
+@mod.capture(rule="<user.formatters> [lit] <user.chunks>")
+def formatted_code(m) -> str:
+    """"""
+    return Formatter.from_description(m.formatters)(m.chunks)
+
+
+@mod.capture(rule="({self.formatter_prose} | {self.formatter_prose_extra})+")
+def formatters_prose(m) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
 
 
-@mod.capture(
-    rule="({self.formatter_code} | {self.formatter_code_extra} | {self.formatter_prose} | {self.formatter_prose_extra})+"
-)
-def formatters(m) -> str:
-    """Return a comma-separated string of formatters e.g. 'SNAKE,DUBSTRING'"""
+@mod.capture(rule="<user.formatters_prose> [lit] <user.prose>")
+def formatted_prose(m) -> str:
+    """"""
+    return Formatter.from_description(m.formatters_prose)(m.prose.split())
+
+
+@mod.capture(rule="({self.formatter_word})+")
+def formatters_word(m) -> str:
+    """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
+
+
+@mod.capture(rule="<user.formatters_word> [lit] <user.word>")
+def formatted_word(m) -> str:
+    """"""
+    return Formatter.from_description(m.formatters_word)((m.word,))
 
 
 @mod.action_class
 class Actions:
     def format_text(text: str, formatter_names: str) -> str:
         """
-        Formats a text according to <formatters>.
+        Formats a text according to <formatter_names>.
 
         Args:
-            formatters: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+            formatter_names: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
-        global formatters_dict
+        global FORMATTERS_DICT
         for formatter_name in reversed(formatter_names.split(",")):
-            text = formatters_dict[formatter_name](text)
+            text = FORMATTERS_DICT[formatter_name](text)
         return text
 
     def unformat_text(text: str) -> str:
@@ -219,8 +290,13 @@ def gui(gui: imgui.GUI):
     if gui.button("Hide"):
         actions.user.help_hide_formatters()
 
+
 mod = Module()
-mod.mode("help_formatters", desc="A mode which is active if the help GUI for formatters is showing")
+mod.mode(
+    "help_formatters",
+    desc="A mode which is active if the help GUI for formatters is showing",
+)
+
 
 @mod.action_class
 class HelpActions:

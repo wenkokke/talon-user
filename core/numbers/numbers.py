@@ -221,7 +221,7 @@ def number_small(m) -> int:
     return int(parse_number(list(m)))
 
 
-@mod.capture(rule="(numb|number) <user.number_string>")
+@mod.capture(rule="numb <user.number_string>")
 def number_prefix(m) -> str:
     """Parses a prefixed number phrase, returning that number as a string."""
     return m.number_string
