@@ -62,18 +62,18 @@ class Formatter(object):
         string_formatters: Sequence[StringFormatter] = (),
     ):
         self.__delimiter = delimiter
-        self.__chunk_formatters = tuple(chunk_formatters)
-        self.__string_formatters = tuple(string_formatters)
+        self.chunk_formatters = tuple(chunk_formatters)
+        self.string_formatters = tuple(string_formatters)
 
     def __repr__(self):
         result = "{\n"
         result += f"  delimiter = '{self.delimiter()}',\n"
-        for i, chunk_formatter in enumerate(self.__chunk_formatters):
+        for i, chunk_formatter in enumerate(self.chunk_formatters):
             sample = "sample"
             if chunk_formatter:
                 sample = chunk_formatter(sample)
             result += f"  chunk_formatter({i}, 'sample') = '{sample}',\n"
-        for i, string_formatter in enumerate(self.__string_formatters):
+        for i, string_formatter in enumerate(self.string_formatters):
             sample = "sample"
             if string_formatter:
                 sample = string_formatter(sample)
@@ -81,51 +81,50 @@ class Formatter(object):
         result += "}"
         return result
 
+    @staticmethod
+    def pick_delimiter(delimiter1: Optional[str], delimiter2: Optional[str]):
+        return delimiter2 if delimiter1 is None else delimiter1
+
     def __add__(self, other: Formatter) -> Formatter:
         return Formatter(
-            self.__delimiter if other.__delimiter is None else other.__delimiter,
-            other.__chunk_formatters or self.__chunk_formatters,
-            other.__string_formatters + self.__string_formatters,
+            Formatter.pick_delimiter(other.__delimiter, self.__delimiter),
+            other.chunk_formatters or self.chunk_formatters,
+            other.string_formatters + self.string_formatters,
         )
 
     def delimiter(self) -> str:
-        if self.__delimiter is None:
-            return " "
-        else:
-            return self.__delimiter
+        return " " if self.__delimiter is None else self.__delimiter
 
-    def format_chunk(self, i: int, chunk: Chunk) -> str:
-        if isinstance(chunk, ImmuneString):
-            return chunk.string
-        else:
-            ith_or_last = min(i, len(self.__chunk_formatters) - 1)
-            chunk_formatter = self.__chunk_formatters[ith_or_last]
-            if chunk_formatter:
-                return chunk_formatter(chunk)
-            else:
-                return chunk
-
-    def format_string(self, string: str) -> str:
-        for string_formatter in self.__string_formatters:
+    def string_formatter(self, string: str) -> str:
+        for string_formatter in self.string_formatters:
             string = string_formatter(string)
         return string
 
+    def chunk_formatter_chain(self) -> Iterable[Optional[StringFormatter]]:
+        repeat_last = repeat(self.chunk_formatters[-1])
+        return chain(self.chunk_formatters, repeat_last)
+
     def __call__(self, chunks: Sequence[Chunk]):
         formatted_string = ""
-        for i in range(0, len(chunks)):
-            current_chunk = chunks[i]
-            current_chunk_is_last = i == len(chunks) - 1
+        shifted_chunks = chain(chunks[1:], [None])
+        for chunk_formatter, curr_chunk, next_chunk in zip(
+            self.chunk_formatter_chain(), chunks, shifted_chunks
+        ):
+            curr_chunk_is_last = next_chunk is None
+            curr_chunk_is_immune = isinstance(curr_chunk, ImmuneString)
+            next_chunk_is_immune = isinstance(next_chunk, ImmuneString)
 
-            formatted_string += self.format_chunk(i, current_chunk)
-
-            if not current_chunk_is_last:
-                next_chunk = chunks[i + 1]
-                next_chunk_is_immune = isinstance(next_chunk, ImmuneString)
-                current_chunk_is_immune = isinstance(current_chunk, ImmuneString)
-                if not (current_chunk_is_immune or next_chunk_is_immune):
+            if curr_chunk_is_immune:
+                formatted_string += curr_chunk.string
+            else:
+                if chunk_formatter:
+                    formatted_string += chunk_formatter(curr_chunk)
+                else:
+                    formatted_string += curr_chunk
+                if not (curr_chunk_is_last or next_chunk_is_immune):
                     formatted_string += self.delimiter()
 
-        return self.format_string(formatted_string)
+        return self.string_formatter(formatted_string)
 
 
 def FormatTopLevel(prefix: str = "", suffix: str = "") -> Formatter:
