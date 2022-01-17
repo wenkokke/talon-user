@@ -94,14 +94,12 @@ class Formatter(object):
         else:
             return self.__delimiter
 
-    def chunk_formatter(self, i: int) -> Optional[StringFormatter]:
-        return self.__chunk_formatters[min(i, len(self.__chunk_formatters) - 1)]
-
     def format_chunk(self, i: int, chunk: Chunk) -> str:
         if isinstance(chunk, ImmuneString):
             return chunk.string
         else:
-            chunk_formatter = self.chunk_formatter(i)
+            ith_or_last = min(i, len(self.__chunk_formatters) - 1)
+            chunk_formatter = self.__chunk_formatters[ith_or_last]
             if chunk_formatter:
                 return chunk_formatter(chunk)
             else:
