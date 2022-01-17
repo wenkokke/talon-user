@@ -66,26 +66,49 @@ class Formatter(object):
         self.chunk_formatters = tuple(chunk_formatters)
         self.string_formatters = tuple(string_formatters)
 
+    def __repr__(self):
+        result = "{\n"
+        result += f"  delimiter = '{self.__delimiter()}',\n"
+        for i, chunk_formatter in enumerate(self.chunk_formatters):
+            sample = "sample"
+            if chunk_formatter:
+                sample = chunk_formatter(sample)
+            result += f"  chunk_formatter({i}, 'sample') = '{sample}',\n"
+        for i, string_formatter in enumerate(self.string_formatters):
+            sample = "sample"
+            if string_formatter:
+                sample = string_formatter(sample)
+            result += f"  string_formatter({i}, 'sample') = '{sample}',\n"
+        result += "}"
+        return result
+
     def __add__(self, other: Formatter) -> Formatter:
         """"""
         return Formatter(
-            other.delimiter or self.delimiter,
+            self.delimiter if other.delimiter is None else other.delimiter,
             other.chunk_formatters or self.chunk_formatters,
             other.string_formatters + self.string_formatters,
         )
 
-    def chunk_formatter(self, i: int) -> Optional[Callable[[str], str]]:
+    def __delimiter(self) -> str:
+        if self.delimiter is None:
+            return " "
+        else:
+            return self.delimiter
+
+    def __chunk_formatter(self, i: int) -> Optional[Callable[[str], str]]:
         return self.chunk_formatters[min(i, len(self.chunk_formatters) - 1)]
 
     def __call__(self, chunks: Sequence[Chunk]):
         """"""
-        delimiter = self.delimiter or " "
+        print(self)
+        print(chunks)
         formatted_string = ""
         for i in range(0, len(chunks)):
             current_chunk = chunks[i]
             current_chunk_is_last = i == len(chunks) - 1
             current_chunk_is_immune = isinstance(current_chunk, ImmuneString)
-            current_formatter = self.chunk_formatter(i)
+            current_formatter = self.__chunk_formatter(i)
 
             if current_chunk_is_immune:
                 formatted_string += current_chunk.string
@@ -99,12 +122,11 @@ class Formatter(object):
                     next_chunk = chunks[i + 1]
                     next_chunk_is_immune = isinstance(next_chunk, ImmuneString)
                     if not next_chunk_is_immune:
-                        formatted_string += delimiter
+                        formatted_string += self.__delimiter()
 
         for format in self.string_formatters:
             formatted_string = format(formatted_string)
         return formatted_string
-
 
 def FormatTopLevel(prefix: str = "", suffix: str = "") -> Formatter:
     return Formatter(string_formatters=(lambda text: f"{prefix}{text}{suffix}",))
@@ -189,6 +211,7 @@ def formatters(m) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
 
+
 # copied from dication.py
 def capture_to_words(m):
     words = []
@@ -202,6 +225,7 @@ def capture_to_words(m):
         else:
             words.append(item)
     return words
+
 
 @mod.capture(rule="<user.formatters> [lit] <user.chunks>")
 def formatted_code(m) -> str:
