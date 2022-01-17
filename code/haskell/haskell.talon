@@ -28,29 +28,3 @@ has type <user.code_type>$:
 
 has type <user.code_type> over:
   " :: {code_type}"
-
-# support for #user.code_library
-module <user.code_library_catch_all>$:
-  "module {code_library_catch_all} where\n\n"
-
-module <user.code_library_catch_all> where:
-  "module {code_library_catch_all} where\n\n"
-
-import {user.code_library}$:
-  "import {code_library}"
-
-import qualified {user.code_library}$:
-  qualified_name = user.haskell_insert_library_qualified_word(code_library)
-  "import qualified {code_library} as {qualified_name}"
-
-import {user.code_library} qualified:
-  qualified_name = user.haskell_insert_library_qualified_word(code_library)
-  "import {code_library} qualified as {qualified_name}"
-
-import qualified {user.code_library} letter:
-  qualified_name = user.haskell_insert_library_qualified_letter(code_library)
-  "import qualified {code_library} as {qualified_name}"
-
-import {user.code_library} qualified letter:
-  qualified_name = user.haskell_insert_library_qualified_letter(code_library)
-  "import {code_library} qualified as {qualified_name}"
