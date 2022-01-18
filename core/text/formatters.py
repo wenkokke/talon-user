@@ -1,4 +1,3 @@
-from __future__ import annotations
 from itertools import chain, repeat
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
 from talon import Module, Context, actions, imgui, ui
@@ -34,7 +33,7 @@ StringFormatter = Callable[[str], str]
 
 class Formatter(object):
     @staticmethod
-    def from_description(formatter_names: str) -> Formatter:
+    def from_description(formatter_names: str) -> 'Formatter':
         global FORMATTERS_DICT
         formatter = Formatter()
         for formatter_name in formatter_names.split(","):
@@ -71,7 +70,7 @@ class Formatter(object):
     def pick_delimiter(delimiter1: Optional[str], delimiter2: Optional[str]):
         return delimiter2 if delimiter1 is None else delimiter1
 
-    def __add__(self, other: Formatter) -> Formatter:
+    def __add__(self, other: 'Formatter') -> 'Formatter':
         return Formatter(
             Formatter.pick_delimiter(other.__delimiter, self.__delimiter),
             other.chunk_formatters or self.chunk_formatters,
