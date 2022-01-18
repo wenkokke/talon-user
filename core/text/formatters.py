@@ -2,6 +2,7 @@ from __future__ import annotations
 from itertools import chain, repeat
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
 from talon import Module, Context, actions, imgui, ui
+from talon.grammar.vm import Capture
 
 import re
 
@@ -208,37 +209,37 @@ ctx.lists["self.formatter_word"] = FORMATTER_WORD
 
 
 @mod.capture(rule="({self.formatter_code} | {self.formatter_code_extra})+")
-def formatters(m) -> str:
+def formatters(m: Capture) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
 
 
 @mod.capture(rule="<user.formatters> [lit] <user.chunks>")
-def formatted_code(m) -> str:
+def formatted_code(m: Capture) -> str:
     """Return a formatted piece of text, using code formatters."""
     return Formatter.from_description(m.formatters)(m.chunks)
 
 
 @mod.capture(rule="({self.formatter_prose} | {self.formatter_prose_extra})+")
-def formatters_prose(m) -> str:
+def formatters_prose(m: Capture) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
 
 
 @mod.capture(rule="<user.formatters_prose> [lit] <user.prose>")
-def formatted_prose(m) -> str:
+def formatted_prose(m: Capture) -> str:
     """Return a formatted piece of text, using prose formatters."""
     return Formatter.from_description(m.formatters_prose)(m.prose.split())
 
 
 @mod.capture(rule="({self.formatter_word})+")
-def formatters_word(m) -> str:
+def formatters_word(m: Capture) -> str:
     """Return a comma-separated string of formatters, e.g., 'DOUBLE_QUOTED_STRING,CAPITALIZE_FIRST_WORD'."""
     return ",".join(m)
 
 
 @mod.capture(rule="<user.formatters_word> [lit] <user.word>")
-def formatted_word(m) -> str:
+def formatted_word(m: Capture) -> str:
     """Return a formatted word, using word formatters."""
     return Formatter.from_description(m.formatters_word)((m.word,))
 
@@ -291,7 +292,7 @@ class FormatterActions:
 
     def reformat_selection(formatter_names: str):
         """
-        Reformats the current selection using <formatter_names>.
+        Reformat the current selection using <formatter_names>.
 
         Args:
             formatter_names(str): A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
@@ -302,8 +303,7 @@ class FormatterActions:
         selections = []
         for selection in selected_text.splitlines():
             unformatted = actions.user.unformat_text(selection)
-            reformatted = actions.user.reformat_text(selection, formatter_names)
-            print(selection, unformatted, reformatted)
+            reformatted = actions.user.format_text(unformatted, formatter_names)
             selections.append((unformatted, reformatted))
 
         if len(selections) == 1:
