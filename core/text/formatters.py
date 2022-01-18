@@ -2,32 +2,15 @@ from __future__ import annotations
 from itertools import chain, repeat
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
 from talon import Module, Context, actions, imgui, ui
-from talon.grammar.vm import Phrase
 
 import re
+
 
 mod = Module()
 ctx = Context()
 
-# NOTE: This is different from the definition of a camelCase boundary
-#       in create_spoken_form: this one splits "IOError" as "IO Error",
-#       whereas the other splits it as "I O Error", which is important
-#       when creating a spoken form as each capitalized letter should
-#       be pronounced separately, but which would reformat "IOError"
-#       as i_o_error in snake_case.
-REGEX_CAMEL_BOUNDARY = re.compile(
-    "|".join(
-        (
-            r"(?<=[a-z])(?=[A-Z])",
-            r"(?<=[A-Z])(?=[A-Z][a-z])",
-            r"(?<=[A-Za-z])(?=[0-9])",
-            r"(?<=[0-9])(?=[A-Za-z])",
-        )
-    )
-)
 
-# NOTE: A delimiter char followed by a blank space is no delimiter.
-REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
+# ImmuneString: text which is immune to formatting
 
 
 class ImmuneString(object):
@@ -41,6 +24,8 @@ class ImmuneString(object):
 def immune_string(m) -> ImmuneString:
     return ImmuneString(str(m[0]))
 
+
+# Formatter: a generic class for formatters
 
 Chunk = Union[str, ImmuneString]
 StringFormatter = Callable[[str], str]
@@ -127,6 +112,9 @@ class Formatter(object):
         return self.string_formatter(formatted_string)
 
 
+# Helper functions for building formatters
+
+
 def FormatTopLevel(prefix: str = "", suffix: str = "") -> Formatter:
     return Formatter(string_formatters=(lambda text: f"{prefix}{text}{suffix}",))
 
@@ -138,6 +126,8 @@ def FormatChunk(chunk_formatters: list[Optional[StringFormatter]]) -> Formatter:
 def JoinBy(delimiter: str) -> Formatter:
     return Formatter(delimiter=delimiter)
 
+
+# FORMATTERS_DICT: a dictionary of standard formatters
 
 FORMATTERS_DICT = {
     "NOOP": Formatter(),
@@ -162,19 +152,19 @@ FORMATTERS_DICT = {
     "NO_SPACES": JoinBy(""),
 }
 
-# This is the mapping from spoken phrases to formatters
-mod.list("formatter_code", desc="List of code formatters")
-mod.list(
-    "formatter_code_extra",
-    desc="List of extra code formatters, meant to be overwritten",
-)
-mod.list("formatter_prose", desc="List of prose formatters")
-mod.list(
-    "formatter_prose_extra",
-    desc="List of extra prose formatters, meant to be overwritten",
-)
-mod.list("formatter_word", desc="List of word formatters")
+# Spoken forms: A mapping from spoken phrases to formatters.
+#
+#   Generally, these come in two forms:
+#
+#   - formatters_code, formatters_prose, formatters_word:
+#     A standard list of formatters, which is available in every setting
+#     and is not meant to be overwritten by contexts.
+#
+#   - formatters_code_extra, formatters_prose_extra:
+#     An extra list of formatters, which is usually empty and can be
+#     overwritten by contexts.
 
+mod.list("formatter_code", desc="List of code formatters")
 FORMATTER_CODE = {
     "upper": "ALL_UPPERCASE",
     "lower": "ALL_LOWERCASE",
@@ -195,12 +185,24 @@ FORMATTER_CODE = {
 }
 ctx.lists["self.formatter_code"] = FORMATTER_CODE
 
+mod.list(
+    "formatter_code_extra",
+    desc="List of extra code formatters, meant to be overwritten",
+)
+
+mod.list("formatter_prose", desc="List of prose formatters")
 FORMATTER_PROSE = {
     "say": "NOOP",
     "sentence": "CAPITALIZE_FIRST",
 }
 ctx.lists["self.formatter_prose"] = FORMATTER_PROSE
 
+mod.list(
+    "formatter_prose_extra",
+    desc="List of extra prose formatters, meant to be overwritten",
+)
+
+mod.list("formatter_word", desc="List of word formatters")
 FORMATTER_WORD = {"word": "NOOP"}
 ctx.lists["self.formatter_word"] = FORMATTER_WORD
 
@@ -213,7 +215,7 @@ def formatters(m) -> str:
 
 @mod.capture(rule="<user.formatters> [lit] <user.chunks>")
 def formatted_code(m) -> str:
-    """"""
+    """Return a formatted piece of text, using code formatters."""
     return Formatter.from_description(m.formatters)(m.chunks)
 
 
@@ -225,7 +227,7 @@ def formatters_prose(m) -> str:
 
 @mod.capture(rule="<user.formatters_prose> [lit] <user.prose>")
 def formatted_prose(m) -> str:
-    """"""
+    """Return a formatted piece of text, using prose formatters."""
     return Formatter.from_description(m.formatters_prose)(m.prose.split())
 
 
@@ -237,31 +239,125 @@ def formatters_word(m) -> str:
 
 @mod.capture(rule="<user.formatters_word> [lit] <user.word>")
 def formatted_word(m) -> str:
-    """"""
+    """Return a formatted word, using word formatters."""
     return Formatter.from_description(m.formatters_word)((m.word,))
 
 
 @mod.action_class
-class Actions:
+class FormatterActions:
     def format_text(text: str, formatter_names: str) -> str:
         """
-        Formats a text according to <formatter_names>.
+        Format <text> using <formatter_names>.
 
         Args:
+            text: The text to format.
             formatter_names: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
-        global FORMATTERS_DICT
-        for formatter_name in reversed(formatter_names.split(",")):
-            text = FORMATTERS_DICT[formatter_name](text)
-        return text
+        return Formatter.from_description(formatter_names)(text.split(' '))
 
     def unformat_text(text: str) -> str:
-        """Remove format from text"""
+        """
+        Remove formatting from <text>.
+
+        Note:
+            Some formatting, such as 'NO_SPACES', is irreversible. Therefore, this function is a best effort.
+
+        Args:
+            text: The text to remove formatting from.
+        """
         text = de_string(text)
         text = de_delim(text)
         text = de_camel(text)
         text = text.lower()
         return text
+
+    def reformat_text(text: str, formatter_names: str) -> str:
+        """
+        Reformat <text> using <formatters>.
+
+        Note:
+            Used by Cursorless.
+
+        Args:
+            text: The text to format.
+            formatter_names: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+        """
+        lines = []
+        for line in text.splitlines():
+            unformatted = actions.user.unformat_text(line)
+            reformatted = actions.user.format_text(unformatted, formatter_names)
+            lines.append(reformatted)
+        return "\n".join(lines)
+
+    def reformat_selection(formatter_names: str):
+        """
+        Reformats the current selection using <formatter_names>.
+
+        Args:
+            formatter_names(str): A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+        """
+        selected_text = actions.edit.selected_text()
+        if not selected_text:
+            return
+        selections = []
+        for selection in selected_text.splitlines():
+            unformatted = actions.user.unformat_text(selection)
+            reformatted = actions.user.reformat_text(selection, formatter_names)
+            print(selection, unformatted, reformatted)
+            selections.append((unformatted, reformatted))
+
+        if len(selections) == 1:
+            ((unformatted, reformatted),) = selections
+            actions.insert(reformatted)
+            actions.user.history_add_phrase(reformatted, unformatted)
+        else:
+            unformatted, reformatted = zip(*selections)
+            actions.insert("\n".join(unformatted))
+            # TODO: no actions.user.history_add_phrase?
+
+    def reformat_last(formatter_names: str):
+        """
+        Reformats the last phrase using <formatter_names>.
+
+        Args:
+            formatter_names: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
+        """
+        last_phrase = actions.user.history_get_last_phrase()
+        if not last_phrase:
+            return
+        last_unformatted = actions.user.history_get_last_unformatted()
+        actions.user.history_clear_last_phrase()
+        if last_unformatted:
+            last_formatted = actions.user.format_text(last_unformatted, formatter_names)
+            actions.user.history_add_phrase(last_formatted, last_unformatted)
+            actions.insert(last_formatted)
+        else:
+            last_formatted = actions.user.format_text(last_phrase, formatter_names)
+            actions.user.history_add_phrase(last_formatted, last_phrase)
+            actions.insert(last_formatted)
+
+
+# Removing formatting
+
+# NOTE: This is different from the definition of a camelCase boundary
+#       in create_spoken_form: this one splits "IOError" as "IO Error",
+#       whereas the other splits it as "I O Error", which is important
+#       when creating a spoken form as each capitalized letter should
+#       be pronounced separately, but which would reformat "IOError"
+#       as i_o_error in snake_case.
+REGEX_CAMEL_BOUNDARY = re.compile(
+    "|".join(
+        (
+            r"(?<=[a-z])(?=[A-Z])",
+            r"(?<=[A-Z])(?=[A-Z][a-z])",
+            r"(?<=[A-Za-z])(?=[0-9])",
+            r"(?<=[0-9])(?=[A-Za-z])",
+        )
+    )
+)
+
+# NOTE: A delimiter char followed by a blank space is no delimiter.
+REGEX_DELIMITER = re.compile(r"[-_.:/](?!\s)+")
 
 
 def de_camel(text: str) -> str:
@@ -299,7 +395,8 @@ def gui(gui: imgui.GUI):
         actions.user.help_hide_formatters()
 
 
-mod = Module()
+# Help menu
+
 mod.mode(
     "help_formatters",
     desc="A mode which is active if the help GUI for formatters is showing",

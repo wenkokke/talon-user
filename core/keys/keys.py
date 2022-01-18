@@ -143,8 +143,12 @@ def uppercase(m) -> str:
     """One or more letters in the alphabet"""
     return "".join(m.key_alphabet_list).upper()
 
+@mod.capture(rule="(<self.lowercase> | <self.uppercase>)+")
+def letters(m) -> str:
+    """One or more letters in the alphabet"""
+    return "".join(m)
 
-@mod.capture(rule="spell (<user.lowercase> | <user.uppercase>)+")
+@mod.capture(rule="spell <self.letters>")
 def spell(m) -> str:
     """One or more letters in the alphabet, prefixed by 'spell'"""
     return "".join(m[1:])

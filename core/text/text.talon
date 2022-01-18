@@ -15,16 +15,16 @@
     auto_insert(formatted_word)
 
 # Reformat
-# <user.formatters> format this:
-#     user.reformat_selection(formatters)
-# <user.formatters> format last:
-#     user.reformat_last(formatters)
-# <user.formatters> format line:
-#     edit.select_line()
-#     user.reformat_selection(formatters)
-# <user.formatters> format word:
-#     edit.select_word()
-#     user.reformat_selection(formatters)
+<user.formatters> format this:
+    user.reformat_selection(formatters)
+<user.formatters> format last:
+    user.reformat_last(formatters)
+<user.formatters> format line:
+    edit.select_line()
+    user.reformat_selection(formatters)
+<user.formatters> format word:
+    edit.select_word()
+    user.reformat_selection(formatters)
 
 
 

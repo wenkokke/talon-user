@@ -6,64 +6,26 @@ mod = Module()
 @mod.action_class
 class Actions:
     def insert_paste(text: str):
-        """Inserts <text> via the clipboard."""
+        """
+        Insert <text> via the clipboard.
+
+        Note:
+            Use this action to to insert text with Unicode characters.
+            This function modifies the phrase history.
+        """
         with clip.revert():
             clip.set_text(text)
             actions.edit.paste()
             actions.sleep("150ms")
+        actions.user.history_add_phrase(text, text)
 
     def insert_string(text: str):
-        """Inserts <text>."""
-        insert_string(text, text)
+        """
+        Insert <text>.
 
-    def reformat_last(formatters: str):
-        """Clears and reformats last formatted phrase"""
-        last_phrase = actions.user.history_get_last_phrase()
-        if not last_phrase:
-            return
-        last_unformatted = actions.user.history_get_last_unformatted()
-        actions.user.history_clear_last_phrase()
-        if last_unformatted:
-            actions.user.insert_and_format(last_unformatted, formatters)
-        else:
-            actions.user.insert_and_format(last_phrase, formatters)
-
-    def reformat_selection(formatters: str):
-        """Reformats the current selection."""
-        selected = actions.edit.selected_text()
-        if not selected:
-            return
-        selections = selected.split("\n")
-        if len(selections) == 1:
-            reformat_single_selection(selections[0], formatters)
-        else:
-            reformat_multiple_selections(selections, formatters)
-
-    def reformat_text(text: str, formatters: str) -> str:
-        """Reformat the text. Used by Cursorless"""
-        return "\n".join(
-            actions.user.format_text(actions.user.unformat_text(line), formatters)
-            for line in text.splitlines()
-        )
-
-
-def reformat_single_selection(selected: str, formatters: str):
-    unformatted = actions.user.unformat_text(selected)
-    formatted = actions.user.format_text(unformatted, formatters)
-    insert_string(formatted, unformatted)
-
-
-def reformat_multiple_selections(selections: list[str], formatters: str):
-    formatted_parts = []
-    for selected in selections:
-        unformatted = actions.user.unformat_text(selected)
-        formatted = actions.user.format_text(unformatted, formatters)
-        actions.user.history_add_phrase(formatted, unformatted)
-        formatted_parts.append(formatted)
-    formatted_all = "\n".join(formatted_parts)
-    actions.insert(formatted_all)
-
-
-def insert_string(formatted: str, unformatted: str):
-    actions.insert(formatted)
-    actions.user.history_add_phrase(formatted, unformatted)
+        Note:
+            Use actions.user.insert_paste to to insert text with Unicode characters.
+            This function modifies the phrase history.
+        """
+        actions.insert(text)
+        actions.user.history_add_phrase(text, text)
