@@ -68,12 +68,21 @@ class Formatter(object):
 
     @staticmethod
     def pick_delimiter(delimiter1: Optional[str], delimiter2: Optional[str]):
-        return delimiter2 if delimiter1 is None else delimiter1
+        if delimiter1 is None:
+            return delimiter2
+        else:
+            return delimiter1
+
+    def pick_chunk_formatters(chunk_formatters1: Sequence[Optional[StringFormatter]], chunk_formatters2: Sequence[Optional[StringFormatter]]) -> Sequence[Optional[StringFormatter]]:
+        if all(chunk_formatter1 is None for chunk_formatter1 in chunk_formatters1):
+            return chunk_formatters2
+        else:
+            return chunk_formatters1
 
     def __add__(self, other: 'Formatter') -> 'Formatter':
         return Formatter(
             Formatter.pick_delimiter(other.__delimiter, self.__delimiter),
-            other.chunk_formatters or self.chunk_formatters,
+            Formatter.pick_chunk_formatters(other.chunk_formatters, self.chunk_formatters),
             other.string_formatters + self.string_formatters,
         )
 
