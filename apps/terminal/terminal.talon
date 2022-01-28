@@ -1,4 +1,4 @@
-app: iterm2
+app: apple_terminal
 -
 tag(): terminal
 tag(): user.terminal_posix
