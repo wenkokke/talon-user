@@ -24,7 +24,7 @@ line, line
 -regex, regularExpression
 -start tag, xmlStartTag
 -state, statement
--string, string
+string, string
 -tags, xmlBothTags
 -token, token
 -type, type
