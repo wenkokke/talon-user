@@ -5,22 +5,21 @@ ctx = Context()
 
 mod.list("delimiters_spaced", desc="List of delimiters with trailing white space")
 ctx.lists["self.delimiters_spaced"] = {
-    "spam"     : ",",
-    "col gap"  : ":",
-    "col gup"  : ":",
-    "full stop": ".",
-    "bullet"   : "*",
+    "drippy": ",",
+    "stacky": ":",
+    "dottie": ".",
+    "snowy": "*",
 }
 
 mod.list("delimiter_pair", desc="List of matching pair delimiters")
 matching_pairs = {
-    "round":    ["(", ")"],
-    "square":   ["[", "]"],
-    "angle":    ["<", ">"],
-    "curly":    ["{", "}"],
-    "single":   ["'", "'"],
-    "double":   ['"', '"'],
-    "brick":    ['`', '`'],
+    "round": ["(", ")"],
+    "square": ["[", "]"],
+    "angle": ["<", ">"],
+    "curly": ["{", "}"],
+    "single": ["'", "'"],
+    "double": ['"', '"'],
+    "brick": ["`", "`"],
 }
 ctx.lists["self.delimiter_pair"] = matching_pairs.keys()
 
@@ -42,4 +41,3 @@ class Actions:
         selection = actions.edit.selected_text()
         text = f"{pair[0]}{selection}{pair[1]}"
         actions.user.insert_paste(text)
-

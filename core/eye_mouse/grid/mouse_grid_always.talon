@@ -6,9 +6,9 @@ grid win:
     user.grid_place_window()
     user.grid_activate()
 
-grid <user.digit>+:
+grid {user.key_number}+:
     user.grid_activate()
-    user.grid_narrow_list(digit_list)
+    user.grid_narrow_list(key_number_list)
 
 grid screen [<number>]:
     user.grid_select_screen(number or 1)
