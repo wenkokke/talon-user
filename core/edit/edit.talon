@@ -80,10 +80,10 @@ clone line:
 
 # Intent
 
-tab:
+(indent | [in] dent):
   edit.indent_more()
 
-retab:
+out dent:
   edit.indent_less()
 
 

@@ -32,3 +32,6 @@ Operator, Spoken form
 <.>     , file extension
 -<.>    , replace file extension
 <>      , monoid
+::      , has type
+=>      , has instance
+$       , dollar

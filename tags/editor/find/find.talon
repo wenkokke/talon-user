@@ -55,7 +55,9 @@ tag: user.editor_find
     edit.find(text)
     user.find_close()
 
-^pop dock <user.text> [<user.file_extension>]$:
+^pop dock <user.text> <user.file_extension>$:
     user.find_file(text + file_extension)
-    sleep(300ms)
-    key(enter)
+
+^pop dock <user.text>$:
+    user.find_file(text)
+

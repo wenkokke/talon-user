@@ -72,7 +72,7 @@ class Actions:
     def focus_name(name: str, phrase: Phrase = None):
         """Focus application by name"""
         focus_name(name)
-        actions.user.help_focus_hide()
+        actions.help_hide_focus()
         if phrase:
             actions.sleep("200ms")
             actions.user.rephrase(phrase)

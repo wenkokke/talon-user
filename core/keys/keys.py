@@ -138,7 +138,7 @@ def lowercase(m) -> str:
     return "".join(m.key_alphabet_list).lower()
 
 
-@mod.capture(rule="ship {self.key_alphabet}+ [over]")
+@mod.capture(rule="ship {self.key_alphabet}+ [sink]")
 def uppercase(m) -> str:
     """One or more letters in the alphabet"""
     return "".join(m.key_alphabet_list).upper()

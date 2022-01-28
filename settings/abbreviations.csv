@@ -29,9 +29,11 @@ ca           , canada
 cm           , centimeter
 chr          , char
 char         , character
+cite         , citation
 cls          , class
 cli          , client
 col          , column
+concat       , concatenate
 cmd          , command
 cli          , command line interface
 cmt          , comment
@@ -162,6 +164,7 @@ pos          , position
 pic          , position independent code
 pie          , position independent executable
 prev         , previous
+proc         , process
 prop         , property
 pub          , public
 py           , python

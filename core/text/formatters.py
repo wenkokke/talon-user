@@ -1,5 +1,5 @@
 from itertools import chain, repeat
-from typing import Any, Callable, Iterable, Optional, Sequence, Union
+from typing import Any, Callable, Generator, Iterable, Optional, Sequence, Union
 from talon import Module, Context, actions, imgui, ui
 from talon.grammar.vm import Capture
 
@@ -43,20 +43,22 @@ class Formatter(object):
     def __init__(
         self,
         delimiter: Optional[str] = None,
-        chunk_formatters: Sequence[Optional[StringFormatter]] = (None,),
+        chunks_formatters: Sequence[Sequence[Optional[StringFormatter]]] = [(None,)],
         string_formatters: Sequence[StringFormatter] = (),
     ):
         self.__delimiter = delimiter
-        self.chunk_formatters = tuple(chunk_formatters)
+        self.chunks_formatters = tuple(map(tuple,chunks_formatters))
         self.string_formatters = tuple(string_formatters)
 
     def __repr__(self):
         result = "{\n"
         result += f"  delimiter = '{self.delimiter()}',\n"
-        for i, chunk_formatter in enumerate(self.chunk_formatters):
+        longest_chunks_formatter = max(map(len,self.chunks_formatters))
+        for i in range(0, longest_chunks_formatter - 1):
             sample = "sample"
-            if chunk_formatter:
-                sample = chunk_formatter(sample)
+            for chunk_formatter in self.chunk_formatters(i):
+                if chunk_formatter:
+                    sample = chunk_formatter(sample)
             result += f"  chunk_formatter({i}, 'sample') = '{sample}',\n"
         for i, string_formatter in enumerate(self.string_formatters):
             sample = "sample"
@@ -73,16 +75,10 @@ class Formatter(object):
         else:
             return delimiter1
 
-    def pick_chunk_formatters(chunk_formatters1: Sequence[Optional[StringFormatter]], chunk_formatters2: Sequence[Optional[StringFormatter]]) -> Sequence[Optional[StringFormatter]]:
-        if all(chunk_formatter1 is None for chunk_formatter1 in chunk_formatters1):
-            return chunk_formatters2
-        else:
-            return chunk_formatters1
-
     def __add__(self, other: 'Formatter') -> 'Formatter':
         return Formatter(
             Formatter.pick_delimiter(other.__delimiter, self.__delimiter),
-            Formatter.pick_chunk_formatters(other.chunk_formatters, self.chunk_formatters),
+            other.chunks_formatters + self.chunks_formatters,
             other.string_formatters + self.string_formatters,
         )
 
@@ -94,16 +90,16 @@ class Formatter(object):
             string = string_formatter(string)
         return string
 
-    def chunk_formatter_chain(self) -> Iterable[Optional[StringFormatter]]:
-        repeat_last = repeat(self.chunk_formatters[-1])
-        return chain(self.chunk_formatters, repeat_last)
+    def chunk_formatters(self, i: int) -> Iterable[Optional[StringFormatter]]:
+        for chunks_formatter in self.chunks_formatters:
+            i_or_last = min(i, len(chunks_formatter) - 1)
+            yield chunks_formatter[i_or_last]
 
     def __call__(self, chunks: Sequence[Chunk]):
         formatted_string = ""
         shifted_chunks = chain(chunks[1:], [None])
-        for chunk_formatter, curr_chunk, next_chunk in zip(
-            self.chunk_formatter_chain(), chunks, shifted_chunks
-        ):
+        i = 0
+        for curr_chunk, next_chunk in zip(chunks, shifted_chunks):
             curr_chunk_is_last = next_chunk is None
             curr_chunk_is_immune = isinstance(curr_chunk, ImmuneString)
             next_chunk_is_immune = isinstance(next_chunk, ImmuneString)
@@ -111,10 +107,11 @@ class Formatter(object):
             if curr_chunk_is_immune:
                 formatted_string += curr_chunk.string
             else:
-                if chunk_formatter:
-                    formatted_string += chunk_formatter(curr_chunk)
-                else:
-                    formatted_string += curr_chunk
+                for chunk_formatter in self.chunk_formatters(i):
+                    if chunk_formatter:
+                        curr_chunk = chunk_formatter(curr_chunk)
+                i += 1 # increment i only when chunk is not immune
+                formatted_string += curr_chunk
                 if not (curr_chunk_is_last or next_chunk_is_immune):
                     formatted_string += self.delimiter()
 
@@ -128,8 +125,8 @@ def FormatTopLevel(prefix: str = "", suffix: str = "") -> Formatter:
     return Formatter(string_formatters=(lambda text: f"{prefix}{text}{suffix}",))
 
 
-def FormatChunk(chunk_formatters: list[Optional[StringFormatter]]) -> Formatter:
-    return Formatter(chunk_formatters=chunk_formatters)
+def FormatChunk(chunks_formatters: list[Optional[StringFormatter]]) -> Formatter:
+    return Formatter(chunks_formatters=[chunks_formatters])
 
 
 def JoinBy(delimiter: str) -> Formatter:
@@ -179,18 +176,14 @@ FORMATTER_CODE = {
     "lower": "ALL_LOWERCASE",
     "string": "DOUBLE_QUOTED_STRING",
     "quote": "SINGLE_QUOTED_STRING",
-    "title": "CAPITALIZE_ALL",
-    "camel": "NO_SPACES,CAPITALIZE_REST",
-    "pascal": "NO_SPACES,CAPITALIZE_ALL",
-    "snake": "SNAKE_CASE",
-    "constant": "ALL_UPPERCASE,SNAKE_CASE",
-    "kebab": "DASH_SEPARATED",
-    "dotted": "DOT_SEPARATED",
-    "slasher": "SLASH_SEPARATED",
-    "dunder": "ALL_LOWERCASE,DOUBLE_UNDERSCORE",
-    "packed": "DOUBLE_COLON_SEPARATED",
+    "title": "CAPITALIZE_ALL,ALL_LOWERCASE",
+    "ship": "CAPITALIZE_FIRST",
+    "camel": "NO_SPACES,CAPITALIZE_REST,ALL_LOWERCASE",
+    "pascal": "NO_SPACES,CAPITALIZE_ALL,ALL_LOWERCASE",
+    "snake": "SNAKE_CASE,ALL_LOWERCASE",
+    "constant": "SNAKE_CASE,ALL_UPPERCASE",
+    "kebab": "DASH_SEPARATED,ALL_LOWERCASE",
     "smash": "NO_SPACES",
-    "trot": "TRAILING_PADDING",
 }
 ctx.lists["self.formatter_code"] = FORMATTER_CODE
 
@@ -212,7 +205,12 @@ mod.list(
 )
 
 mod.list("formatter_word", desc="List of word formatters")
-FORMATTER_WORD = {"word": "NOOP"}
+FORMATTER_WORD = {
+    "word": "NOOP",
+    "trot": "TRAILING_PADDING",
+    "proud": "CAPITALIZE_FIRST",
+    "leap": "CAPITALIZE_FIRST,TRAILING_PADDING",
+}
 ctx.lists["self.formatter_word"] = FORMATTER_WORD
 
 
