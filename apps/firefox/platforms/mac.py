@@ -1,4 +1,3 @@
-from pathlib import Path
 from talon import Context, actions
 from talon.mac import applescript
 
@@ -42,9 +41,9 @@ GET_FIREFOX_TITLE = r"""
 
 @ctx.action_class("browser")
 class BrowserActions:
-    def address() -> str:
-        global GET_FIREFOX_ADDRESS
-        return applescript.run(GET_FIREFOX_ADDRESS)
+    # def address() -> str:
+    #     global GET_FIREFOX_ADDRESS
+    #     return applescript.run(GET_FIREFOX_ADDRESS)
 
     def bookmark():
         actions.key("cmd-shift-d")
@@ -109,9 +108,9 @@ class BrowserActions:
     def submit_form():
         actions.key("enter")
 
-    def title() -> str:
-        global GET_FIREFOX_TITLE
-        return applescript.run(GET_FIREFOX_TITLE)
+    # def title() -> str:
+    #     global GET_FIREFOX_TITLE
+    #     return applescript.run(GET_FIREFOX_TITLE)
 
     def toggle_dev_tools():
         actions.key("cmd-alt-i")
