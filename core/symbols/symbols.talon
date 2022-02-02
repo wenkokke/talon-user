@@ -1,2 +1,4 @@
-greek <self.greek_letters>:
-  user.insert_paste(greek_letters)
+<self.greek>: user.insert_paste(greek)
+<self.blackboard>: user.insert_paste(blackboard)
+<self.math_script>: user.insert_paste(math_script)
+<self.math_script_bold>: user.insert_paste(math_script_bold)

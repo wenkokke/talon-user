@@ -4,63 +4,85 @@ from user.util import csv
 mod = Module()
 ctx = Context()
 
-alphabet = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
+ALPHABET = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
 
 # Blackboard Bold
 
-blackboard_bold_lower = "𝕒 𝕓 𝕔 𝕕 𝕖 𝕗 𝕘 𝕙 𝕚 𝕛 𝕜 𝕝 𝕞 𝕟 𝕠 𝕡 𝕢 𝕣 𝕤 𝕥 𝕦 𝕧 𝕨 𝕩 𝕪 𝕫".split()
-blackboard_bold_lower = dict(zip(alphabet, blackboard_bold_lower))
-blackboard_bold_upper = "𝔸 𝔹 ℂ 𝔻 𝔼 𝔽 𝔾 ℍ 𝕀 𝕁 𝕂 𝕃 𝕄 ℕ 𝕆 ℙ ℚ ℝ 𝕊 𝕋 𝕌 𝕍 𝕎 𝕏 𝕐 ℤ".split()
-blackboard_bold_upper = dict(zip(alphabet, blackboard_bold_upper))
+BLACKBOARD_LOWER = "𝕒 𝕓 𝕔 𝕕 𝕖 𝕗 𝕘 𝕙 𝕚 𝕛 𝕜 𝕝 𝕞 𝕟 𝕠 𝕡 𝕢 𝕣 𝕤 𝕥 𝕦 𝕧 𝕨 𝕩 𝕪 𝕫".split()
+BLACKBOARD_UPPER = "𝔸 𝔹 ℂ 𝔻 𝔼 𝔽 𝔾 ℍ 𝕀 𝕁 𝕂 𝕃 𝕄 ℕ 𝕆 ℙ ℚ ℝ 𝕊 𝕋 𝕌 𝕍 𝕎 𝕏 𝕐 ℤ".split()
+BLACKBOARD = dict(zip(ALPHABET, BLACKBOARD_LOWER)) | \
+             dict(zip(map(str.upper,ALPHABET), BLACKBOARD_UPPER))
+
+@mod.capture(rule="blackboard <self.letters>")
+def blackboard(m) -> str:
+    """One or more letters in blackboard bold"""
+    global BLACKBOARD
+    return "".join(BLACKBOARD.get(letter,letter) for letter in m.letters)
+
 
 # Math Calligraphy
 
-mathcal_upper = "𝒜 ℬ 𝒞 𝒟 ℰ ℱ 𝒢 ℋ ℐ 𝒥 𝒦 ℒ ℳ 𝒩 𝒪 𝒫 𝒬 ℛ 𝒮 𝒯 𝒰 𝒱 𝒲 𝒳 𝒴 𝒵".split()
-mathcal_upper = dict(zip(alphabet, mathcal_upper))
-mathcal_lower = "𝒶 𝒷 𝒸 𝒹 ℯ 𝒻 ℊ 𝒽 𝒾 𝒿 𝓀 𝓁 𝓂 𝓃 ℴ 𝓅 𝓆 𝓇 𝓈 𝓉 𝓊 𝓋 𝓌 𝓍 𝓎 𝓏 ".split()
-mathcal_lower = dict(zip(alphabet, mathcal_lower))
+MATH_SCRIPT_LOWER = "𝒶 𝒷 𝒸 𝒹 ℯ 𝒻 ℊ 𝒽 𝒾 𝒿 𝓀 𝓁 𝓂 𝓃 ℴ 𝓅 𝓆 𝓇 𝓈 𝓉 𝓊 𝓋 𝓌 𝓍 𝓎 𝓏 ".split()
+MATH_SCRIPT_UPPER = "𝒜 ℬ 𝒞 𝒟 ℰ ℱ 𝒢 ℋ ℐ 𝒥 𝒦 ℒ ℳ 𝒩 𝒪 𝒫 𝒬 ℛ 𝒮 𝒯 𝒰 𝒱 𝒲 𝒳 𝒴 𝒵".split()
+MATH_SCRIPT = dict(zip(ALPHABET, MATH_SCRIPT_LOWER)) | dict(zip(map(str.upper,ALPHABET), MATH_SCRIPT_UPPER))
 
-mathcal_bold_upper = "𝓐 𝓑 𝓒 𝓓 𝓔 𝓕 𝓖 𝓗 𝓘 𝓙 𝓚 𝓛 𝓜 𝓝 𝓞 𝓟 𝓠 𝓡 𝓢 𝓣 𝓤 𝓥 𝓦 𝓧 𝓨 𝓩".split()
-mathcal_bold_upper = dict(zip(alphabet, mathcal_bold_upper))
-mathcal_bold_lower = "𝓪 𝓫 𝓬 𝓭 𝓮 𝓯 𝓰 𝓱 𝓲 𝓳 𝓴 𝓵 𝓶 𝓷 𝓸 𝓹 𝓺 𝓻 𝓼 𝓽 𝓾 𝓿 𝔀 𝔁 𝔂 𝔃".split()
-mathcal_bold_lower = dict(zip(alphabet, mathcal_bold_lower))
+
+@mod.capture(rule="math script <self.letters>")
+def math_script(m) -> str:
+    """One or more letters in math script or cursive"""
+    global MATH_SCRIPT
+    return "".join(MATH_SCRIPT.get(letter,letter) for letter in m.letters)
+
+
+MATH_SCRIPT_BOLD_LOWER = "𝓪 𝓫 𝓬 𝓭 𝓮 𝓯 𝓰 𝓱 𝓲 𝓳 𝓴 𝓵 𝓶 𝓷 𝓸 𝓹 𝓺 𝓻 𝓼 𝓽 𝓾 𝓿 𝔀 𝔁 𝔂 𝔃".split()
+MATH_SCRIPT_BOLD_UPPER = "𝓐 𝓑 𝓒 𝓓 𝓔 𝓕 𝓖 𝓗 𝓘 𝓙 𝓚 𝓛 𝓜 𝓝 𝓞 𝓟 𝓠 𝓡 𝓢 𝓣 𝓤 𝓥 𝓦 𝓧 𝓨 𝓩".split()
+MATH_SCRIPT_BOLD = dict(zip(ALPHABET, MATH_SCRIPT_BOLD_LOWER)) | dict(zip(map(str.upper,ALPHABET), MATH_SCRIPT_BOLD_UPPER))
+
+
+@mod.capture(rule="math script bold <self.letters>")
+def math_script_bold(m) -> str:
+    """One or more letters in bold math script or cursive"""
+    global MATH_SCRIPT_BOLD
+    return "".join(MATH_SCRIPT_BOLD.get(letter,letter) for letter in m.letters)
+
 
 # Greek
 
-mod.list("greek_alphabet", desc="The spoken Greek alphabet")
+mod.list("greek_ALPHABET", desc="The spoken Greek ALPHABET")
 
 GREEK_ALPHABET = csv.read_spoken_forms("symbols/greek.csv", value_name="Greek letter")
-ctx.lists["self.greek_alphabet"] = GREEK_ALPHABET
+ctx.lists["self.greek_ALPHABET"] = GREEK_ALPHABET
 
+# TODO: bind alternative sigma and lambda
 greek_lower_sigma_alt = "ς"
 greek_lower_lambda_alt = "ƛ"
 
 
-@mod.capture(rule="{self.greek_alphabet}")
+@mod.capture(rule="{self.greek_ALPHABET}")
 def greek_lowercase(m) -> str:
-    """One lowercase letter in the Greek alphabet"""
+    """One lowercase letter in the Greek ALPHABET"""
     return str(m).lower()
 
 
 @mod.capture(rule="<self.greek_lowercase>+")
 def greek_lowercases(m) -> str:
-    """One or more lowercase letters in the Greek alphabet"""
+    """One or more lowercase letters in the Greek ALPHABET"""
     return "".join(m.greek_lowercase_list)
 
 
-@mod.capture(rule="{self.greek_alphabet}")
+@mod.capture(rule="{self.greek_ALPHABET}")
 def greek_uppercase(m) -> str:
-    """One uppercase letter in the Greek alphabet"""
+    """One uppercase letter in the Greek ALPHABET"""
     return str(m).upper()
 
 
 @mod.capture(rule="ship <self.greek_uppercase>+ [sink]")
 def greek_uppercases(m) -> str:
-    """One or more lowercase letters in the Greek alphabet"""
+    """One or more lowercase letters in the Greek ALPHABET"""
     return "".join(m.greek_uppercase_list)
 
 
-@mod.capture(rule="(<self.greek_lowercases> | <self.greek_uppercases>)+")
-def greek_letters(m) -> str:
-    """One or more letters in the Greek alphabet"""
-    return "".join(m)
+@mod.capture(rule="greek (<self.greek_lowercases> | <self.greek_uppercases>)+")
+def greek(m) -> str:
+    """One or more letters in the Greek ALPHABET"""
+    return "".join(m[1:])
