@@ -1,6 +1,4 @@
-tag: user.python_forced
-tag: user.auto_lang
-and code.language: python
+tag: user.python
 -
 tag(): user.code_data
 tag(): user.code_exception

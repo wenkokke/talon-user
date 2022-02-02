@@ -1,6 +1,4 @@
-tag: user.haskell_forced
-tag: user.auto_lang
-and code.language: haskell
+tag: user.haskell
 -
 tag(): user.code_function
 tag(): user.code_library

@@ -1,7 +1,4 @@
-tag: user.haskell_forced
-and app: vscode
-tag: user.auto_lang
-and code.language: haskell
+tag: user.haskell
 and app: vscode
 -
 haskell language server restart:

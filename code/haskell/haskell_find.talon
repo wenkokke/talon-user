@@ -1,7 +1,4 @@
-tag: user.haskell_forced
-and tag: user.editor_find
-tag: user.auto_lang
-and code.language: haskell
+tag: user.haskell
 and tag: user.editor_find
 -
 ^hole step$:
