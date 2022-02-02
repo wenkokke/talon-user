@@ -2,3 +2,5 @@
 <self.blackboard>: user.insert_paste(blackboard)
 <self.math_script>: user.insert_paste(math_script)
 <self.math_script_bold>: user.insert_paste(math_script_bold)
+<self.subscript_digit>: user.insert_paste(subscript_digit)
+<self.superscript_digit>: user.insert_paste(superscript_digit)
