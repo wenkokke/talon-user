@@ -11,7 +11,7 @@ ALPHABET = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
 # Blackboard Bold
 
 BLACKBOARD_LOWER = "𝕒 𝕓 𝕔 𝕕 𝕖 𝕗 𝕘 𝕙 𝕚 𝕛 𝕜 𝕝 𝕞 𝕟 𝕠 𝕡 𝕢 𝕣 𝕤 𝕥 𝕦 𝕧 𝕨 𝕩 𝕪 𝕫".split()
-BLACKBOARD_LOWER = dict(zip(ALPHABET, BLACKBOARD_LOWER))9
+BLACKBOARD_LOWER = dict(zip(ALPHABET, BLACKBOARD_LOWER))
 BLACKBOARD_UPPER = "𝔸 𝔹 ℂ 𝔻 𝔼 𝔽 𝔾 ℍ 𝕀 𝕁 𝕂 𝕃 𝕄 ℕ 𝕆 ℙ ℚ ℝ 𝕊 𝕋 𝕌 𝕍 𝕎 𝕏 𝕐 ℤ".split()
 BLACKBOARD_UPPER = dict(zip(map(str.upper,ALPHABET), BLACKBOARD_UPPER))
 BLACKBOARD = BLACKBOARD_LOWER | BLACKBOARD_UPPER
