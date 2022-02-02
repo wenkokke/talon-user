@@ -86,3 +86,5 @@ def greek_uppercases(m) -> str:
 def greek(m) -> str:
     """One or more letters in the Greek ALPHABET"""
     return "".join(m[1:])
+
+# TODO: subscript and superscript
