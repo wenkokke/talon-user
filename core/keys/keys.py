@@ -126,30 +126,30 @@ def key_unmodified(m) -> str:
 
 
 @mod.capture(rule="{self.key_alphabet}")
-def lowercase(m) -> str:
+def letter_lowercase(m) -> str:
     """One lowercase letter in the Latin alphabet"""
     return str(m).lower()
 
 
-@mod.capture(rule="<self.lowercase>+")
-def lowercases(m) -> str:
+@mod.capture(rule="<self.letter_lowercase>+")
+def letter_lowercases(m) -> str:
     """One or more lowercase letters in the Latin alphabet"""
-    return "".join(m.lowercase_list)
+    return "".join(m.letter_lowercase_list)
 
 
 @mod.capture(rule="{self.key_alphabet}")
-def uppercase(m) -> str:
+def letter_uppercase(m) -> str:
     """One uppercase letter in the Latin alphabet"""
     return str(m).upper()
 
 
-@mod.capture(rule="ship <self.uppercase>+ [sink]")
-def uppercases(m) -> str:
-    """One or more lowercase letters in the Latin alphabet"""
-    return "".join(m.uppercase_list)
+@mod.capture(rule="ship <self.letter_uppercase>+ [sink]")
+def letter_uppercases(m) -> str:
+    """One or more uppercase letters in the Latin alphabet"""
+    return "".join(m.letter_uppercase_list)
 
 
-@mod.capture(rule="(<self.lowercases> | <self.uppercases>)+")
+@mod.capture(rule="(<self.letter_lowercases> | <self.letter_uppercases>)+")
 def letters(m) -> str:
     """One or more letters in the Latin alphabet"""
     return "".join(m)
