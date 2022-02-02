@@ -60,8 +60,6 @@ ctx.lists["self.key_punctuation"] = {
     "question mark": "?",
     "exclamation mark": "!",
     "asterisk": "*",
-    "hash sign": "#",
-    "percent sign": "%",
 }
 
 # Symbols immune to formatting.
@@ -107,8 +105,9 @@ ctx.lists["self.key_symbol"] = {
     "semi": ";",
     "stack": ":",
     "drip": ",",
-    "at sign": "@",
+    "monkey": "@",
     "hash": "#",
+    "dollar": "$",
 }
 
 
@@ -127,26 +126,34 @@ def key_unmodified(m) -> str:
 
 
 @mod.capture(rule="{self.key_alphabet}")
-def letter(m) -> str:
-    """One letter in the alphabet"""
-    return str(m)
-
-
-@mod.capture(rule="{self.key_alphabet}+")
 def lowercase(m) -> str:
-    """One or more letters in the alphabet"""
-    return "".join(m.key_alphabet_list).lower()
+    """One lowercase letter in the Latin alphabet"""
+    return str(m).lower()
 
 
-@mod.capture(rule="ship {self.key_alphabet}+ [sink]")
+@mod.capture(rule="<self.lowercase>+")
+def lowercases(m) -> str:
+    """One or more lowercase letters in the Latin alphabet"""
+    return "".join(m.lowercase_list)
+
+
+@mod.capture(rule="{self.key_alphabet}")
 def uppercase(m) -> str:
-    """One or more letters in the alphabet"""
-    return "".join(m.key_alphabet_list).upper()
+    """One uppercase letter in the Latin alphabet"""
+    return str(m).upper()
 
-@mod.capture(rule="(<self.lowercase> | <self.uppercase>)+")
+
+@mod.capture(rule="ship <self.uppercase>+ [sink]")
+def uppercases(m) -> str:
+    """One or more lowercase letters in the Latin alphabet"""
+    return "".join(m.uppercase_list)
+
+
+@mod.capture(rule="(<self.lowercases> | <self.uppercases>)+")
 def letters(m) -> str:
-    """One or more letters in the alphabet"""
+    """One or more letters in the Latin alphabet"""
     return "".join(m)
+
 
 @mod.capture(rule="spell <self.letters>")
 def spell(m) -> str:
