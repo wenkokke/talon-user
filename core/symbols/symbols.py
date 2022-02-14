@@ -98,7 +98,6 @@ def greek(m) -> str:
 
 
 SUBSCRIPT = "₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉".split()
-# SUBSCRIPT = dict(zip(DIGITS, SUBSCRIPT))
 
 @mod.capture(rule="subscript <self.digit>")
 def subscript_digit(m) -> str:
@@ -107,7 +106,6 @@ def subscript_digit(m) -> str:
     return SUBSCRIPT[m.digit]
 
 SUPERSCRIPT = "⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹".split()
-# SUPERSCRIPT = dict(zip(DIGITS, SUPERSCRIPT))
 
 @mod.capture(rule="superscript <self.digit>")
 def superscript_digit(m) -> str:

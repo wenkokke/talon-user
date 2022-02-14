@@ -1,10 +1,9 @@
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
-from talon import Context, resource
+from typing import Any, Callable, Dict, Sequence, TypeVar
+from talon import Context
 import csv
 
 SETTINGS_DIR = Path(__file__).parents[1] / "settings"
-
 
 def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
     """
@@ -19,7 +18,9 @@ def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
     global SETTINGS_DIR
     csv_file = (SETTINGS_DIR / csv_file).resolve()
     if csv_file.exists():
-        with resource.open(str(csv_file), "r") as csv_handle:
+        with csv_file.open(newline="") as csv_handle:
+        # Or, to use talon resource API:
+        # with resource.open(str(csv_file), "r") as csv_handle:
             reader = csv.reader(csv_handle, delimiter=",")
             csv_header, *csv_rows = tuple(
                 tuple(sanitize(fld) for fld in row) for row in reader
