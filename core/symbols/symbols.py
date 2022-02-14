@@ -53,7 +53,7 @@ def math_script_bold(m) -> str:
     return "".join(MATH_SCRIPT_BOLD.get(letter,letter) for letter in m.letters)
 
 
-# Greek
+# Greek letters
 
 mod.list("greek_ALPHABET", desc="The spoken Greek ALPHABET")
 
@@ -94,8 +94,8 @@ def greek(m) -> str:
     """One or more letters in the Greek ALPHABET"""
     return "".join(m[1:])
 
-# TODO: subscript and superscript
 
+# Subscripts and superscripts
 
 SUBSCRIPT = "₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉".split()
 
