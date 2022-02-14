@@ -7,6 +7,7 @@ import os
 import math
 import re
 from itertools import islice
+from user.util.speech import create_spoken_forms_from_list
 
 mod = Module()
 ctx = Context()
@@ -14,26 +15,6 @@ ctx = Context()
 mod.tag("file_manager", desc="Tag for enabling generic file management commands")
 mod.list("file_manager_directories", desc="List of subdirectories for the current path")
 mod.list("file_manager_files", desc="List of files at the root of the current path")
-
-words_to_exclude = [
-    "and",
-    "zero",
-    "one",
-    "two",
-    "three",
-    "for",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "microsoft",
-    "windows",
-    "Windows",
-    "dot",
-    "exe",
-]
 
 setting_auto_show_pickers = mod.setting(
     "file_manager_auto_show_pickers",
@@ -155,7 +136,7 @@ class Actions:
         """selects the file"""
 
     def file_manager_refresh_title():
-        """Refreshes the title to match current directory. this is for e.g. windows command prompt that will need to do some magic. """
+        """Refreshes the title to match current directory. this is for e.g. windows command prompt that will need to do some magic."""
         return
 
     def file_manager_update_lists():
@@ -266,9 +247,7 @@ def get_directory_map(current_path):
         if is_dir(f)
     ]
     directories.sort(key=str.casefold)
-    return actions.user.create_spoken_forms_from_list(
-        directories, words_to_exclude=words_to_exclude
-    )
+    return create_spoken_forms_from_list(directories)
 
 
 def get_file_map(current_path):
@@ -280,9 +259,7 @@ def get_file_map(current_path):
         if is_file(f)
     ]
     files.sort(key=str.casefold)
-    return actions.user.create_spoken_forms_from_list(
-        files, words_to_exclude=words_to_exclude
-    )
+    return create_spoken_forms_from_list(files)
 
 
 @imgui.open(y=10, x=2)

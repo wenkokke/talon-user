@@ -145,3 +145,4 @@ def gui(gui: imgui.GUI):
     gui.spacer()
     if gui.button("Hide"):
         actions.user.help_hide_focus()
+

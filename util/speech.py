@@ -1,11 +1,11 @@
 from ast import Dict
-import itertools
-import re
-from typing import Any, Mapping, Optional, Sequence
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import Any, Mapping, Sequence
 
 from user.util import csv
 
-DEFAULT_MINIMUM_TERM_LENGTH = 3
+import re
 
 RE_WORD = r"[A-Z]?[a-z]+|[A-Z]+(?![a-z])|[0-9]+"
 
@@ -177,6 +177,7 @@ REVERSE_PRONUNCIATION_MAP = {
     **{str(value): key for key, value in DIGITS_MAP.items()},
 }
 
+
 def create_single_spoken_form(source: str) -> str:
     """
     Returns a spoken form of a string
@@ -190,7 +191,9 @@ def create_single_spoken_form(source: str) -> str:
         return REVERSE_PRONUNCIATION_MAP[normalized_source]
     except KeyError:
         if source.isupper():
-            return " ".join(REVERSE_PRONUNCIATION_MAP[letter] for letter in source.lower())
+            return " ".join(
+                REVERSE_PRONUNCIATION_MAP[letter] for letter in source.lower()
+            )
         else:
             return source
 
@@ -267,17 +270,21 @@ def create_spoken_forms_from_regex(source: str, pattern: re.Pattern) -> Sequence
 
     return spoken_forms
 
+
 def create_spoken_forms(source: str) -> Sequence[str]:
     """Create spoken forms for a given source"""
     return create_spoken_forms_from_regex(source, RE_CHUNK)
 
 
-# ---------- create_spoken_form  (uncomment to run) ----------
+# ---------- create_spoken_forms (uncomment to run) ----------
 
 # def test_spoken_form(spoken_form: str, expected: str):
 #     result = create_spoken_forms(spoken_form)
-#     print(f"test_spoken_form: test string = {spoken_form}, result = {result}, expected = {expected}")
+#     print(
+#         f"test_spoken_form: test string = {spoken_form}, result = {result}, expected = {expected}"
+#     )
 #     assert result == expected
+
 
 # test_spoken_form("user.get_match1", ["user get match one"])
 # test_spoken_form("user.macro_play", ["user macro play"])
@@ -287,6 +294,7 @@ def create_spoken_forms(source: str) -> Sequence[str]:
 APP_NAME_OVERRIDES = csv.read_spoken_forms(
     "app_name_overrides.csv", value_name="Application name"
 )
+
 
 def create_spoken_forms_app(name: str) -> Sequence[str]:
     """Create spoken forms for an application name"""
@@ -298,3 +306,36 @@ def create_spoken_forms_app(name: str) -> Sequence[str]:
         name = name.split("-")[0]
         name = name.strip()
         return create_spoken_forms(name)
+
+
+@dataclass
+class SpeakableItem:
+    name: str
+    value: Any
+
+
+def create_spoken_forms_from_list(sources: Sequence[str]) -> Mapping[str, str]:
+    """Create spoken forms for all sources in a list, doing conflict resolution"""
+    return create_spoken_forms_from_map({source: source for source in sources})
+
+
+def create_spoken_forms_from_map(sources: Mapping[str, Any]) -> Mapping[str, Any]:
+    """Create spoken forms for all sources in a map, doing conflict resolution"""
+    all_spoken_forms: defaultdict[str, Sequence[SpeakableItem]] = defaultdict(list)
+
+    for name, value in sources.items():
+        spoken_forms = create_spoken_forms(name)
+        for spoken_form in spoken_forms:
+            all_spoken_forms[spoken_form].append(SpeakableItem(name, value))
+
+    final_spoken_forms = {}
+    for spoken_form, spoken_form_sources in all_spoken_forms.items():
+        if len(spoken_form_sources) > 1:
+            final_spoken_forms[spoken_form] = min(
+                spoken_form_sources,
+                key=lambda speakable_item: len(speakable_item.name),
+            ).value
+        else:
+            final_spoken_forms[spoken_form] = spoken_form_sources[0].value
+
+    return final_spoken_forms
