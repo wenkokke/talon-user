@@ -346,7 +346,7 @@ class FormatterActions:
 # Removing formatting
 
 # NOTE: This is different from the definition of a camelCase boundary
-#       in create_spoken_form: this one splits "IOError" as "IO Error",
+#       in create_spoken_forms: this one splits "IOError" as "IO Error",
 #       whereas the other splits it as "I O Error", which is important
 #       when creating a spoken form as each capitalized letter should
 #       be pronounced separately, but which would reformat "IOError"

@@ -18,7 +18,7 @@ for spoken_form, number in tuple(TENS_MAP.items()):
     if number in [0, 10]:
         del TENS_MAP[spoken_form]
 
-SCALES = "hundred thousand million billion trillion quadrillion quintillion sextillion septillion octillion nonillion decillion".split()
+SCALES = csv.read_list("numbers/scales.csv", value_name="Scale")
 SCALES_MAP = {n: 10 ** (3 * (i + 1)) for i, n in enumerate(SCALES[1:])}
 SCALES_MAP["hundred"] = 100
 

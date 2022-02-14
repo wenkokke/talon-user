@@ -34,6 +34,15 @@ def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
 Key = TypeVar("Key")
 Value = TypeVar("Value")
 
+def read_list(csv_file: str, value_name: str, value_type: Callable[[str], Value] = str) -> Sequence[str]:
+    """
+    Read a CSV file as a simple list.
+
+    Note:
+        Assumes a 1-column table.
+    """
+    return tuple(map(lambda row: value_type(row[0]), read_rows(csv_file, (value_name,))))
+
 
 def read_dict(
     csv_file: str,

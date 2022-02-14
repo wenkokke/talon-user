@@ -1,7 +1,7 @@
 from talon import Context, Module, app, imgui, ui, actions
 from talon.grammar import Phrase
 from itertools import *
-from user.util.speech import create_spoken_form_app
+from user.util.speech import create_spoken_forms_app
 
 import time
 
@@ -16,9 +16,11 @@ ctx.lists["self.running_application"] = {}
 # Monitor running applications
 def on_ready_app_launch_or_close():
     """Update list of running applications."""
-    ctx.lists["self.running_application"] = {
-        create_spoken_form_app(app.name): app.name for app in ui.apps(background=False)
-    }
+    app_running = {}
+    for app in ui.apps(background=False):
+        for spoken_form in create_spoken_forms_app(app.name):
+            app_running[spoken_form] = app.name
+    ctx.lists["self.running_application"] = app_running
 
 
 def on_ready():
@@ -31,12 +33,17 @@ app.register("ready", on_ready)
 
 
 def get_app(name: str) -> ui.App:
+
+    # fast check
     for app in ui.apps(background=False):
         if app.name == name:
             return app
-    spoken_form = create_spoken_form_app(name)
+
+    # slower check
+    name_spoken_forms = set(create_spoken_forms_app(name))
     for app in ui.apps(background=False):
-        if create_spoken_form_app(app.name) == spoken_form:
+        app_spoken_forms = set(create_spoken_forms_app(app.name))
+        if not name_spoken_forms.isdisjoint(app_spoken_forms):
             return app
     raise RuntimeError(f'App not running: "{name}"')
 

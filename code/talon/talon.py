@@ -1,6 +1,6 @@
 from talon import Module, Context, registry
 from user.util import csv
-from user.util.speech import create_spoken_form
+from user.util.speech import create_spoken_forms
 
 mod = Module()
 
@@ -29,12 +29,14 @@ class TalonActions:
         # functions
         code_function = {}
         for action in registry.decls.actions:
-            spoken_form = create_spoken_form(action)
-            code_function[spoken_form] = action
+            spoken_forms = create_spoken_forms(action)
+            for spoken_form in spoken_forms:
+                code_function[spoken_form] = action
         ctx.lists["user.code_function"] = code_function
         # libraries
         code_library = {}
         for tag in registry.decls.tags:
-            spoken_form = create_spoken_form(tag)
-            code_library[spoken_form] = tag
+            spoken_forms = create_spoken_forms(tag)
+            for spoken_form in spoken_forms:
+                code_library[spoken_form] = tag
         ctx.lists["user.code_library"] = code_library

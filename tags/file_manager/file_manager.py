@@ -397,8 +397,9 @@ def update_lists(path=None):
         try:
             directories = get_directory_map(current_path)
             files = get_file_map(current_path)
-        except:
+        except BaseException as err:
             # print("invalid path...")
+            print(err)
 
             directories = {}
             files = {}
