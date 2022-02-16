@@ -4,3 +4,6 @@
 <self.math_script_bold>: user.insert_paste(math_script_bold)
 <self.subscript_digit>: user.insert_paste(subscript_digit)
 <self.superscript_digit>: user.insert_paste(superscript_digit)
+<self.unicode_arrow>: user.insert_paste(unicode_arrow)
+<self.unicode_mathematical_operator>: user.insert_paste(unicode_mathematical_operator)
+<self.unicode_character>: user.insert_paste(unicode_character)
