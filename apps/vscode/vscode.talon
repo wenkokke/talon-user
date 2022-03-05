@@ -112,3 +112,7 @@ open settings json:
 please [<user.text>]$:
     user.vscode("workbench.action.showCommands")
     "{user.text or ''}"
+
+# https://github.com/cursorless-dev/cursorless-vscode/blob/main/docs/contributing/test-case-recorder.md
+cursorless record:
+    user.vscode("cursorless.recordTestCase")
