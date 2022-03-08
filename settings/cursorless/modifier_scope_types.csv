@@ -1,4 +1,10 @@
 Spoken form, Cursorless identifier
+-five section, sectionLevelFive
+-four section, sectionLevelFour
+-one section, sectionLevelOne
+-six section, sectionLevelSix
+-three section, sectionLevelThree
+-two section, sectionLevelTwo
 arg, argumentOrParameter
 attribute, attribute
 block, paragraph
@@ -8,6 +14,7 @@ char, character
 class, class
 class name, className
 comment, comment
+condition, condition
 element, xmlElement
 end tag, xmlEndTag
 file, document
@@ -18,10 +25,13 @@ item, collectionItem
 key, collectionKey
 lambda, anonymousFunction
 line, line
+link, url
 list, list
 map, map
 name, name
+paint, nonWhitespaceSequence
 regex, regularExpression
+section, section
 start tag, xmlStartTag
 state, statement
 string, string
@@ -30,15 +40,3 @@ token, token
 type, type
 value, value
 word, word
-condition, condition
-
-# 2022-03-04 19:02:36 - New entries automatically added by cursorless
--five section, sectionLevelFive
--four section, sectionLevelFour
--one section, sectionLevelOne
--six section, sectionLevelSix
--three section, sectionLevelThree
--two section, sectionLevelTwo
-link, url
-paint, nonWhitespaceSequence
-section, section

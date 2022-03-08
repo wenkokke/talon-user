@@ -2,7 +2,5 @@ Spoken form, Cursorless identifier
 else, ifElseStatement.alternative
 if, ifStatement.consequence
 if else, ifElseStatement.consequence
-try, tryCatchStatement.body
-
-# 2022-03-04 19:02:36 - New entries automatically added by cursorless
 link, link.text
+try, tryCatchStatement.body
