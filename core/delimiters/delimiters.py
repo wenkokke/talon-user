@@ -6,7 +6,9 @@ ctx = Context()
 mod.list("delimiters_spaced", desc="List of delimiters with trailing white space")
 ctx.lists["self.delimiters_spaced"] = {
     "drippy": ",",
+    "drace": ",",
     "stacky": ":",
+    "stace": ":",
     "dottie": ".",
     "snowy": "*",
 }
