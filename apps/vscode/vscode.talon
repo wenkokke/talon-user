@@ -31,6 +31,18 @@ problem last:                    user.vscode("editor.action.marker.prevInFiles")
 problem fix:                     user.vscode("editor.action.quickFix")
 refactor this:                   user.vscode("editor.action.refactor")
 
+# Tasks
+task build:                  user.vscode("workbench.action.tasks.build")
+task test:                   user.vscode("workbench.action.tasks.test")
+task clean:
+    user.vscode("workbench.action.tasks.runTask")
+    insert("clean")
+    key(enter)
+task clobber:
+    user.vscode("workbench.action.tasks.runTask")
+    insert("clobber")
+    key(enter)
+
 # Sidebar
 bar (show | hide):               user.vscode("workbench.action.toggleSidebarVisibility")
 bar explorer:                    user.vscode("workbench.view.explorer")
