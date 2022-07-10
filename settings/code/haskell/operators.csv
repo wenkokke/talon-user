@@ -28,9 +28,9 @@ Operator, Spoken form
 :       , cons
 =       , define
 =       , deaf
-</>     , file path
-<.>     , file extension
--<.>    , replace file extension
+</>     , join path
+<.>     , join extension
+-<.>    , replace extension
 <>      , monoid
 ::      , has type
 =>      , has instance
