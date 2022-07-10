@@ -41,3 +41,7 @@ type, type
 value, value
 word, word
 selector, selector
+
+# 2022-07-10 17:57:59 - New entries automatically added by cursorless
+callee, functionCallee
+short paint, boundedNonWhitespaceSequence
