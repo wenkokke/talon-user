@@ -5,3 +5,5 @@ inside, interiorOnly
 just, toRawSelection
 slice, verticalRange
 tail, extendThroughEndOf
+leading, leading
+trailing, trailing
