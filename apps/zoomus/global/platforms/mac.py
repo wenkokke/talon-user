@@ -7,6 +7,7 @@ import subprocess
 ctx = Context()
 ctx.matches = r"""
 os: mac
+and user.running: zoom.us
 """
 
 ZOOMUS_STATUS = r"""

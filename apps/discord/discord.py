@@ -33,15 +33,3 @@ class discord_actions:
 
     def discord_mark_inbox_read():
         """Mark top inbox channel read"""
-
-    def discord_mute():
-        """Toggle mute"""
-
-    def discord_deafen():
-        """Toggle deafen"""
-
-    def discord_answer_call():
-        """Answer incoming call"""
-
-    def discord_decline_call():
-        """Decline incoming call"""

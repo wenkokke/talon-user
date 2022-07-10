@@ -7,3 +7,4 @@ key(cmd-ctrl-alt-f17):
 
 key(cmd-ctrl-alt-f18):
     user.zoomus_toggle()
+    user.discord_mute()

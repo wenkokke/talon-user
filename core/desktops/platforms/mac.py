@@ -1,5 +1,7 @@
-from contextlib import contextmanager
-from talon import actions, ctrl, ui, Context
+import contextlib
+import time
+
+from talon import Context, actions, ctrl, ui
 
 ctx = Context()
 ctx.matches = r"""
@@ -7,7 +9,7 @@ os: mac
 """
 
 
-@contextmanager
+@contextlib.contextmanager
 def _drag_window_mac(win=None):
     if win is None:
         win = ui.active_window()
@@ -18,21 +20,20 @@ def _drag_window_mac(win=None):
     ctrl.mouse_move(x, y)
     ctrl.mouse_click(button=0, down=True)
     yield
-    actions.sleep(0.1)
+    time.sleep(0.1)
     ctrl.mouse_click(button=0, up=True)
 
 
 @ctx.action_class("user")
 class MacActions:
     def desktop(number: int):
-        # TODO: support more than ten desktops by iterating desktop_next
         if number < 10:
-            actions.key("ctrl-{}".format(number))
+            actions.key(f"ctrl-{number}")
 
     def desktop_next():
         actions.key("ctrl-right")
 
-    def desktop_previous():
+    def desktop_last():
         actions.key("ctrl-left")
 
     def desktop_show():
@@ -47,7 +48,6 @@ class MacActions:
             actions.key("ctrl-cmd-alt-right")
 
     def window_move_desktop(desktop_number: int):
-        # TODO: should be moved into amethyst support
         if ui.apps(bundle="com.amethyst.Amethyst"):
             actions.key(f"ctrl-alt-shift-{desktop_number}")
         else:

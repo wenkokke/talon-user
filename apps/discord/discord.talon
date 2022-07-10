@@ -14,7 +14,7 @@ pick (jif | gif | gift): user.discord_gif_picker()
 
 # Misc
 mark inbox channel read: user.discord_mark_inbox_read()
-[toggle] (mute | unmute): user.discord_mute()
+[toggle] (mute | unmute): user.discord_toggle()
 [toggle] (deafen | undeafen): user.discord_deafen()
 answer call: user.discord_answer_call()
 decline call: user.discord_decline_call()
