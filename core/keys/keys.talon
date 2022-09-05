@@ -8,11 +8,9 @@
 {user.key_number}: key(key_number)
 
 # Press a key with optional modifiers
-firm:
-    key(enter)
+firm: key(enter)
 
-press <user.key_unmodified>:
-    key(key_unmodified)
+press <user.key_unmodified>: key(key_unmodified)
 
 press <user.key_modifiers> <user.key_unmodified>:
     key("{key_modifiers}-{key_unmodified}")

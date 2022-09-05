@@ -83,7 +83,7 @@ window layout wide:
     # Select wide layout
     key("alt-shift-cmd-s")
 
-window layout (full|fullscreen):
+window layout (full | fullscreen):
     # Select fullscreen layout
     key("alt-shift-cmd-d")
 

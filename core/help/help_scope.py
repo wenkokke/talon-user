@@ -1,10 +1,10 @@
 from talon import Module, actions, imgui, scope, ui
 
-
 mod = Module()
 mod.mode(
     "help_scope", desc="A mode which is active if the help GUI for scope is showing"
 )
+
 
 @imgui.open(x=ui.main_screen().x)
 def gui(gui: imgui.GUI):
@@ -48,7 +48,6 @@ def format_value(value):
     if isinstance(value, list) or isinstance(value, set):
         return ", ".join(sorted(value))
     return value
-
 
 
 @mod.action_class

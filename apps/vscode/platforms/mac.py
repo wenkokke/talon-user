@@ -1,4 +1,4 @@
-from talon import Module, Context, actions, ui, ctrl, app
+from talon import Context, Module, actions, app, ctrl, ui
 
 ctx = Context()
 ctx.matches = r"""
@@ -6,12 +6,14 @@ os: mac
 app: vscode
 """
 
+
 @ctx.action_class("win")
 class WinActions:
     def filename():
         parts = actions.win.title().split(" — ")
         result = parts[1] if parts[0] == "[Extension Development Host]" else parts[0]
         return result if "." in result else ""
+
 
 @ctx.action_class("user")
 class UserActions:

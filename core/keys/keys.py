@@ -1,4 +1,5 @@
-from talon import Module, Context, actions, app, imgui, registry, ui
+from talon import Context, Module, actions, app, imgui, registry, ui
+
 from user.util import csv
 
 mod = Module()

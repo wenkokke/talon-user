@@ -1,4 +1,5 @@
-from talon import Module, Context, registry
+from talon import Context, Module, registry
+
 from user.util import csv
 from user.util.speech import create_spoken_forms
 

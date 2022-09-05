@@ -1,1 +1,1 @@
-cancel$:   skip()
+cancel$: skip()

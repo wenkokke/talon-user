@@ -1,6 +1,7 @@
-from talon import Module, actions, imgui, clip
-from talon.skia.image import Image
 from dataclasses import dataclass
+
+from talon import Module, actions, clip, imgui
+from talon.skia.image import Image
 
 
 @dataclass

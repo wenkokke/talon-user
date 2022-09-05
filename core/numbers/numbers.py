@@ -1,12 +1,18 @@
 from functools import cache
+from typing import Iterator, Union
+
 from talon import Context, Module
-from typing import Union, Iterator
+
 from user.util import csv
 
-DIGITS_MAP = csv.read_spoken_forms("numbers/digits.csv", value_name="Digit", value_type=int)
+DIGITS_MAP = csv.read_spoken_forms(
+    "numbers/digits.csv", value_name="Digit", value_type=int
+)
 DIGITS = list(DIGITS_MAP.keys())
 
-TEENS_MAP = csv.read_spoken_forms("numbers/teens.csv", value_name="Teen", value_type=int)
+TEENS_MAP = csv.read_spoken_forms(
+    "numbers/teens.csv", value_name="Teen", value_type=int
+)
 TEENS = list(TEENS_MAP.keys())
 
 TENS_MAP = csv.read_spoken_forms("numbers/tens.csv", value_name="Ten", value_type=int)
@@ -26,7 +32,9 @@ NUMBERS_MAP = DIGITS_MAP | TEENS_MAP | TENS_MAP | SCALES_MAP
 NUMBERS = list(NUMBERS_MAP.keys())
 
 # NOTE: REV_ORDINALS_MAP maps numbers to spoken forms
-REV_ORDINALS_MAP = csv.read_dict("numbers/ordinals.csv", key_name="Ordinal", key_type=int, value_name="Spoken form")
+REV_ORDINALS_MAP = csv.read_dict(
+    "numbers/ordinals.csv", key_name="Ordinal", key_type=int, value_name="Spoken form"
+)
 for n in range(1, 100):
     if not n in REV_ORDINALS_MAP:
         tens, ones = divmod(n, 10)
@@ -35,6 +43,7 @@ for n in range(1, 100):
 ORDINALS_MAP = {spoken_form: n for n, spoken_form in REV_ORDINALS_MAP.items()}
 ORDINALS = list(ORDINALS_MAP.keys())
 ORDINALS_SMALL = ORDINALS[:20]
+
 
 def parse_number(l: list[str]) -> str:
     """Parses a list of words into a number/digit string."""
@@ -151,6 +160,7 @@ def ordinal(n):
         suffix = "th"
     return str(n) + suffix
 
+
 # ---------- TESTS (uncomment to run) ----------
 def test_number(expected, string):
     global SCALES
@@ -203,6 +213,7 @@ RULE_NUMBERS_SMALL = f"({RULE_DIGITS}|{RULE_TEENS}|{RULE_TENS} [{RULE_DIGITS}])"
 LEADING_WORDS = NUMBERS_MAP.keys() - SCALES_MAP.keys()
 RULE_LEADING_NUMBERS = f"({'|'.join(LEADING_WORDS)})"
 RULE_NUMBERS = f"{RULE_LEADING_NUMBERS} ([and] {RULE_NUMBERS_ANY})*"
+
 
 @mod.capture(rule=RULE_NUMBERS)
 def number_string(m) -> str:

@@ -1,9 +1,11 @@
+import csv
 from pathlib import Path
 from typing import Any, Callable, Dict, Sequence, TypeVar
+
 from talon import Context
-import csv
 
 SETTINGS_DIR = Path(__file__).parents[1] / "settings"
+
 
 def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
     """
@@ -19,8 +21,8 @@ def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
     csv_file = (SETTINGS_DIR / csv_file).resolve()
     if csv_file.exists():
         with csv_file.open(newline="") as csv_handle:
-        # Or, to use talon resource API:
-        # with resource.open(str(csv_file), "r") as csv_handle:
+            # Or, to use talon resource API:
+            # with resource.open(str(csv_file), "r") as csv_handle:
             reader = csv.reader(csv_handle, delimiter=",")
             csv_header, *csv_rows = tuple(
                 tuple(sanitize(fld) for fld in row) for row in reader
@@ -34,14 +36,19 @@ def read_rows(csv_file: str, header: Sequence[str]) -> Sequence[Sequence[str]]:
 Key = TypeVar("Key")
 Value = TypeVar("Value")
 
-def read_list(csv_file: str, value_name: str, value_type: Callable[[str], Value] = str) -> Sequence[str]:
+
+def read_list(
+    csv_file: str, value_name: str, value_type: Callable[[str], Value] = str
+) -> Sequence[str]:
     """
     Read a CSV file as a simple list.
 
     Note:
         Assumes a 1-column table.
     """
-    return tuple(map(lambda row: value_type(row[0]), read_rows(csv_file, (value_name,))))
+    return tuple(
+        map(lambda row: value_type(row[0]), read_rows(csv_file, (value_name,)))
+    )
 
 
 def read_dict(
@@ -82,7 +89,13 @@ def read_spoken_forms(
     }
 
 
-def register_spoken_forms(csv_file: str, ctx: Context, list_name: str, value_name: str, value_type: Callable[[str], Value] = str):
+def register_spoken_forms(
+    csv_file: str,
+    ctx: Context,
+    list_name: str,
+    value_name: str,
+    value_type: Callable[[str], Value] = str,
+):
     """
     Register a CSV file as the source for a Talon list.
 
@@ -90,7 +103,9 @@ def register_spoken_forms(csv_file: str, ctx: Context, list_name: str, value_nam
         Assumes a 2-column table, where the first column is the value of interest,
         and the second column is an optional spoken form.
     """
-    ctx.lists[list_name] = read_spoken_forms(csv_file, value_name=value_name, value_type=value_type)
+    ctx.lists[list_name] = read_spoken_forms(
+        csv_file, value_name=value_name, value_type=value_type
+    )
 
 
 def sanitize(text: str) -> str:

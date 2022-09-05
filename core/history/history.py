@@ -1,5 +1,6 @@
-from talon import Module, actions, imgui, ui
 import logging
+
+from talon import Module, actions, imgui, ui
 
 mod = Module()
 mod.mode(

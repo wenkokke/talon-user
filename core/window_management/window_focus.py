@@ -1,9 +1,10 @@
-from talon import Context, Module, app, imgui, ui, actions
-from talon.grammar import Phrase
-from itertools import *
-from user.util.speech import create_spoken_forms_app
-
 import time
+from itertools import *
+
+from talon import Context, Module, actions, app, imgui, ui
+from talon.grammar import Phrase
+
+from user.util.speech import create_spoken_forms_app
 
 mod = Module()
 mod.mode("help_focus")
@@ -145,4 +146,3 @@ def gui(gui: imgui.GUI):
     gui.spacer()
     if gui.button("Hide"):
         actions.user.help_hide_focus()
-

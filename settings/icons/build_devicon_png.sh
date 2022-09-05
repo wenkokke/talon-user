@@ -12,5 +12,3 @@ for svg in $(find devicon/icons -name '*.svg'); do
   echo "Desaturate $(basename -- $png) -> $(basename -- $png_bw)"
   convert "$png" -grayscale rec709luma "$png_bw"
 done
-
-

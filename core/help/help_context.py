@@ -1,7 +1,8 @@
-from collections import defaultdict
 import math
+from collections import defaultdict
 from typing import Iterable, Tuple
-from talon import Module, Context, actions, imgui, Module, registry, ui, app, clip
+
+from talon import Context, Module, actions, app, clip, imgui, registry, ui
 
 mod = Module()
 mod.list("help_context", desc="List of available contexts")
@@ -84,7 +85,7 @@ def format_context_button(index: int, context_label: str, context_name: str) -> 
             else "",
         )
     else:
-        return "{}. {} ".format(index, context_label)
+        return f"{index}. {context_label} "
 
 
 # translates 1-based index -> actual index in sorted_context_map_keys
@@ -167,9 +168,7 @@ def gui_context_help(gui: imgui.GUI):
     if selected_context is None and search_phrase is None:
         total_page_count = get_total_context_pages()
 
-        gui.text(
-            "Help: contexts ({}/{})".format(current_context_page, total_page_count)
-        )
+        gui.text(f"Help: contexts ({current_context_page}/{total_page_count})")
 
         gui.line()
 
@@ -301,7 +300,7 @@ def draw_commands_title(gui: imgui.GUI, title: str):
     global selected_context_page
     global total_page_count
 
-    gui.text("{} ({}/{})".format(title, selected_context_page, total_page_count))
+    gui.text(f"{title} ({selected_context_page}/{total_page_count})")
     gui.line()
 
 

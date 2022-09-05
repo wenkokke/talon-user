@@ -1,23 +1,17 @@
 tag: browser
 -
 
-copy address:
-  clip.set_text(browser.address())
+copy address: clip.set_text(browser.address())
 
-focus address:
-  browser.focus_page()
+focus address: browser.focus_page()
 
-focus page:
-  browser.focus_page()
+focus page: browser.focus_page()
 
-reload:
-  browser.reload()
+reload: browser.reload()
 
-reload hard:
-  browser.reload_hard()
+reload hard: browser.reload_hard()
 
-reload hardest:
-  browser.reload_hardest()
+reload hardest: browser.reload_hardest()
 
 # browser.bookmark()
 #   Bookmark the current page

@@ -2,7 +2,10 @@
 from talon import Module, actions, imgui, registry, ui
 
 mod = Module()
-mod.mode("help_snippets", desc="A mode which is active if the help GUI for snippet is showing")
+mod.mode(
+    "help_snippets",
+    desc="A mode which is active if the help GUI for snippet is showing",
+)
 
 mod.tag("editor_snippets", desc="Tag for enabling code snippet-related commands")
 mod.list("snippet", desc="List of code snippets")
@@ -17,7 +20,6 @@ def gui(gui: imgui.GUI):
         if function_list:
             for i, entry in enumerate(function_list):
                 gui.text("{}".format(entry, function_list))
-
 
 
 @mod.action_class

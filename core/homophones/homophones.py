@@ -1,7 +1,9 @@
-from typing import Dict, Optional, Sequence
-from talon import Context, Module, app, imgui, actions, ui
-from user.util import csv
 import re
+from typing import Dict, Optional, Sequence
+
+from talon import Context, Module, actions, app, imgui, ui
+
+from user.util import csv
 
 # a list of homophones where each line is a comma separated list
 # e.g. where,wear,ware

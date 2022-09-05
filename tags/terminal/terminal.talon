@@ -1,49 +1,35 @@
 tag: terminal
 -
 
-short <user.letters>:
-    "-{letters} "
+short <user.letters>: "-{letters} "
 
-lisa: 
-    user.terminal_list_directories()
+lisa: user.terminal_list_directories()
 
-lisa all: 
-    user.terminal_list_all_directories()
+lisa all: user.terminal_list_all_directories()
 
-katie [<user.text>]:
-    user.terminal_change_directory(text or "")
+katie [<user.text>]: user.terminal_change_directory(text or "")
 
-katie root:
-    user.terminal_change_directory_root()
+katie root: user.terminal_change_directory_root()
 
-katie home:
-    user.terminal_change_directory_home()
+katie home: user.terminal_change_directory_home()
 
-katie talon user:
-    user.terminal_change_directory_talon_user()
+katie talon user: user.terminal_change_directory_talon_user()
 
-clear screen:
-    user.terminal_clear_screen()
+clear screen: user.terminal_clear_screen()
 
-run last:
-    user.terminal_run_last()
+run last: user.terminal_run_last()
 
-rerun [<user.text>]:
-    user.terminal_rerun_search(text or "")
+rerun [<user.text>]: user.terminal_rerun_search(text or "")
 
-rerun search:
-    user.terminal_rerun_search("")
+rerun search: user.terminal_rerun_search("")
 
-kill this:
-    user.terminal_kill_current()
+kill this: user.terminal_kill_current()
 
 copy paste:
     edit.copy()
     sleep(50ms)
     edit.paste()
 
-talon rebel:
-    user.terminal_open_talon_repl()
+talon rebel: user.terminal_open_talon_repl()
 
-talon log:
-    user.terminal_open_talon_log()
+talon log: user.terminal_open_talon_log()

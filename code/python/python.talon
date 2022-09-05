@@ -12,18 +12,16 @@ settings():
     user.code_type_catch_all = "PASCAL_CASE"
 
 # support for #user.code_exception
-raise {user.code_exception}:
-    "raise {code_exception}"
+raise {user.code_exception}: "raise {code_exception}"
 
-except {user.code_exception}:
-    "except {code_exception}:"
+except {user.code_exception}: "except {code_exception}:"
 
 except {user.code_exception} as:
     "except {code_exception} as :"
     edit.left()
 
 # support for #user.code_function
-(deaf|define) funk <user.code_function_catch_all>:
+(deaf | define) funk <user.code_function_catch_all>:
     "def {code_function_catch_all}():"
     edit.insert_line_below()
     "pass"
@@ -33,8 +31,6 @@ except {user.code_exception} as:
     edit.left()
 
 # support for #user.code_type
-has type <user.code_type>$:
-    ": {code_type}"
+has type <user.code_type>$: ": {code_type}"
 
-returns type <user.code_type>:
-    " -> {code_type}"
+returns type <user.code_type>: " -> {code_type}"

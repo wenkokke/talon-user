@@ -1,4 +1,5 @@
-from talon import Module, Context
+from talon import Context, Module
+
 from user.util import csv
 
 mod = Module()
@@ -11,6 +12,7 @@ csv.register_spoken_forms(
     list_name="user.file_extension",
     value_name="File extension",
 )
+
 
 @mod.capture(rule="dot {user.file_extension}")
 def file_extension(m) -> str:

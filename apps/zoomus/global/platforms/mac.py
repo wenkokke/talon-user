@@ -1,8 +1,8 @@
+import subprocess
+from pathlib import *
+
 from talon import Context, actions
 from talon.mac import applescript
-from pathlib import *
-import subprocess
-
 
 ctx = Context()
 ctx.matches = r"""

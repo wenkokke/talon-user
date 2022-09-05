@@ -1,10 +1,9 @@
+import re
 from itertools import chain, repeat
 from typing import Any, Callable, Generator, Iterable, Optional, Sequence, Union
-from talon import Module, Context, actions, imgui, ui
+
+from talon import Context, Module, actions, imgui, ui
 from talon.grammar.vm import Capture
-
-import re
-
 
 mod = Module()
 ctx = Context()
@@ -33,7 +32,7 @@ StringFormatter = Callable[[str], str]
 
 class Formatter(object):
     @staticmethod
-    def from_description(formatter_names: str) -> 'Formatter':
+    def from_description(formatter_names: str) -> "Formatter":
         global FORMATTERS_DICT
         formatter = Formatter()
         for formatter_name in formatter_names.split(","):
@@ -47,13 +46,13 @@ class Formatter(object):
         string_formatters: Sequence[StringFormatter] = (),
     ):
         self.__delimiter = delimiter
-        self.chunks_formatters = tuple(map(tuple,chunks_formatters))
+        self.chunks_formatters = tuple(map(tuple, chunks_formatters))
         self.string_formatters = tuple(string_formatters)
 
     def __repr__(self):
         result = "{\n"
         result += f"  delimiter = '{self.delimiter()}',\n"
-        longest_chunks_formatter = max(map(len,self.chunks_formatters))
+        longest_chunks_formatter = max(map(len, self.chunks_formatters))
         for i in range(0, longest_chunks_formatter - 1):
             sample = "sample"
             for chunk_formatter in self.chunk_formatters(i):
@@ -75,7 +74,7 @@ class Formatter(object):
         else:
             return delimiter1
 
-    def __add__(self, other: 'Formatter') -> 'Formatter':
+    def __add__(self, other: "Formatter") -> "Formatter":
         return Formatter(
             Formatter.pick_delimiter(other.__delimiter, self.__delimiter),
             other.chunks_formatters + self.chunks_formatters,
@@ -110,7 +109,7 @@ class Formatter(object):
                 for chunk_formatter in self.chunk_formatters(i):
                     if chunk_formatter:
                         curr_chunk = chunk_formatter(curr_chunk)
-                i += 1 # increment i only when chunk is not immune
+                i += 1  # increment i only when chunk is not immune
                 formatted_string += curr_chunk
                 if not (curr_chunk_is_last or next_chunk_is_immune):
                     formatted_string += self.delimiter()
@@ -260,7 +259,7 @@ class FormatterActions:
             text: The text to format.
             formatter_names: A comma-separated string of formatters, e.g., 'CAPITALIZE_ALL_WORDS,DOUBLE_QUOTED_STRING'.
         """
-        return Formatter.from_description(formatter_names)(text.split(' '))
+        return Formatter.from_description(formatter_names)(text.split(" "))
 
     def unformat_text(text: str) -> str:
         """

@@ -1,4 +1,5 @@
-from talon import Module, Context
+from talon import Context, Module
+
 from user.util import csv
 
 mod = Module()

@@ -1,5 +1,5 @@
-from typing import Dict, Sequence
 import logging
+from typing import Dict, Sequence
 
 
 class PhraseReplacer:

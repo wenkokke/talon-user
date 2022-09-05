@@ -1,4 +1,5 @@
 from talon import Context, Module
+
 from user.util import csv
 
 mod = Module()
@@ -11,6 +12,7 @@ csv.register_spoken_forms(
     list_name="user.abbreviation",
     value_name="Abbreviation",
 )
+
 
 @mod.capture(rule="brief {self.abbreviation}")
 def abbreviation(m) -> str:

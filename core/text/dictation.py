@@ -1,7 +1,8 @@
-from talon import Module, Context, ui, actions, grammar
-from talon.grammar.vm import Phrase, Capture
-from typing import Any, Optional, Sequence
 import re
+from typing import Any, Optional, Sequence
+
+from talon import Context, Module, actions, grammar, ui
+from talon.grammar.vm import Capture, Phrase
 
 mod = Module()
 ctx = Context()
@@ -13,11 +14,13 @@ setting_context_sensitive_dictation = mod.setting(
     desc="Look at surrounding text to improve auto-capitalization/spacing in dictation mode. By default, this works by selecting that text & copying it to the clipboard, so it may be slow or fail in some applications.",
 )
 
+
 @mod.capture(rule="({self.vocabulary} | <word>)")
 def word(m) -> str:
     """A single word, including user-defined vocabulary."""
     words = capture_to_chunks(m)
     return words[0]
+
 
 # Used to escape numbers and symbols
 @mod.capture(rule="({self.vocabulary} | <phrase>)+")
@@ -25,20 +28,28 @@ def words(m) -> str:
     """A sequence of words, including user-defined vocabulary."""
     return format_phrase(m)
 
-@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | <user.immune_string> | <phrase>)+")
+
+@mod.capture(
+    rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | <user.immune_string> | <phrase>)+"
+)
 def chunks(m) -> Sequence[Any]:
     return capture_to_chunks(m)
+
 
 @mod.capture(rule="<self.chunks>")
 def text(m) -> str:
     """Sequence of words, including user-defined vocabulary, abbreviations and spelling."""
     return format_phrase(m.chunks)
 
-@mod.capture(rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | {self.key_punctuation} | <phrase>)+")
+
+@mod.capture(
+    rule="({self.vocabulary} | <user.abbreviation> | <user.spell> | <user.number_prefix> | {self.key_punctuation} | <phrase>)+"
+)
 def prose(m) -> str:
     """Mixed words and punctuation, including user-defined vocabulary, abbreviations and spelling, auto-spaced & capitalized."""
     text, _state = auto_capitalize(format_phrase(capture_to_chunks(m)))
     return text
+
 
 # ---------- FORMATTING ---------- #
 def format_phrase(chunks: Sequence[Any]) -> str:
@@ -49,6 +60,7 @@ def format_phrase(chunks: Sequence[Any]) -> str:
             prhrase += " "
         prhrase += word
     return prhrase
+
 
 def capture_to_chunks(m: Capture) -> Sequence[Any]:
     chunks = []
@@ -63,28 +75,41 @@ def capture_to_chunks(m: Capture) -> Sequence[Any]:
             chunks.append(item)
     return chunks
 
+
 # There must be a simpler way to do this, but I don't see it right now.
-no_space_after = re.compile(r"""
+no_space_after = re.compile(
+    r"""
   (?:
     [\s\-_/#@([{‘“]     # characters that never need space after them
   | (?<!\w)[$£€¥₩₽₹]    # currency symbols not preceded by a word character
   # quotes preceded by beginning of string, space, opening braces, dash, or other quotes
   | (?: ^ | [\s([{\-'"] ) ['"]
-  )$""", re.VERBOSE)
-no_space_before = re.compile(r"""
+  )$""",
+    re.VERBOSE,
+)
+no_space_before = re.compile(
+    r"""
   ^(?:
     [\s\-_.,!?;:/%)\]}’”]   # characters that never need space before them
   | [$£€¥₩₽₹](?!\w)         # currency symbols not followed by a word character
   # quotes followed by end of string, space, closing braces, dash, other quotes, or some punctuation.
   | ['"] (?: $ | [\s)\]}\-'".,!?;:/] )
-  )""", re.VERBOSE)
+  )""",
+    re.VERBOSE,
+)
+
 
 def omit_space_before(text: str) -> bool:
     return not text or no_space_before.search(text)
+
+
 def omit_space_after(text: str) -> bool:
     return not text or no_space_after.search(text)
+
+
 def needs_space_between(before: str, after: str) -> bool:
     return not (omit_space_after(before) or omit_space_before(after))
+
 
 # TESTS, uncomment to enable
 assert needs_space_between("a", "break")
@@ -116,7 +141,8 @@ assert not needs_space_between("example", '."')
 assert not needs_space_between("hello'", ".")
 assert not needs_space_between("hello.", "'")
 
-def auto_capitalize(text, state = None):
+
+def auto_capitalize(text, state=None):
     """
     Auto-capitalizes text. `state` argument means:
     - None: Don't capitalize initial word.
@@ -143,8 +169,9 @@ def auto_capitalize(text, state = None):
         # Otherwise the charge just passes through.
         output += c
         newline = c == "\n"
-    return output, ("sentence start" if charge else
-                    "after newline" if newline else None)
+    return output, (
+        "sentence start" if charge else "after newline" if newline else None
+    )
 
 
 # ---------- DICTATION AUTO FORMATTING ---------- #
@@ -157,7 +184,8 @@ class DictationFormat:
         self.state = "sentence start"
 
     def update_context(self, before):
-        if before is None: return
+        if before is None:
+            return
         self.reset()
         self.pass_through(before)
 
@@ -172,9 +200,11 @@ class DictationFormat:
         self.before = text or self.before
         return text
 
+
 dictation_formatter = DictationFormat()
 ui.register("app_deactivate", lambda app: dictation_formatter.reset())
 ui.register("win_focus", lambda win: dictation_formatter.reset())
+
 
 @mod.action_class
 class Actions:
@@ -191,11 +221,13 @@ class Actions:
         """Inserts dictated text, formatted appropriately."""
         context_sensitive = setting_context_sensitive_dictation.get()
         # Omit peeking left if we don't need left space or capitalization.
-        if (context_sensitive
-            and not (omit_space_before(text)
-                     and auto_capitalize(text, "sentence start")[0] == text)):
+        if context_sensitive and not (
+            omit_space_before(text)
+            and auto_capitalize(text, "sentence start")[0] == text
+        ):
             dictation_formatter.update_context(
-                actions.user.dictation_peek_left(clobber=True))
+                actions.user.dictation_peek_left(clobber=True)
+            )
         text = dictation_formatter.format(text)
         actions.user.history_add_phrase(text)
         actions.insert(text)
@@ -218,9 +250,11 @@ class Actions:
         unchanged unless `clobber` is true, in which case it may clobber it.
         """
         # Get rid of the selection if it exists.
-        if clobber: actions.user.clobber_selection_if_exists()
+        if clobber:
+            actions.user.clobber_selection_if_exists()
         # Otherwise, if there's a selection, fail.
-        elif "" != actions.edit.selected_text(): return None
+        elif "" != actions.edit.selected_text():
+            return None
 
         # In principle the previous word should suffice, but some applications
         # have a funny concept of what the previous word is (for example, they
@@ -275,14 +309,17 @@ class Actions:
         actions.edit.extend_right()
         actions.edit.extend_right()
         after = actions.edit.selected_text()
-        if after: actions.edit.left()
+        if after:
+            actions.edit.left()
         return after
+
 
 # Use the dictation formatter in dictation mode.
 dictation_ctx = Context()
 dictation_ctx.matches = r"""
 mode: dictation
 """
+
 
 @dictation_ctx.action_class("main")
 class main_action:

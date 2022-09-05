@@ -1,4 +1,4 @@
-from talon import Module, actions, app, imgui, Module, registry, ui
+from talon import Module, actions, app, imgui, registry, ui
 
 mod = Module()
 mod.mode(

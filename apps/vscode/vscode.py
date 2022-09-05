@@ -1,5 +1,7 @@
 from logging import warning
-from talon import Module, Context, actions
+
+from talon import Context, Module, actions
+
 from user.util import csv
 
 mod = Module()
@@ -284,4 +286,3 @@ class UserActions:
 
     def version_control_pull():
         actions.user.vscode("git.pull")
-

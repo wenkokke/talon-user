@@ -1,5 +1,6 @@
-from talon import Module, actions, app
 from subprocess import run
+
+from talon import Module, actions, app
 
 # Path to the SetLEDs executable
 # <https://github.com/damieng/setledsmac>

@@ -1,8 +1,10 @@
+import logging
 from typing import Sequence
-from talon import Module, Context, actions
+
+from talon import Context, Module, actions
+
 from user.util import csv
 from user.util.phrase_replacer import PhraseReplacer
-import logging
 
 mod = Module()
 ctx = Context()

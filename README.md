@@ -9,7 +9,7 @@
 
 # TODO
 
-+ Extract lists to CSV files
+- Extract lists to CSV files
   - `delimiters.py`: `delimiters_spaced`
   - `delimiters.py`: `delimiter_pair`
   - `keys.py`: `key_special`
@@ -19,4 +19,4 @@
   - `formatters.py`: `formatter_code`
   - `formatters.py`: `formatter_prose`
   - `formatters.py`: `formatter_word`
-+ Debug Talon HUD
+- Debug Talon HUD

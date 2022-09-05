@@ -38,4 +38,3 @@ class multiple_cursor_actions:
 
     def multi_cursor_add_to_line_ends():
         """Adds cursor at end of every selected line"""
-

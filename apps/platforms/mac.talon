@@ -1,4 +1,3 @@
 os: mac
 -
-spot light:
-  key(cmd-space)
+spot light: key(cmd-space)

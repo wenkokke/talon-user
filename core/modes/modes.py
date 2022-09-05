@@ -1,4 +1,5 @@
 from typing import Callable
+
 from talon import Module, actions
 
 # The following built-in actions may be of use:

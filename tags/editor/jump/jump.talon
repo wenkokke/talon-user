@@ -1,17 +1,17 @@
 tag: user.editor_jump
 -
 jump <number>:
-  edit.jump_line(number)
-  edit.line_start()
+    edit.jump_line(number)
+    edit.line_start()
 
 jump <number> tail:
-  edit.jump_line(number)
-  edit.line_end()
+    edit.jump_line(number)
+    edit.line_end()
 
 clear line <number>:
-  edit.jump_line(number)
-  edit.select_line(number)
-  edit.delete()
+    edit.jump_line(number)
+    edit.select_line(number)
+    edit.delete()
 
 clear line <number> until <number>:
     edit.select_lines(number_1, number_2)
@@ -37,11 +37,9 @@ paste over line <number> until <number>:
     edit.select_lines(number_1, number_2)
     edit.paste()
 
-take line <number>:
-    edit.select_lines(number, number)
+take line <number>: edit.select_lines(number, number)
 
-take line <number> until <number>:
-    edit.select_lines(number_1, number_2)
+take line <number> until <number>: edit.select_lines(number_1, number_2)
 
 tab line <number>:
     edit.jump_line(number)

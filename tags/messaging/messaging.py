@@ -1,4 +1,4 @@
-from talon import Context, actions, ui, Module, app
+from talon import Context, Module, actions, app, ui
 
 mod = Module()
 mod.tag("messaging", desc="Tag for generic multi-channel messaging apps")

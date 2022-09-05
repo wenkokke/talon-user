@@ -1,4 +1,4 @@
-from talon import Module, Context, actions
+from talon import Context, Module, actions
 
 ctx = Context()
 ctx.matches = r"""
@@ -6,10 +6,12 @@ tag: terminal
 """
 
 ctx.lists["self.formatter_code_extra"] = {
-    'long': "LEADING_DOUBLE_DASH,DASH_SEPARATED,TRAILING_PADDING"
+    "long": "LEADING_DOUBLE_DASH,DASH_SEPARATED,TRAILING_PADDING"
 }
 
 mod = Module()
+
+
 @mod.action_class
 class Actions:
     def terminal_list_directories():

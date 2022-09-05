@@ -1,11 +1,10 @@
+import re
 from ast import Dict
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any, Mapping, Sequence
 
 from user.util import csv
-
-import re
 
 RE_WORD = r"[A-Z]?[a-z]+|[A-Z]+(?![a-z])|[0-9]+"
 

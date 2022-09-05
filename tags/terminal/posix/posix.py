@@ -1,5 +1,6 @@
-from talon import Module, Context, actions
 from os.path import join
+
+from talon import Context, Module, actions
 
 # NOTE: activating #user.terminal_posix provides support for a portion of #terminal
 

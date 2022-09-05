@@ -1,4 +1,5 @@
 from talon import Context, Module, ui
+
 from user.util.speech import create_spoken_forms_app
 
 mod = Module()
@@ -32,9 +33,12 @@ def update_running_list():
             running[spoken_form] = cur_app.name
 
     # batch update lists
-    ctx.lists.update({
-        "self.running": running,
-    })
+    ctx.lists.update(
+        {
+            "self.running": running,
+        }
+    )
+
 
 ui.register("app_launch", lambda evt: update_running_list())
 ui.register("app_close", lambda evt: update_running_list())
